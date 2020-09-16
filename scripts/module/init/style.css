@@ -1,0 +1,18 @@
+
+.main-container {
+    height: 100%;
+}
+.category-container {
+    height: 100%;
+    width: 200px;
+    background: #ccc;
+}
+.edit-container {
+}
+.preview-container {
+    overflow: hidden;
+}
+
+.setting-container {
+    height: 40px;
+}
