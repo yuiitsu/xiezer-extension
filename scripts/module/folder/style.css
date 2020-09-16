@@ -1,0 +1,57 @@
+.folder-main {
+    color: #fff;
+}
+
+.folder-item-container {
+    padding: 10px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.folder-item-container:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 1);
+}
+
+.folder-item-container.focus {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 1);
+}
+
+.folder-root:hover {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 1);
+}
+
+.folder-root-title {
+    padding-bottom: 10px;
+}
+
+.folder-root-icon {
+    padding-top: 6px;
+}
+
+.folder-item-container .bi-chevron-down {
+    float: right;
+}
+
+.folder-item-container svg.bi-journals, .folder-item-container .bi-files {
+    margin-right: 5px;
+    margin-top: -4px;
+}
+
+.folder-child:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.folder-item {
+    padding: 5px;
+    padding-left: 21px;
+}
+
+.folder-item:hover {
+}
+
+.folder-item-action {
+    padding: 10px;
+}

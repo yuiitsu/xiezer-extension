@@ -10,7 +10,6 @@ App.module.extend('previewer', function() {
     this.init = function() {
         //
         this.md = window.markdownit();
-        this.log(this.md);
         //
         Model.set('title', '').watch('title', this.renderContent);
         Model.set('content', '').watch('content', this.renderContent);
@@ -25,8 +24,20 @@ App.module.extend('previewer', function() {
         title = title ? title : '';
         content = content ? content : '';
         //
-        // var result = this.md.render('# markdown-it rulezz!');
         $('#previewer').html(self.md.render(title + content));
         // $('#previewer').html(markdown.toHTML(title + content));
+        //
+        // let $img = $('#previewer').find('img');
+        // if (images.length > 0) {
+        //     let i = 0;
+        //     $img.each(function() {
+        //         $(this).prop('outerHTML', images[i]);
+        //         i++;
+        //     });
+        // } 
+        // $img.each(function() {
+        //     // self.log($(this).prop('outerHTML'));
+        //     images.push($(this).prop('outerHTML'));
+        // });
     };
 });

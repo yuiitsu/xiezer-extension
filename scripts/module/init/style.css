@@ -2,10 +2,24 @@
 .main-container {
     height: 100%;
 }
-.category-container {
+.folder-container {
     height: 100%;
     width: 200px;
-    background: #ccc;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.notes-container {
+    width: 200px;
+    height: 100%;
+}
+
+.viewpoint-container {
+    overflow: hidden;
+}
+
+.viewpoint {
+    height: 100%;
+    overflow: hidden;
 }
 .edit-container {
 }
@@ -14,5 +28,4 @@
 }
 
 .setting-container {
-    height: 40px;
 }

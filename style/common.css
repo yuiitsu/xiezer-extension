@@ -1,7 +1,7 @@
 *{padding:0;margin:0;box-sizing: border-box;outline: none;}
 
 body {
-    background-color: #efefef;
+    background-color: #f2f2f2;
 }
 
 /* flex */
@@ -9,3 +9,12 @@ body {
 .display-flex-column{display: flex;flex-direction: column;}
 .display-flex-row{display: flex;flex-direction: row;}
 .display-flex-auto{flex: 1;}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {width:5px;height:10px;}
+/* 滚动槽 */
+::-webkit-scrollbar-track {box-shadow:rgba(0,0,0,0.3);border-radius:0;}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {border-radius:0;background:#efefef;box-shadow:rgba(0,0,0,0.5);}
+::-webkit-scrollbar-thumb:window-inactive {background:rgba(0,0,0,0.5);}
+

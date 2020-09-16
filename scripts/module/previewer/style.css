@@ -18,7 +18,9 @@
 
 .previewer-main pre {
     width: 100%;
-    overflow: visible;
+    border: 1px solid #eee;
+    padding: 10px;
+    background-color: #efefef;
 }
 
 .previewer-main dl, .previewer-main ol, .previewer-main ul {
@@ -27,4 +29,18 @@
 
 .previewer-main p {
     line-height: 1.6;
+}
+
+.previewer-empty {
+    width: 100%;
+    height: 100%;
+    justify-content:center;
+    font-size: 50px;
+    color: rgba(0, 0, 0, 0.1);
+    align-items: center;
+}
+
+.previewer-empty-text {
+    font-size: 16px;
+    display: block;
 }

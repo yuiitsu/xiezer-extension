@@ -1,0 +1,36 @@
+.notes-main {
+    height: 100%;
+}
+
+.notes-header {
+    padding: 14px 10px;
+    border-bottom: 1px solid #e1e1e1;
+    text-align: right;
+    color: #999;
+    cursor: pointer;
+}
+
+.notes-header:hover {
+    color: #333;
+}
+
+.notes-items {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.notes-item {
+    padding: 10px;
+    line-height: 1.6;
+    border-bottom: 1px solid #e1e1e1;
+    cursor: pointer;
+    word-break:break-all;
+}
+
+.notes-item.focus {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.notes-item:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}

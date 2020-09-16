@@ -1,0 +1,40 @@
+.setting-main {
+    height: 40px;
+    padding: 0 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.logo-container {
+    width: 200px;
+    height: 40px;
+    line-height: 35px;;
+    color: #fff;
+    font-weight: 700;
+}
+
+.logo {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.logo svg {
+    margin-top: -5px;
+    margin-right: 8px;
+}
+
+.setting-inner-container {
+    text-align: right;
+    padding-top: 9px;
+}
+
+.setting-copy {
+    display: inline-block;
+    padding: 5px;
+    /* background-color: #ccc; */
+    color: #999;
+}
+
+.setting-copy svg {
+    width: 12px;
+    height: 12px;
+}
