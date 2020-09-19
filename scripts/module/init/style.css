@@ -4,12 +4,12 @@
 }
 .folder-container {
     height: 100%;
-    width: 200px;
+    width: 250px;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
 .notes-container {
-    width: 200px;
+    width: 250px;
     height: 100%;
 }
 

@@ -11,20 +11,22 @@ App.module.extend('previewer', function() {
         //
         this.md = window.markdownit();
         //
-        Model.set('title', '').watch('title', this.renderContent);
         Model.set('content', '').watch('content', this.renderContent);
         //
         this.view.display('previewer', 'layout', {}, $('#previewer-container'));
     };
 
     this.renderContent = function() {
-        let title = Model.get('title'), 
-            content = Model.get('content');
+        let content = Model.get('content');
         //
-        title = title ? title : '';
         content = content ? content : '';
         //
-        $('#previewer').html(self.md.render(title + content));
+        $('#previewer').html(self.md.render(content));
+        //
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        //
         // $('#previewer').html(markdown.toHTML(title + content));
         //
         // let $img = $('#previewer').find('img');

@@ -1,5 +1,49 @@
 .folder-main {
     color: #fff;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.logo-container {
+    color: #fff;
+    font-weight: 700;
+    background-color: rgba(201, 69, 54, 1);
+    padding: 10px;
+}
+
+.logo {
+    display: inline-block;
+    color: rgba(255, 255, 255, 1);
+}
+
+.logo-bg {
+    display: inline-block;
+    padding: 5px;
+    /* background-color: rgba(0, 0, 0, 0.2); */
+    margin-right: 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.logo svg {
+}
+
+.setting-icon {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.setting-icon:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.setting-icon svg {
+    margin-top: 4px;
+}
+
+.notes-container {
+    overflow-y: auto;
 }
 
 .folder-item-container {
@@ -35,8 +79,12 @@
     float: right;
 }
 
-.folder-item-container svg.bi-journals, .folder-item-container .bi-files {
+.folder-root-title-icon {
+    display: inline-block;
     margin-right: 5px;
+}
+
+.folder-item-container svg.bi-journals, .folder-item-container .bi-files {
     margin-top: -4px;
 }
 
@@ -47,11 +95,24 @@
 .folder-item {
     padding: 5px;
     padding-left: 21px;
-}
-
-.folder-item:hover {
+    font-size: 14px;
 }
 
 .folder-item-action {
     padding: 10px;
+}
+
+.bottom-bar {
+    height: 30px;
+    line-height: 30px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    padding: 0 10px;
+    color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.bottom-bar-item {
+    display: inline-block;
+    padding-top: 8px;
 }

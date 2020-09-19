@@ -15,6 +15,6 @@ body {
 /* 滚动槽 */
 ::-webkit-scrollbar-track {box-shadow:rgba(0,0,0,0.3);border-radius:0;}
 /* 滚动条滑块 */
-::-webkit-scrollbar-thumb {border-radius:0;background:#efefef;box-shadow:rgba(0,0,0,0.5);}
-::-webkit-scrollbar-thumb:window-inactive {background:rgba(0,0,0,0.5);}
+::-webkit-scrollbar-thumb {border-radius:0;background:rgba(0, 0, 0, 0.1);box-shadow:rgba(0,0,0,0.2);}
+::-webkit-scrollbar-thumb:window-inactive {background:rgba(0,0,0,0.2);}
 

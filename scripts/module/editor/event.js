@@ -3,17 +3,22 @@
  */
 App.event.extend('editor', function() {
 
-    let self = this;
+    let self = this, 
+        inputing = false, 
+        timer = null;
+
+    this.autoSave = function() {
+
+    };
 
     this.event = {
-        titleChange: function() {
-            $('.editor-title input').on('input', function() {
-                Model.set('title', '# ' + $.trim($(this).val()) + '\n');
-            });
-        },
         contentChange: function() {
             $('.editor-content').on('input', function() {
-                Model.set('content', $.trim($(this).val()));
+                let content = $.trim($(this).val());
+                if (!content) {
+                    return false;
+                }
+                self.module.editor.saveData(content);
             });
         },
         clickTab: function() {
