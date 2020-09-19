@@ -88,8 +88,16 @@
     margin-top: -4px;
 }
 
+.folder-child.focus {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 .folder-child:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.folder-child:hover .folder-item-action {
+    visibility: visible;
 }
 
 .folder-item {
@@ -100,6 +108,45 @@
 
 .folder-item-action {
     padding: 10px;
+    visibility: hidden;
+}
+
+.folder-action-item {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.folder-item-action-list {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+}
+
+.folder-item-action-list svg {
+    margin-top: -3px;
+}
+
+.folder-item-edit-container {
+    padding: 5px 21px;
+}
+
+.folder-item-edit {
+    background-color: #fff;
+    padding: 0 5px;
+}
+
+.folder-item-edit input {
+    border: 0;
+    width: 100%;
+}
+
+.folder-item-edit-save-button {
+    color: rgba(0, 0, 0, 0.5);
+    padding-top:5px;
+    font-size: 14px;
+}
+
+.folder-item-edit-save-button:hover {
+    color: rgba(0, 0, 0, 0.9);
 }
 
 .bottom-bar {

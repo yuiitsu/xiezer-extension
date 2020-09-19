@@ -22,6 +22,11 @@
     cursor: pointer;
 }
 
+.notes-header-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 .notes-items {
     overflow-y: auto;
     height: 100%;

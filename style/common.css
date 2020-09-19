@@ -4,6 +4,9 @@ body {
     background-color: #f2f2f2;
 }
 
+/* color */
+.color-red {color: #ff0000;}
+
 /* flex */
 .display-flex {display: flex;}
 .display-flex-column{display: flex;flex-direction: column;}

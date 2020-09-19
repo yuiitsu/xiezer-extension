@@ -23,7 +23,7 @@ App.view.extend('folder', function() {
                         </svg>
                     </div>
                 </div>
-                <div class="all-files folder-item-container focus">
+                <div class="all-notes folder-item-container focus">
                     <div class="folder-root-title-icon">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
@@ -51,6 +51,7 @@ App.view.extend('folder', function() {
                             </div>
                         </div>
                         <!-- list -->
+                        <div id="folder-list"></div>
                     </div>
                     <div class="folder-item-container folder-root">
                         <div class="folder-root-title display-flex display-flex-row">
@@ -82,28 +83,60 @@ App.view.extend('folder', function() {
 
     this.list = function() {
         return `
-            <div class="folder-child display-flex display-flex-row">
-                <div class="folder-item display-flex-auto">Default</div>
-                <div class="folder-item-action">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
-                </div>
+            {{ for var i in data.list }}
+            {{ var item = data.list[i] }}
+            {{ var focus = item.id === data.selectedNoteBookId ? 'focus': '' }}
+            <div class="folder-child display-flex display-flex-row {{ focus }}">
+                {{ this.view.getView('folder', 'list_item', item) }}
             </div>
-            {{ for var i in data }}
-            {{ var item = data[i] }}
-            <div class="folder-child display-flex display-flex-row">
-                <div class="folder-item display-flex-auto" data-id="{{ item['id'] }}">{{ item['name'] }}</div>
-                <div class="folder-item-action">
+            {{ end }}
+        `;
+    };
+
+    this.list_item = function() {
+        return `
+            <div class="folder-item display-flex-auto" data-id="{{ data['id'] }}">{{ data['name'] }}</div>
+            <div class="folder-item-action">
+                <div class="folder-action-item folder-action-item-more" data-id="{{ data['id'] }}">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                     </svg>
+                </div>
+                <div class="folder-action-item">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
                 </div>
             </div>
-            {{ end }}
+        `;
+    };
+
+    this.list_item_edit = function() {
+        return `
+            <div class="folder-item-edit-container">
+                <div class="folder-item-edit display-flex-row">
+                    <input type="text" class="folder-item-edit-input display-flex-auto" data-id="{{ data['id'] }}" data-name="{{ data.name }}" value="{{ data.name }}" />
+                    <div class="folder-item-edit-save-button">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-return-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    this.listActions = function() {
+        return `
+            <div class="folder-item-action-list">
+                <div class="color-red folder-item-action-item" data-action="delete" data-id="{{ data.noteBookId }}">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg> 
+                    Delete
+                </div>
+            </div>
         `;
     };
 

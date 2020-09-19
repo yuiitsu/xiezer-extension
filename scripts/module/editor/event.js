@@ -18,7 +18,16 @@ App.event.extend('editor', function() {
                 if (!content) {
                     return false;
                 }
-                self.module.editor.saveData(content);
+                self.module.editor.previewNote(content);
+            });
+        },
+        save: function() {
+            $('#editor-save-button').on('click', function() {
+                let content = $.trim($('.editor-content').val());
+                if (!content) {
+                    return false;
+                }
+                self.module.editor.saveNote(content);
             });
         },
         clickTab: function() {

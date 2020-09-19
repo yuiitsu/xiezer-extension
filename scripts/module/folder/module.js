@@ -14,6 +14,10 @@ App.module.extend('folder', function() {
     };
 
     this.renderNotebooks = function(notes) {
-        self.view.append('foler', 'list', notes, $('.notes-container'));
+        let selectedNoteBookId = Model.get('noteBookId');
+        self.view.display('folder', 'list', {
+            list: notes, 
+            selectedNoteBookId: selectedNoteBookId
+        }, $('#folder-list'));
     };
 });
