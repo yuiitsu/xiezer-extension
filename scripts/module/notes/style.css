@@ -50,6 +50,28 @@
     color: rgba(0, 0, 0, 0.7);
 }
 
+.notes-item:hover .notes-bottom-action {
+    visibility: visible;
+}
+
+.notes-bottom {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.2);
+    margin-top: 5px;
+}
+
+.notes-bottom-action {
+    visibility: hidden;
+}
+
+.notes-bottom-action svg {
+    margin-top: 3px;
+}
+
+.notes-bottom-action:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
 .notes-empty {
     color: rgba(0, 0, 0, 0.2);
     text-align: center;

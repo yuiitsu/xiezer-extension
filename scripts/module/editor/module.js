@@ -8,7 +8,8 @@ App.module.extend('editor', function() {
 
     this.init = function() {
         //
-        Model.set('editor_data', '').watch('editor_data', this.renderEditorData);
+        // Model.set('editor_data', '').watch('editor_data', this.renderEditorData);
+        Model.set('content', '').watch('content', this.renderEditorData);
         //
         let currentData = this.module.data.currentData.get();
         if (currentData) {

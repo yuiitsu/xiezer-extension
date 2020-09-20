@@ -24,6 +24,30 @@ App.module.extend('component', function() {
         return true;
     };
 
+    this.timeToStr = function(timestamp) {
+        if (!timestamp) {
+            return '';
+        }
+        let date = new Date(parseInt(timestamp)), 
+            year = date.getFullYear(), 
+            month = date.getMonth() + 1, 
+            d = date.getDate(), 
+            h = date.getHours(), 
+            m = date.getMinutes(), 
+            s = date.getSeconds();
+        //
+        return year + '-' 
+            + (month < 10 ? '0' + month : month) 
+            + '-' 
+            + (d < 10 ? '0' + d : d) 
+            + ' ' 
+            + (h < 10 ? '0' + h : h) 
+            + ':' 
+            + (m < 10 ? '0' + m : m) 
+            + ':' 
+            + (s < 10 ? '0' + s  : s);
+    };
+
     /**
      * 提示
      * @param focus

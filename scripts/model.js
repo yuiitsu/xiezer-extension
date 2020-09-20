@@ -5,6 +5,7 @@
 let Model = {
     default: {},
     data: {},
+    subscribe: {},
 
     /**
      * set data
@@ -47,10 +48,25 @@ let Model = {
      */
     watch: function(target, callback) {
         let _this = this;
+        //
+        if (!this.subscribe.hasOwnProperty(target)) {
+            this.subscribe[target] = [];
+        }
+        this.subscribe[target].push(callback);
+        //
         Object.defineProperty(this.default, target, {
             set: function(value) {
                 _this.data[target] = value;
-                callback(value);
+                // _this.subscribe[target].forEach(function(item, index) {
+                //     if (typeof item === 'function') {
+                //         item(value);
+                //     }
+                // });
+                _this.subscribe[target].forEach(item => {
+                    if (typeof item === 'function') {
+                        item(value);
+                    }
+                });
                 // let value_type = Object.prototype.toString.call(value);
                 // let target_type = Object.prototype.toString.call(_this.data[target]);
                 // if (value_type !== target_type) {

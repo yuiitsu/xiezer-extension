@@ -9,6 +9,12 @@ App.module.extend('data', function() {
         db = null, 
         currentDataKey = 'currentData';
 
+    //
+    Model.default = {
+        action: 'new',
+        currentNote: {}
+    }
+
     this.init = function() {
         //
         this.openDb();
@@ -66,9 +72,13 @@ App.module.extend('data', function() {
         //
         data['notebook'] = Model.get('noteBookId');
         let request = null, 
-            noteId = Model.get('noteId');
-        if (noteId) {
+            noteId = Model.get('noteId'), 
+            action = Model.get('action'), 
+            currentNote = Model.get('currentNote');
+        //
+        if (noteId && action === 'update') {
             data['noteId'] = parseInt(noteId);
+            data['createAt'] = currentNote['createAt'];
             request = db.transaction(['notes'], 'readwrite')
                 .objectStore('notes')
                 .put(data);
@@ -88,9 +98,9 @@ App.module.extend('data', function() {
                 self.log('add data error.')
             };
         } else {
-            // data['noteId'] = self._uuid();
             self.getNoteCount(null, function(count) {
                 data['noteId'] = count + 1;
+                data['createAt'] = new Date().getTime();
                 request = db.transaction(['notes'], 'readwrite')
                     .objectStore('notes')
                     .add(data);
@@ -195,7 +205,8 @@ App.module.extend('data', function() {
             if (cursor) {
                 result.push({
                     id: cursor.key,
-                    title: cursor.value.title
+                    title: cursor.value.title,
+                    createAt: self.module.component.timeToStr(cursor.value.createAt)
                 });
                 cursor.continue();
             } else {
@@ -213,10 +224,10 @@ App.module.extend('data', function() {
         request.onsuccess = function (e) {
             var result = e.target.result;
             if (result) {
-                self.log('data existed.');
-                self.log(result);
+                Model.set('action', 'update');
                 Model.set('content', result.content);
-                Model.set('editor_data', result.content);
+                Model.set('currentNote', result);
+                // Model.set('editor_data', result.content);
             } else {
                 // 
                 self.log('data not existed.');

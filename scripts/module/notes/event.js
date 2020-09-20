@@ -9,9 +9,8 @@ App.event.extend('notes', function() {
         newNote: function() {
             $('#notes-new-button').on('click', function() {
                 let content = '# Untitled\n';
+                Model.set('action', 'new');
                 Model.set('note', content);
-                // Model.set('content', content);
-                // $('.editor-content').val(content);
             });
         },
         openNote: function() {

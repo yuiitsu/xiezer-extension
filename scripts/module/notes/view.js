@@ -41,7 +41,17 @@ App.view.extend('notes', function() {
             {{ if data && data.length > 0 }}
             {{ for var i in data }}
             {{ var item = data[i] }}
-            <div class="notes-item" data-id="{{ item['id'] }}">{{ item['title'] }}</div>
+            <div class="notes-item" data-id="{{ item['id'] }}">
+                <div class="notes-name">{{ item['title'] }}</div>
+                <div class="notes-bottom display-flex-row">
+                    <div class="display-flex-auto notes-time">{{ item['createAt'] }}</div>
+                    <div class="notes-bottom-action">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
             {{ end }}
             {{ else }}
             <div class="notes-empty">Nothing</div>
