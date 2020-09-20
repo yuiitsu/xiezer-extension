@@ -10,8 +10,8 @@ App.event.extend('notes', function() {
             $('#notes-new-button').on('click', function() {
                 let content = '# Untitled\n';
                 Model.set('note', content);
-                Model.set('content', content);
-                $('.editor-content').val(content);
+                // Model.set('content', content);
+                // $('.editor-content').val(content);
             });
         },
         openNote: function() {

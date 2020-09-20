@@ -80,6 +80,8 @@ App.module.extend('data', function() {
                 } else {
                     self.readAllNotes();
                 }
+                //
+                Model.set('noteId', data['noteId']);
             };
             //
             request.onerror = function() {
@@ -100,6 +102,7 @@ App.module.extend('data', function() {
                     } else {
                         self.readAllNotes();
                     }
+                    Model.set('noteId', data['noteId']);
                 };
                 //
                 request.onerror = function() {
