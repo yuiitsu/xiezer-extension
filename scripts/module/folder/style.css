@@ -88,6 +88,10 @@
     margin-top: -4px;
 }
 
+.folder-child {
+    position: relative;
+}
+
 .folder-child.focus {
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -98,6 +102,12 @@
 
 .folder-child:hover .folder-item-action {
     visibility: visible;
+}
+
+.folder-new-note-close {
+    position: absolute;
+    top: 8px;
+    right: 0;
 }
 
 .folder-item {

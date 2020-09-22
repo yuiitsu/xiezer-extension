@@ -14,24 +14,15 @@ App.event.extend('folder', function() {
             });
         },
 
-        showForm: function() {
+        newNoteBook: function() {
             $('.notes-container').on('click', '.folder-add', function() {
-                let parent = $(this).attr('data-parent');
-                self.view.append('folder', 'form', {});
-                //
-                let target = $('#folderForm');
-                target.modal('show');
-                //
-                target.find('#folderSaveButton').on('click', function() {
-                    let name = $.trim($('#notebook-name').val());
-                    if (!name) {
-                        return false;
-                    }
-                    //
-                    self.module.data.saveNoteBook(name, function() {
-                        target.modal('dispose');
-                    });
-                });
+                $('#folder-list').prepend(self.view.getView('folder', 'newNoteBook', {}));
+            });
+        },
+
+        closeNewNoteBook: function() {
+            $('.notes-container').on('click', '.folder-new-note-close', function() {
+                $(this).parent().remove();
             });
         },
 
@@ -84,23 +75,32 @@ App.event.extend('folder', function() {
                 let noteBookId = target.attr('data-id'), 
                     originalName = target.attr('data-name'), 
                     name = $.trim(target.val());
+                
                 //
-                if (!name) {
-                    return false;
+                if (noteBookId) {
+                    //
+                    if (!name) {
+                        return false;
+                    }
+                    // update
+                    if (name !== originalName) {
+                        self.log('do update');
+                        self.module.data.updateNoteBook({
+                            noteBookId: noteBookId,
+                            name: name
+                        }, function() {});
+                    }
+                } else {
+                    if (name) {
+                        // add
+                        self.module.data.saveNoteBook(name, function() {
+
+                        });
+                    } else {
+                        // pass
+                        target.parent().parent().parent().remove();
+                    }
                 }
-                //
-                if (name !== originalName) {
-                    self.log('do update');
-                    self.module.data.updateNoteBook({
-                        noteBookId: noteBookId,
-                        name: name
-                    }, function() {});
-                }
-                //
-                self.view.display('folder', 'list_item', {
-                    id: noteBookId,
-                    name: name
-                }, target.parent().parent().parent());
             };
             //
             $('#folder-list').on('keydown', '.folder-item-edit-input', function(e) {
