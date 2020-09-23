@@ -14,7 +14,8 @@ App.module.extend('data', function() {
         action: 'new',
         currentNote: {},
         showToc: false,
-        showNoteBook: false
+        showNoteBook: false,
+        scrollMaster: 'editor'
     }
 
     this.init = function() {

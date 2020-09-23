@@ -12,6 +12,8 @@ App.module.extend('editor', function() {
         Model.set('editorCharactersCount', 0).watch('editorCharactersCount', this.renderCharactersCount);
         Model.set('editorAutoSaved', '').watch('editorAutoSaved', this.renderAutoSaved);
         Model.set('content', '').watch('content', this.renderEditorData);
+        Model.set('editorScrollTop', 0).watch('editorScrollTop', this.renderScrollTop);
+        //
         self.view.display('editor', 'layout', {content: ''}, $('#editor'));
     };
 
@@ -44,5 +46,13 @@ App.module.extend('editor', function() {
         } else {
             container.html('');
         }
+    };
+
+    this.renderScrollTop = function(percent) {
+        let target = $('.editor-content'), 
+            scrollHeight = target.prop('scrollHeight'), 
+            scrollTop = scrollHeight * percent;
+        //
+        $('.editor-content').animate({scrollTop: scrollTop}, 0);
     };
 });

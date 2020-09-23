@@ -74,6 +74,23 @@ App.event.extend('editor', function() {
                 self.save();
             });
         },
+        scroll: function() {
+            //
+            $('.editor-content').mouseenter(function() {
+                Model.set('scrollMaster', 'editor');
+            });
+            //
+            $('.editor-content').scroll(function() {
+                let scrollMaster = Model.get('scrollMaster');
+                if (scrollMaster !== 'editor') {
+                    return false;
+                }
+                let scrollHeight = $(this).prop('scrollHeight'), 
+                    scrollTop = $(this).prop('scrollTop');
+                //
+                Model.set('previewerScrollTop', scrollHeight > 0 ? scrollTop / scrollHeight : 0);
+            });
+        }
         // clickTab: function() {
         //     $('.editor-content').on('keydown', function(e) {
         //         if (e.key === 'Tab') {

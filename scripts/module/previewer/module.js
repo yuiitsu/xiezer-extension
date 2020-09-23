@@ -14,6 +14,7 @@ App.module.extend('previewer', function() {
         Model.set('content', '').watch('content', this.renderContent);
         Model.set('toc', '').watch('toc', this.renderToc);
         Model.watch('showToc', this.renderTocIcon);
+        Model.set('previewerScrollTop', 0).watch('previewerScrollTop', this.renderScrollTop);
         //
         this.view.display('previewer', 'layout', {}, $('#previewer-container'));
         //
@@ -53,5 +54,13 @@ App.module.extend('previewer', function() {
         } else {
             target.removeClass('focus');
         }
-    }
+    };
+
+    this.renderScrollTop = function(percent) {
+        let target = $('#previewer'), 
+            scrollHeight = target.prop('scrollHeight'), 
+            scrollTop = scrollHeight * percent;
+        //
+        $('#previewer').animate({scrollTop: scrollTop}, 0);
+    };
 });
