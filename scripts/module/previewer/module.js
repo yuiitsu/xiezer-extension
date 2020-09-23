@@ -22,15 +22,14 @@ App.module.extend('previewer', function() {
     };
 
     this.renderContent = function(content) {
-        if (!content) {
-            return false;
+        //
+        if (content) {
+            $('#previewer').html(self.md.render(content));
+            //
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
         }
-        //
-        $('#previewer').html(self.md.render(content));
-        //
-        document.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightBlock(block);
-        });
         //
         Model.set('toc', new Date().getTime());
     };

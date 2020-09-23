@@ -19,6 +19,12 @@ ol, ul, p {
     margin-bottom: 1rem;
 }
 
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
 .hide {
     display: none;
 }
