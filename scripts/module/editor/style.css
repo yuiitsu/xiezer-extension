@@ -38,3 +38,19 @@
     resize:none;
     font-size: 18px;
 }
+
+.editor-entity-status-bar {
+    padding: 10px 20px;
+    border-top: 1px solid #efefef;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.editor-entity-autosave-status {
+    color: #009900;
+}
+
+.editor-entity-autosave-status svg {
+    margin-bottom: -3px;
+    margin-right: 5px;
+}

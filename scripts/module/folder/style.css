@@ -8,7 +8,8 @@
     color: #fff;
     font-weight: 700;
     background-color: rgba(201, 69, 54, 1);
-    padding: 10px;
+    padding: 9px 10px;
+    height: 45px;
 }
 
 .logo {
@@ -23,9 +24,6 @@
     margin-right: 8px;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.25);
-}
-
-.logo svg {
 }
 
 .setting-icon {
@@ -88,10 +86,6 @@
     margin-top: -4px;
 }
 
-.folder-child {
-    position: relative;
-}
-
 .folder-child.focus {
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -104,16 +98,36 @@
     visibility: visible;
 }
 
+.folder-new-note-book {
+    position: relative;
+}
+
 .folder-new-note-close {
     position: absolute;
     top: 8px;
     right: 0;
 }
 
+.folder-child-extend-icon {
+    display: inline-block;
+    padding: 9px 0 0 5px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.visibility-hide {
+    visibility: hidden;
+}
+
+.folder-child-extend-icon:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
 .folder-item {
     padding: 5px;
-    padding-left: 21px;
+    /* padding-left: 21px; */
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .folder-item-action {
@@ -133,6 +147,10 @@
 
 .folder-item-action-list svg {
     margin-top: -3px;
+}
+
+.folder-child2 .folder-item {
+    padding-left: 42px;
 }
 
 .folder-item-edit-container {

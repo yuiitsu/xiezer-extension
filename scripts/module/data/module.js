@@ -7,7 +7,8 @@ App.module.extend('data', function() {
     let self = this, 
         dbName = 'xiezer',
         db = null, 
-        currentDataKey = 'currentData';
+        currentDataKey = 'currentData', 
+        noteBookSwitch = {};
 
     //
     Model.default = {
@@ -42,11 +43,11 @@ App.module.extend('data', function() {
         //
         request.onupgradeneeded = function(event) {
             db = event.target.result;
-            // self.initDb(db);
             let objectStore;
             if (!db.objectStoreNames.contains('notebooks')) {
                 objectStore = db.createObjectStore('notebooks', { keyPath: 'noteBookId' });
                 objectStore.createIndex('name', 'name', { unique: true });
+                objectStore.createIndex('parentId', 'parentId', { unique: false });
             }
             //
             if (!db.objectStoreNames.contains('notes')) {
@@ -91,7 +92,7 @@ App.module.extend('data', function() {
                     self.readAllNotes();
                 }
                 //
-                Model.set('noteId', data['noteId']);
+                // Model.set('noteId', data['noteId']);
             };
             //
             request.onerror = function() {
@@ -122,14 +123,17 @@ App.module.extend('data', function() {
         }
     };
 
-    this.saveNoteBook = function(name, callback) {
-
-        this.getNoteBook(name, function() {
+    /**
+     * @param {*} data 
+     *  data.name
+     *  data.parentId
+     * @param {*} callback 
+     */
+    this.saveNoteBook = function(data, callback) {
+        this.getNoteBook(data.name, function() {
             let noteBookId = self._uuid();
-            let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').add({
-                noteBookId: noteBookId,
-                name: name
-            });
+            data['noteBookId'] = noteBookId;
+            let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').add(data);
             request.onsuccess = function() {
                 self.log('add Notebook success.');
                 //
@@ -146,7 +150,9 @@ App.module.extend('data', function() {
     this.updateNoteBook = function(data, callback) {
         let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').put({
             noteBookId: data.noteBookId,
-            name: data.name
+            name: data.name,
+            parentId: data.parentId,
+            showChildren: data.showChildren
         });
         request.onsuccess = function() {
             self.log('update Notebook success.');
@@ -161,13 +167,13 @@ App.module.extend('data', function() {
     };
 
     this.getNoteBook = function(name, callback) {
-        var transaction = db.transaction(['notebooks'], 'readonly');
-        var store = transaction.objectStore('notebooks');
-        var index = store.index('name');
-        var request = index.get(name);
+        let transaction = db.transaction(['notebooks'], 'readonly');
+        let store = transaction.objectStore('notebooks');
+        let index = store.index('name');
+        let request = index.get(name);
         //
         request.onsuccess = function (e) {
-            var result = e.target.result;
+            let result = e.target.result;
             if (result) {
                 self.log('data existed.');
             } else {
@@ -177,21 +183,51 @@ App.module.extend('data', function() {
         }
     };
 
+    this.deleteNoteBook = function(noteBookId, callback) {
+        let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').delete(noteBookId);
+        request.onsuccess = function() {
+            self.readAllNoteBooks();
+            callback();
+        };
+    };
+
     this.readAllNoteBooks = function() {
         let objectStore = db.transaction('notebooks').objectStore('notebooks'), 
-            result = [];
+            result = [], 
+            o = {};
         //
         objectStore.openCursor().onsuccess = function (event) {
-            var cursor = event.target.result;
+            let cursor = event.target.result; 
             if (cursor) {
-                result.push({
-                    id: cursor.key,
-                    name: cursor.value.name
-                });
+                let id = cursor.key, 
+                    parentId = cursor.value.parentId, 
+                    name = cursor.value.name, 
+                    showChildren = cursor.value.showChildren ? cursor.value.showChildren : '1',
+                    d = {
+                        id: id,
+                        parentId: parentId,
+                        name: name,
+                        showChildren: showChildren,
+                        children: []
+                    };
+                //
+                if (!parentId) {
+                    o[id] = [];
+                    result.push(d);
+                } else {
+                    o[parentId].push(d);
+                }
+                //
                 cursor.continue();
             } else {
-                self.log(result);
+                //
+                for (let i = 0; i < result.length; i++) {
+                    if (o[result[i]['id']]) {
+                        result[i]['children'] = o[result[i]['id']];
+                    }
+                }
                 Model.set('notebooks', result);
+                self.log(result);
             }
         };
     };
@@ -210,8 +246,8 @@ App.module.extend('data', function() {
                 });
                 cursor.continue();
             } else {
-                self.log(result);
                 Model.set('notes', result);
+                self.log(result);
             }
         };
     };
@@ -227,7 +263,7 @@ App.module.extend('data', function() {
                 Model.set('action', 'update');
                 Model.set('content', result.content);
                 Model.set('currentNote', result);
-                // Model.set('editor_data', result.content);
+                Model.set('editorData', result.content);
             } else {
                 // 
                 self.log('data not existed.');
@@ -253,13 +289,16 @@ App.module.extend('data', function() {
             var cursor = e.target.result;
             if (cursor) {
                 result.push({
-                    id: cursor.key,
-                    title: cursor.value.title
+                    id: cursor.value.noteId,
+                    title: cursor.value.title,
+                    createAt: self.module.component.timeToStr(cursor.value.createAt)
                 });
                 cursor.continue();
+            } else {
+                Model.set('notes', result);
+                self.log(result);
+                self.readAllNoteBooks();
             }
-            Model.set('notes', result);
-            self.readAllNoteBooks();
         }
     };
 

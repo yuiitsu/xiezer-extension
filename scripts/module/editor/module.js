@@ -8,15 +8,11 @@ App.module.extend('editor', function() {
 
     this.init = function() {
         //
-        // Model.set('editor_data', '').watch('editor_data', this.renderEditorData);
+        Model.set('editorData', '').watch('editorData', this.renderEditorData);
+        Model.set('editorCharactersCount', 0).watch('editorCharactersCount', this.renderCharactersCount);
+        Model.set('editorAutoSaved', '').watch('editorAutoSaved', this.renderAutoSaved);
         Model.set('content', '').watch('content', this.renderEditorData);
-        //
-        let currentData = this.module.data.currentData.get();
-        if (currentData) {
-            Model.set('content', currentData);
-            Model.set('editor_data', currentData);
-        }
-        self.view.display('editor', 'layout', {content: currentData ? currentData : ''}, $('#editor'));
+        self.view.display('editor', 'layout', {content: ''}, $('#editor'));
     };
 
     this.previewNote = function(content) {
@@ -28,6 +24,25 @@ App.module.extend('editor', function() {
     };
 
     this.renderEditorData = function(data) {
+        //
+        self.event.editor.clearTimer();
+        //
         $('.editor-content').val(data);
+        //
+        Model.set('editorCharactersCount', data.length);
+        Model.set('editorAutoSaved', '');
+    };
+
+    this.renderCharactersCount = function(n) {
+        $('.editor-entity-characters-count').find('span').text(n);
+    };
+
+    this.renderAutoSaved = function(savedAt) {
+        let container = $('.editor-entity-autosave-status');
+        if (savedAt) {
+            self.view.display('editor', 'autoSavedTips', {savedAt: savedAt}, container);
+        } else {
+            container.html('');
+        }
     };
 });

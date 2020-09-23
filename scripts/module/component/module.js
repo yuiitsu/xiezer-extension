@@ -26,7 +26,7 @@ App.module.extend('component', function() {
 
     this.timeToStr = function(timestamp) {
         if (!timestamp) {
-            return '';
+            timestamp = new Date().getTime();
         }
         let date = new Date(parseInt(timestamp)), 
             year = date.getFullYear(), 

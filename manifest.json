@@ -41,7 +41,6 @@
         "tabs",
         "cookies",
         "contextMenus",
-        "fontSettings",
         "http://*/*",
         "https://*/*"
     ]

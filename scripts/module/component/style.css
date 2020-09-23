@@ -1,5 +1,5 @@
 /* tips */
-#tips-box{border-radius: 8px;padding: 10px;position: absolute;
+#tips-box{border-radius: 3px;padding: 10px;position: absolute;
     left:0;top:0;background-color: #fff;}
 .tips-array{position: absolute;width:8px;height:8px;display: none;}
 
@@ -53,8 +53,8 @@
 /* dialog */
 .dialog{position: relative;left:0;top:0;}
 .dialog-content{position: fixed;left:50%;top:50%;transform: translate(-50%, -50%);width:450px;background-color:#fff;
-    border: 1px solid #ddd;border-radius: 5px;padding: 10px;}
-.dialog-header{height:30px;}
-.dialog-msg{line-height:1.6;margin-bottom:20px;}
-.dialog-action{height:30px;text-align: center;}
+    border: 1px solid #ddd;border-radius: 5px;padding: 20px;}
+.dialog-header{height:30px;font-size: 16px;}
+.dialog-msg{line-height:1.6;padding: 20px 0;}
+.dialog-action{height: 30px;text-align: center;}
 .dialog-action-button{display: inline-block;width:100px;margin:0 5px;}

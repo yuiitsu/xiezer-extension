@@ -21,11 +21,52 @@
     height: 100%;
     overflow: hidden;
 }
-.edit-container {
-}
+
 .preview-container {
     overflow: hidden;
 }
 
-.setting-container {
+.toc-container {
+    width: 200px;
+    color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+}
+
+.toc-container .header {
+    height: 45px;
+    line-height: 45px;
+    padding: 0 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.toc-content {
+    padding: 20px 10px 20px 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.toc {
+    padding: 5px 10px;
+    line-height: 1.6;
+    cursor: pointer;
+}
+
+.toc:hover {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.toc-H2 {
+    padding-left: 20px;
+}
+
+.toc-H3 {
+    padding-left: 30px;
+}
+
+.toc-H4 {
+    padding-left: 40px;
+}
+
+.toc-H5 {
+    padding-left: 50px;
 }

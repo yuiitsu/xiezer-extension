@@ -13,6 +13,7 @@ App.view.extend('init', function() {
                     <div class="viewpoint display-flex display-flex-row display-flex-auto">
                         <div id="editor" class="edit-container display-flex-auto"></div>
                         <div id="previewer-container" class="preview-container display-flex-auto"></div>
+                        <div id="toc" class="toc-container display-flex-column"></div>
                     </div>
                 </div>
             </div>

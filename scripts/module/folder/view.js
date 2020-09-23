@@ -83,8 +83,8 @@ App.view.extend('folder', function() {
 
     this.newNoteBook = function() {
         return `
-            <div class="folder-child display-flex display-flex-row">
-                {{ this.view.getView('folder', 'list_item_edit', {id: '', name: ''}) }}
+            <div class="folder-child display-flex display-flex-row folder-new-note-book">
+                {{ this.view.getView('folder', 'list_item_edit', {id: '', name: '', parentId: data.parentId ? data.parentId : ''}) }}
                 <div class="folder-new-note-close">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -99,9 +99,38 @@ App.view.extend('folder', function() {
             {{ for var i in data.list }}
             {{ var item = data.list[i] }}
             {{ var focus = item.id === data.selectedNoteBookId ? 'focus': '' }}
+            {{ var childrenShow = item['children'].length > 0 ? 'visibility-show' : 'visibility-hide' }}
             <div class="folder-child display-flex display-flex-row {{ focus }}">
+                <div class="folder-child-extend-icon {{ childrenShow }}" data-id="{{ item['id'] }}" data-name="{{ item['name'] }}" data-show-children="{{ item['showChildren'] }}">
+                    {{ if item['showChildren'] === '1' }}
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                    {{ else }}
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                    {{ end }}
+                </div>
                 {{ this.view.getView('folder', 'list_item', item) }}
             </div>
+            {{ if item['children'].length > 0 && item['showChildren'] === '1' }}
+            {{ var children = item['children'] }}
+            {{ for var j in children }}
+            {{ var child = children[j] }}
+            {{ var focus = child.id === data.selectedNoteBookId ? 'focus': '' }}
+            <div class="folder-child folder-child2 display-flex display-flex-row {{ focus }}">
+                <div class="folder-item display-flex-auto" data-id="{{ child['id'] }}" data-parent-id="{{ child['parentId'] }}">{{ child['name'] }}</div>
+                <div class="folder-item-action">
+                    <div class="folder-action-item folder-action-item-more" data-id="{{ child['id'] }}">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+            {{ end }}
             {{ end }}
         `;
     };
@@ -115,7 +144,7 @@ App.view.extend('folder', function() {
                         <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                     </svg>
                 </div>
-                <div class="folder-action-item">
+                <div class="folder-action-item folder-add-child" data-id="{{ data['id'] }}">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
@@ -128,7 +157,7 @@ App.view.extend('folder', function() {
         return `
             <div class="folder-item-edit-container">
                 <div class="folder-item-edit display-flex-row">
-                    <input type="text" class="folder-item-edit-input display-flex-auto" data-id="{{ data['id'] }}" data-name="{{ data.name }}" value="{{ data.name }}" />
+                    <input type="text" class="folder-item-edit-input display-flex-auto" data-id="{{ data['id'] }}" data-parent-id="{{ data.parentId }}" data-name="{{ data.name }}" value="{{ data.name }}" />
                     <div class="folder-item-edit-save-button">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-return-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
