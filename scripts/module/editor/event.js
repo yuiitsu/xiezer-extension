@@ -4,20 +4,24 @@
 App.event.extend('editor', function() {
 
     let self = this, 
-        timer = null;
+        autoSaveTimer = null, 
+        hideAutoSavedTimer = null;
 
     this.autoSave = function() {
-        if (timer) {
+        if (autoSaveTimer) {
             self.log('clear auto save timer');
-            clearTimeout(timer);
+            clearTimeout(autoSaveTimer);
         }
         self.log('set auto save timer');
-        timer = setTimeout(function() {
+        autoSaveTimer = setTimeout(function() {
             self.save();
         }, 2000);
     };
 
     this.save = function() {
+        //
+        clearTimeout(hideAutoSavedTimer);
+        //
         let content = $.trim($('.editor-content').val());
         if (!content) {
             return false;
@@ -25,23 +29,44 @@ App.event.extend('editor', function() {
         self.module.editor.saveNote(content);
         self.log('auto save: ', content);
         Model.set('editorAutoSaved', self.module.component.timeToStr());
+        //
+        hideAutoSavedTimer = setTimeout(function() {
+            $('.editor-entity-autosave-status').html('');
+        }, 3000);
     };
 
     this.clearTimer = function() {
         self.log('clearTimer');
-        clearTimeout(timer);
+        clearTimeout(autoSaveTimer);
     };
 
     this.event = {
         contentChange: function() {
-            $('.editor-content').on('input', function() {
-                let content = $.trim($(this).val());
+            $('.editor-content').on('input', function(e) {
+                let content = $(this).val();
                 if (!content) {
                     return false;
                 }
                 self.module.editor.previewNote(content);
                 //
                 self.autoSave();
+            });
+
+            $('.editor-content').on('keydown', function(e) {
+                if (e.keyCode === 13) {
+                    //
+                    let el = $(this).get(0), 
+                        currentPosition = el.selectionStart, 
+                        content = $(this).val();
+                    //
+                    content = content.substr(0, currentPosition) + '\n' + content.substr(currentPosition);
+                    $(this).val(content);
+                    el.focus();
+                    el.setSelectionRange(currentPosition + 1, currentPosition + 1);
+                    //
+                    self.autoSave();
+                    return false;
+                }
             });
         },
         save: function() {

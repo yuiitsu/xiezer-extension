@@ -25,7 +25,7 @@ App.view.extend('editor', function() {
                     </div>
                 </div>
                 <div class="editor-entity display-flex-auto">
-                    <textarea class="editor-content" placeholder="Here is the content">{{ data.content }}</textarea>
+                    <textarea class="editor-content" placeholder="Here is the content" spellcheck="false">{{ data.content }}</textarea>
                 </div>
                 <div class="editor-entity-status-bar display-flex-row">
                     <div class="display-flex-auto editor-entity-autosave-status"></div>

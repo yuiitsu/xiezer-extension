@@ -4,7 +4,7 @@
 }
 .folder-container {
     height: 100%;
-    width: 250px;
+    width: 200px;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -69,4 +69,22 @@
 
 .toc-H5 {
     padding-left: 50px;
+}
+
+.folder-mini {
+    position: absolute;
+    left: 0;
+    bottom: 37px;
+    width: 35px;
+    background: rgba(201, 69, 54, 0.8);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+    padding: 10px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    cursor: pointer;
+}
+
+.folder-mini:hover {
+    background: rgba(201, 69, 54, 1);
 }

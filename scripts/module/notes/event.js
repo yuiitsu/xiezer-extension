@@ -21,6 +21,9 @@ App.event.extend('notes', function() {
                 }
                 //
                 Model.set('noteId', noteId);
+                //
+                $('.notes-item').removeClass('focus');
+                $(this).addClass('focus');
             });
         }
     }

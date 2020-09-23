@@ -7,13 +7,14 @@ App.module.extend('data', function() {
     let self = this, 
         dbName = 'xiezer',
         db = null, 
-        currentDataKey = 'currentData', 
-        noteBookSwitch = {};
+        currentDataKey = 'currentData';
 
     //
     Model.default = {
         action: 'new',
-        currentNote: {}
+        currentNote: {},
+        showToc: false,
+        showNoteBook: false
     }
 
     this.init = function() {
@@ -211,8 +212,11 @@ App.module.extend('data', function() {
                         children: []
                     };
                 //
+                if (parentId && !o[parentId]) {
+                    o[parentId] = [];
+                }
                 if (!parentId) {
-                    o[id] = [];
+                    // o[id] = [];
                     result.push(d);
                 } else {
                     o[parentId].push(d);
@@ -242,7 +246,7 @@ App.module.extend('data', function() {
                 result.push({
                     id: cursor.key,
                     title: cursor.value.title,
-                    createAt: self.module.component.timeToStr(cursor.value.createAt)
+                    createAt: cursor.value.createAt ? self.module.component.timeToStr(cursor.value.createAt) : ''
                 });
                 cursor.continue();
             } else {

@@ -7,27 +7,41 @@ App.event.extend('folder', function() {
         clickTimer = null, 
         dbClick = false;
 
+    this.setNoteBookSwitch = function(status) {
+        Model.set('showNoteBook', status);
+    }
+
     this.event = {
         showOff: function() {
+            //
             $('.bottom-bar-switch-button').on('click', function() {
-                $('.folder-main').parent().hide();
+                $('#folder').hide();
+                $('.folder-mini').show();
+                //
+                self.setNoteBookSwitch(false); 
+            });
+            //
+            $('.folder-mini').on('click', function() {
+                $('#folder').show();
+                $(this).hide();
+                self.setNoteBookSwitch(true); 
             });
         },
 
         newNoteBook: function() {
             // level 1
-            $('.notes-container').on('click', '.folder-add', function() {
+            $('.notebooks-container').on('click', '.folder-add', function() {
                 $('#folder-list').prepend(self.view.getView('folder', 'newNoteBook', {}));
             });
             // level 2
-            $('.notes-container').on('click', '.folder-add-child', function() {
+            $('.notebooks-container').on('click', '.folder-add-child', function() {
                 let parentId = $(this).attr('data-id');
                 $(this).parent().parent().after(self.view.getView('folder', 'newNoteBook', {parentId: parentId}));
             });
         },
 
         closeNewNoteBook: function() {
-            $('.notes-container').on('click', '.folder-new-note-close', function() {
+            $('.notebooks-container').on('click', '.folder-new-note-close', function() {
                 $(this).parent().remove();
             });
         },

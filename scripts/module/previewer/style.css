@@ -5,6 +5,10 @@
     font-size: 18px;
 }
 
+.previewer-main #toc-switch.focus {
+    color: rgba(201, 69, 54, 1);
+}
+
 .previewer-enity {
     padding: 20px;
     overflow-y: auto;
@@ -24,6 +28,11 @@
     border: 1px solid #eee;
     padding: 10px;
     background-color: #efefef;
+    font-family: inherit;
+}
+
+.previewer-main pre code {
+    font-family: inherit;
 }
 
 .previewer-main dl, .previewer-main ol, .previewer-main ul {
@@ -39,6 +48,7 @@
     padding-left: 10px;
     color: #999;
     margin: 0;
+    margin-bottom: 1rem;
 }
 
 .previewer-main blockquote p {

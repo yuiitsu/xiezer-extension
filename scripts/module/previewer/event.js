@@ -6,7 +6,12 @@ App.event.extend('prviewer', function() {
     let self = this;
 
     this.event = {
-        contentChange: function() {
+        switchToc: function() {
+            $('#toc-switch').on('click', function() {
+                let showToc = Model.get('showToc');
+                Model.set('showToc', !showToc);
+                localStorage.setItem('showToc', !showToc);
+            });
         }
     }
 });

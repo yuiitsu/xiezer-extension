@@ -9,6 +9,14 @@ App.view.extend('init', function() {
             <div class="display-flex display-flex-column main-container">
                 <div class="viewpoint-container display-flex display-flex-row display-flex-auto">
                     <div id="folder" class="folder-container"></div>
+                    <div class="folder-mini display-flex-row" style="display:none">
+                        <div class="display-flex-auto folder-mini-item folder-mini-logo">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-vector-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.646.646a.5.5 0 0 1 .708 0l4 4a.5.5 0 0 1 0 .708l-1.902 1.902-.829 3.313a1.5 1.5 0 0 1-1.024 1.073L1.254 14.746 4.358 4.4A1.5 1.5 0 0 1 5.43 3.377l3.313-.828L10.646.646zm-1.8 2.908l-3.173.793a.5.5 0 0 0-.358.342l-2.57 8.565 8.567-2.57a.5.5 0 0 0 .34-.357l.794-3.174-3.6-3.6z"/>
+                                <path fill-rule="evenodd" d="M2.832 13.228L8 9a1 1 0 1 0-1-1l-4.228 5.168-.026.086.086-.026z"/>
+                            </svg> 
+                        </div>
+                    </div>
                     <div id="notes" class="notes-container"></div>
                     <div class="viewpoint display-flex display-flex-row display-flex-auto">
                         <div id="editor" class="edit-container display-flex-auto"></div>

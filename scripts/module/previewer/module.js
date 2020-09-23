@@ -13,13 +13,18 @@ App.module.extend('previewer', function() {
         //
         Model.set('content', '').watch('content', this.renderContent);
         Model.set('toc', '').watch('toc', this.renderToc);
+        Model.watch('showToc', this.renderTocIcon);
         //
         this.view.display('previewer', 'layout', {}, $('#previewer-container'));
+        //
+        let showToc = localStorage.getItem('showToc');
+        Model.set('showToc', showToc === 'true' ? true : false);
     };
 
     this.renderContent = function(content) {
-        //
-        content = content ? content : '';
+        if (!content) {
+            return false;
+        }
         //
         $('#previewer').html(self.md.render(content));
         //
@@ -28,21 +33,6 @@ App.module.extend('previewer', function() {
         });
         //
         Model.set('toc', new Date().getTime());
-        //
-        // $('#previewer').html(markdown.toHTML(title + content));
-        //
-        // let $img = $('#previewer').find('img');
-        // if (images.length > 0) {
-        //     let i = 0;
-        //     $img.each(function() {
-        //         $(this).prop('outerHTML', images[i]);
-        //         i++;
-        //     });
-        // } 
-        // $img.each(function() {
-        //     // self.log($(this).prop('outerHTML'));
-        //     images.push($(this).prop('outerHTML'));
-        // });
     };
 
     this.renderToc = function() {
@@ -56,4 +46,13 @@ App.module.extend('previewer', function() {
         //
         self.view.display('previewer', 'toc', {list: toc}, $('#toc'));
     };
+
+    this.renderTocIcon = function(status) {
+        let target = $('#toc-switch');
+        if (status) {
+            target.addClass('focus');
+        } else {
+            target.removeClass('focus');
+        }
+    }
 });
