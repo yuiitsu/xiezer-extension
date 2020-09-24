@@ -86,9 +86,10 @@ App.event.extend('editor', function() {
                     return false;
                 }
                 let scrollHeight = $(this).prop('scrollHeight'), 
-                    scrollTop = $(this).prop('scrollTop');
+                    scrollTop = $(this).prop('scrollTop'), 
+                    clientHeight = $(this).outerHeight();
                 //
-                Model.set('previewerScrollTop', scrollHeight > 0 ? scrollTop / scrollHeight : 0);
+                Model.set('previewerScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
             });
         }
         // clickTab: function() {

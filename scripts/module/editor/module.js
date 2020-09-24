@@ -51,7 +51,8 @@ App.module.extend('editor', function() {
     this.renderScrollTop = function(percent) {
         let target = $('.editor-content'), 
             scrollHeight = target.prop('scrollHeight'), 
-            scrollTop = scrollHeight * percent;
+            clientHeight = target.outerHeight(),
+            scrollTop = (scrollHeight - clientHeight) * percent;
         //
         $('.editor-content').animate({scrollTop: scrollTop}, 0);
     };

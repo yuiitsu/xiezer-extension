@@ -47,7 +47,7 @@ button {outline: none;}
 .btn-default:hover{background-color:#ddd;}
 
 /* 设置滚动条的样式 */
-::-webkit-scrollbar {width:5px;height:10px;}
+::-webkit-scrollbar {width:5px;height:5px;}
 /* 滚动槽 */
 ::-webkit-scrollbar-track {box-shadow:rgba(0,0,0,0.3);border-radius:0;}
 /* 滚动条滑块 */

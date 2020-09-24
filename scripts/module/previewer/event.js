@@ -24,11 +24,11 @@ App.event.extend('prviewer', function() {
                 if (scrollMaster !== 'previewer') {
                     return false;
                 }
-                console.log($(this).prop('scrollHeight'), $(this).prop('scrollTop'));
                 let scrollHeight = $(this).prop('scrollHeight'), 
-                    scrollTop = $(this).prop('scrollTop');
+                    scrollTop = $(this).prop('scrollTop'), 
+                    clientHeight = $(this).outerHeight();
                 //
-                Model.set('editorScrollTop', scrollHeight > 0 ? scrollTop / scrollHeight : 0);
+                Model.set('editorScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
             });
         }
     }

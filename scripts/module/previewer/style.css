@@ -1,6 +1,7 @@
 .previewer-main {
     width: 100%;
     height: 100%;
+    line-height: 1.6;
     background-color: #fff;
     font-size: 18px;
 }
@@ -14,7 +15,7 @@
     overflow-y: auto;
 }
 
-.previewer-main h1, .previewer-main h2 {
+.previewer-main h1, .previewer-main h2, .previewer-main h3, .previewer-main h4, .previewer-main h5 {
     margin-bottom: 1rem;
     line-height: 1.5;
 }
@@ -29,6 +30,7 @@
     padding: 10px;
     background-color: #efefef;
     font-family: inherit;
+    margin-bottom: 1rem;
 }
 
 .previewer-main pre code {

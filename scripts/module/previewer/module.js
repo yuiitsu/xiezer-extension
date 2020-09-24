@@ -59,7 +59,8 @@ App.module.extend('previewer', function() {
     this.renderScrollTop = function(percent) {
         let target = $('#previewer'), 
             scrollHeight = target.prop('scrollHeight'), 
-            scrollTop = scrollHeight * percent;
+            clientHeight = target.outerHeight(),
+            scrollTop = (scrollHeight - clientHeight) * percent;
         //
         $('#previewer').animate({scrollTop: scrollTop}, 0);
     };
