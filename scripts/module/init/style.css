@@ -22,6 +22,10 @@
     overflow: hidden;
 }
 
+.editor-container {
+    /* min-width: 320px; */
+}
+
 .editor-previewer-container {
     height: 100%;
     width: 100%;
@@ -35,6 +39,7 @@
 
 .preview-container {
     overflow: hidden;
+    /* min-width: 320px; */
 }
 
 .toc-container {

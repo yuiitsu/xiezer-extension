@@ -14,6 +14,7 @@ App.module.extend('notes', function() {
         Model.set('isNotesEditMode', false).watch('isNotesEditMode', this.renderNotes);
         Model.set('notesChecked', []).watch('notesChecked', this.renderNotes);
         Model.watch('notesOrder', this.renderOrderIcon);
+        Model.watch('isNotesEditMode', this.renderEditIcon);
     };
 
     this.renderNotes = function() {
@@ -28,6 +29,15 @@ App.module.extend('notes', function() {
             notesChecked: notesChecked,
             isNotesEditMode: isNotesEditMode
         }, $('.notes-items'));
+    };
+
+    this.renderEditIcon = function(status) {
+        let target = $('#notes-header-action');
+        if (status) {
+            target.addClass('focus');
+        } else {
+            target.removeClass('focus');
+        }
     };
 
     this.renderOrderIcon = function(order) {

@@ -24,12 +24,14 @@ App.module.extend('previewer', function() {
 
     this.renderContent = function(content) {
         //
-        $('#previewer').html(self.md.render(content));
-        //
+        let container = $('#previewer');
         if (content) {
+            container.html(self.md.render(content));
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });
+        } else {
+            self.view.display('previewer', 'empty', {}, container);
         }
         //
         Model.set('toc', new Date().getTime());

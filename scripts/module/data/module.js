@@ -265,6 +265,7 @@ App.module.extend('data', function() {
                 //
                 Model.set('notes', result);
                 self.log(result);
+                self.readAllNoteBooks();
             }
         };
     };

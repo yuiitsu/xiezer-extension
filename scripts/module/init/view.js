@@ -21,7 +21,7 @@ App.view.extend('init', function() {
                     <div class="viewpoint display-flex display-flex-row display-flex-auto">
                         <div class="display-flex-auto display-flex-column editor-previewer-container">
                             <div class="display-flex-auto display-flex-row editor-column">
-                                <div id="editor" class="edit-container display-flex-auto"></div>
+                                <div id="editor" class="editor-container display-flex-auto"></div>
                                 <div id="previewer-container" class="preview-container display-flex-auto"></div>
                             </div>
                             <div class="editor-entity-status-bar display-flex-row">

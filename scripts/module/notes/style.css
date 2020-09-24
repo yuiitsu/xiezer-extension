@@ -27,6 +27,10 @@
     margin-right: 10px;
 }
 
+.notes-header-item.focus {
+    color: rgba(201, 69, 54, 0.9);
+}
+
 .notes-items {
     overflow: hidden;
     height: 100%;

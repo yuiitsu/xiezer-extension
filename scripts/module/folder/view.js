@@ -100,8 +100,8 @@ App.view.extend('folder', function() {
             {{ var item = data.list[i] }}
             {{ var focus = item.id === data.selectedNoteBookId ? 'focus': '' }}
             {{ var childrenShow = item['children'].length > 0 ? 'visibility-show' : 'visibility-hide' }}
-            <div class="folder-child display-flex display-flex-row {{ focus }}">
-                <div class="folder-child-extend-icon {{ childrenShow }}" data-id="{{ item['id'] }}" data-name="{{ item['name'] }}" data-show-children="{{ item['showChildren'] }}">
+            <div class="folder-child display-flex display-flex-row {{ focus }}" data-id="{{ item['id'] }}" data-name="{{ item['name'] }}" data-show-children="{{ item['showChildren'] }}">
+                <div class="folder-child-extend-icon {{ childrenShow }}">
                     {{ if item['showChildren'] === '1' }}
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
