@@ -24,9 +24,9 @@ App.module.extend('previewer', function() {
 
     this.renderContent = function(content) {
         //
+        $('#previewer').html(self.md.render(content));
+        //
         if (content) {
-            $('#previewer').html(self.md.render(content));
-            //
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });

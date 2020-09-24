@@ -160,6 +160,7 @@
 .folder-item-edit {
     background-color: #fff;
     padding: 0 5px;
+    border-radius: 1px;
 }
 
 .folder-item-edit input {
@@ -194,3 +195,27 @@
     cursor: pointer;
 }
 
+.folder-selector-container {
+    padding: 20px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.folder-selector-box {
+    min-height: 200px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.folder-selector-item  {
+    line-height: 1.6;
+    cursor: pointer;
+    border-bottom: 1px dotted #efefef;
+}
+
+.folder-selector-item:hover {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.folder-selector-child {
+    padding-left: 20px;
+}

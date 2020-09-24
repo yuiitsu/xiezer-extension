@@ -160,7 +160,7 @@ App.module.extend('component', function() {
         clearTimeout(notification_timer);
         //
         let bg = type ? type : 'success';
-        $('body').append(self.view.getView('common', 'notification', {
+        $('body').append(self.view.getView('component', 'notification', {
             text: text,
             bg: bg
         }));
@@ -178,7 +178,7 @@ App.module.extend('component', function() {
      */
     this.module = function(name, content, action) {
         let module_id = Date.parse(new Date());
-        $('body').append(this.view.getView('common', 'module', {
+        $('body').append(this.view.getView('component', 'module', {
             name: name,
             content: content,
             action: action,

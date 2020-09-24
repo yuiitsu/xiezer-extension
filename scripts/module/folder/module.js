@@ -20,4 +20,9 @@ App.module.extend('folder', function() {
             selectedNoteBookId: selectedNoteBookId
         }, $('#folder-list'));
     };
+
+    this.getSelectorView = function() {
+        let noteBooks = Model.get('notebooks');
+        return self.view.getView('folder', 'selector', noteBooks);
+    };
 });

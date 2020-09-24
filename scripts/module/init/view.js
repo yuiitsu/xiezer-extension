@@ -19,8 +19,18 @@ App.view.extend('init', function() {
                     </div>
                     <div id="notes" class="notes-container"></div>
                     <div class="viewpoint display-flex display-flex-row display-flex-auto">
-                        <div id="editor" class="edit-container display-flex-auto"></div>
-                        <div id="previewer-container" class="preview-container display-flex-auto"></div>
+                        <div class="display-flex-auto display-flex-column editor-previewer-container">
+                            <div class="display-flex-auto display-flex-row editor-column">
+                                <div id="editor" class="edit-container display-flex-auto"></div>
+                                <div id="previewer-container" class="preview-container display-flex-auto"></div>
+                            </div>
+                            <div class="editor-entity-status-bar display-flex-row">
+                                <div class="display-flex-auto editor-entity-autosave-status"></div>
+                                <div class="editor-entity-characters-count">
+                                    <span>0</span> Characters
+                                </div>
+                            </div>
+                        </div>
                         <div id="toc" class="toc-container display-flex-column"></div>
                     </div>
                 </div>

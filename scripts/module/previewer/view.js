@@ -56,7 +56,12 @@ App.view.extend('previewer', function() {
             <div class="toc-content display-flex-auto">
                 {{ for var i in data.list }}
                 {{ var item = data.list[i] }}
-                <div class="toc toc-{{ item.type }}">{{ item.title }}</div>
+                <div class="toc toc-{{ item.type }} display-flex-row">
+                    <div class="toc-icon">-</div> 
+                    <div class="display-flex-auto">
+                        {{ item.title }}
+                    </div>
+                </div>
                 {{ end }}
             </div>
         `;

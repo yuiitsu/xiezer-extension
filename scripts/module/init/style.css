@@ -22,6 +22,17 @@
     overflow: hidden;
 }
 
+.editor-previewer-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.editor-column {
+    height: 100%;
+    overflow: hidden;
+}
+
 .preview-container {
     overflow: hidden;
 }
@@ -40,19 +51,25 @@
 }
 
 .toc-content {
-    padding: 20px 10px 20px 0;
+    padding: 20px 10px;
     height: 100%;
     overflow-y: auto;
+    font-size: 13px;
 }
 
 .toc {
     padding: 5px 10px;
     line-height: 1.6;
     cursor: pointer;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
 }
 
 .toc:hover {
     color: rgba(0, 0, 0, 0.9);
+}
+
+.toc-icon {
+    margin-right: 5px;
 }
 
 .toc-H2 {

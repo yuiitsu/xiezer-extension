@@ -31,12 +31,16 @@ App.event.extend('folder', function() {
         newNoteBook: function() {
             // level 1
             $('.notebooks-container').on('click', '.folder-add', function() {
-                $('#folder-list').prepend(self.view.getView('folder', 'newNoteBook', {}));
+                let elementId = self.module.component.timeToStr();
+                $('#folder-list').prepend(self.view.getView('folder', 'newNoteBook', {elementId: elementId}));
+                $('input[data-element-id="'+ elementId +'"]').focus();
             });
             // level 2
             $('.notebooks-container').on('click', '.folder-add-child', function() {
-                let parentId = $(this).attr('data-id');
-                $(this).parent().parent().after(self.view.getView('folder', 'newNoteBook', {parentId: parentId}));
+                let parentId = $(this).attr('data-id'), 
+                    elementId = self.module.component.timeToStr();
+                $(this).parent().parent().after(self.view.getView('folder', 'newNoteBook', {parentId: parentId, elementId: elementId}));
+                $('input[data-element-id="'+ elementId +'"]').focus();
             });
         },
 
@@ -86,7 +90,8 @@ App.event.extend('folder', function() {
                 self.view.display('folder', 'list_item_edit', {
                     id: noteBookId,
                     name: name,
-                    parentId: parentId
+                    parentId: parentId,
+                    elementId: ''
                 }, $(this).parent());
                 //
                 e.stopPropagation();

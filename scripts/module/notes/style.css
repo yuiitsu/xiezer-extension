@@ -28,8 +28,41 @@
 }
 
 .notes-items {
+    overflow: hidden;
+    height: 100%;
+}
+
+.notes-items-container {
     overflow-y: auto;
     height: 100%;
+}
+
+.notes-edit-actions {
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(214, 202, 165, 0.2);
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.notes-edit-action-delete {
+    color: rgba(201, 69, 54, 0.2);
+}
+
+.notes-edit-actions.is-selected .notes-edit-action-delete {
+    color: rgba(201, 69, 54, 0.9);
+}
+
+.notes-edit-actions.is-selected {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.notes-edit-action-item {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.notes-edit-actions-right {
+    text-align: right;
 }
 
 .notes-item {
@@ -48,6 +81,18 @@
 .notes-item:hover {
     background-color: rgba(214, 202, 165, 0.2);
     color: rgba(0, 0, 0, 0.7);
+}
+
+.notes-checkbox {
+    padding: 5px 5px 0 0;
+}
+
+.notes-checkbox-default {
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.notes-checkbox-checked {
+    color: #009900;
 }
 
 .notes-item:hover .notes-bottom-action {
