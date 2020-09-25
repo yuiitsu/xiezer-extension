@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-    "name": "Xiezer - A simple Chrome Extension development framework",
-    "short_name": "Xiezer",
+    "name": "XIEZER - Use simple, Writing well, A writing management application based on markdown editor",
+    "short_name": "XIEZER",
     "version": "0.1.0",
-    "description":"A simple Chrome Extension development framework",
+    "description":"Use simple, Writing well, A writing management application based on markdown editor",
     "homepage_url": "https://www.xiezer.com",
     "author":"onlyfu",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
@@ -35,7 +35,7 @@
         ]
     }],
     "browser_action": {
-        "default_title": "Xiezer"
+        "default_title": "XIEZER"
     },
     "permissions": [
         "tabs",
