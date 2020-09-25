@@ -43,6 +43,7 @@
 .editor-entity-status-bar {
     padding: 10px 20px;
     border-top: 1px solid #efefef;
+    border-right: 1px solid #efefef;
     font-size: 12px;
     color: rgba(0, 0, 0, 0.5);
     background: #fff;

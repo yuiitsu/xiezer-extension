@@ -20,8 +20,8 @@ App.event.extend('notes', function() {
                     return false;
                 }
                 //
-                let isNotesEditMode = Model.get('isNotesEditMode');
-                if (isNotesEditMode) {
+                let isEditMode = Model.get('isEditMode');
+                if (isEditMode) {
                     let notesChecked = Model.get('notesChecked'), 
                         i = notesChecked.indexOf(noteId);
                     if (i !== -1) {
@@ -40,9 +40,23 @@ App.event.extend('notes', function() {
             });
         },
         headerAction: function() {
-            $('#notes-header-action').on('click', function() {
-                let isNotesEditMode = Model.get('isNotesEditMode');
-                Model.set('isNotesEditMode', !isNotesEditMode);
+            $('.notes-header-action').on('click', function() {
+                let mode = $(this).attr('data-mode'), 
+                    isMode = Model.get(mode);
+                //
+                if (mode === 'isSearchMode' && Model.get('searchKey')) {
+                    return false;
+                }
+                Model.set(mode, !isMode);
+            });
+        },
+        search: function() {
+            $('.notes-items').on('keydown', '#notes-search', function(e) {
+                if (e.keyCode === 13) {
+                    let searchKey = $.trim($(this).val());
+                    Model.set('searchKey', searchKey);
+                }
+                e.stopPropagation();
             });
         },
         editModeAction: function() {

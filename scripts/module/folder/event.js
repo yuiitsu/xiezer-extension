@@ -14,17 +14,19 @@ App.event.extend('folder', function() {
     this.event = {
         showOff: function() {
             //
-            $('.bottom-bar-switch-button').on('click', function() {
+            $('.folder-switch').on('click', function() {
                 $('#folder').hide();
-                $('.folder-mini').show();
+                // $('.folder-mini').show();
+                Model.set('miniSwitch', true);
                 //
                 self.setNoteBookSwitch(false); 
             });
             //
-            $('.folder-mini').on('click', function() {
+            $('body').on('click', '.folder-mini', function(e) {
                 $('#folder').show();
-                $(this).hide();
+                Model.set('miniSwitch', false);
                 self.setNoteBookSwitch(true); 
+                e.stopPropagation();
             });
         },
 
@@ -149,9 +151,9 @@ App.event.extend('folder', function() {
 
         childrenSwitch: function() {
             $('#folder-list').on('click', '.folder-child-extend-icon', function(e) {
-                let noteBookId = $(this).attr('data-id'), 
-                    name = $(this).attr('data-name'), 
-                    showChildren = $(this).attr('data-show-children');
+                let noteBookId = $(this).parent().attr('data-id'), 
+                    name = $(this).parent().attr('data-name'), 
+                    showChildren = $(this).parent().attr('data-show-children');
                 //
                 showChildren = showChildren === '1' ? '0' : '1';
                 //

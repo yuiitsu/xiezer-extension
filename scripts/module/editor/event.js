@@ -4,8 +4,7 @@
 App.event.extend('editor', function() {
 
     let self = this, 
-        autoSaveTimer = null, 
-        hideAutoSavedTimer = null;
+        autoSaveTimer = null; 
 
     this.autoSave = function() {
         if (autoSaveTimer) {
@@ -20,8 +19,6 @@ App.event.extend('editor', function() {
 
     this.save = function() {
         //
-        clearTimeout(hideAutoSavedTimer);
-        //
         let content = $.trim($('.editor-content').val());
         if (!content) {
             return false;
@@ -29,10 +26,6 @@ App.event.extend('editor', function() {
         self.module.editor.saveNote(content);
         self.log('auto save: ', content);
         Model.set('editorAutoSaved', self.module.component.timeToStr());
-        //
-        hideAutoSavedTimer = setTimeout(function() {
-            $('.editor-entity-autosave-status').html('');
-        }, 3000);
     };
 
     this.clearTimer = function() {
@@ -41,6 +34,9 @@ App.event.extend('editor', function() {
     };
 
     this.event = {
+        focusOnEditor: function() {
+            $('.editor-content').focus();
+        },
         contentChange: function() {
             $('.editor-content').on('input', function(e) {
                 let content = $(this).val();

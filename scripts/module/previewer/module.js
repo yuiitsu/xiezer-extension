@@ -4,12 +4,11 @@
  */
 App.module.extend('previewer', function() {
     //
-    let self = this, 
-        md = null;
+    let self = this;
 
     this.init = function() {
         //
-        this.md = window.markdownit();
+        // this.md = window.markdownit();
         //
         Model.set('content', '').watch('content', this.renderContent);
         Model.set('toc', '').watch('toc', this.renderToc);
@@ -26,10 +25,12 @@ App.module.extend('previewer', function() {
         //
         let container = $('#previewer');
         if (content) {
-            container.html(self.md.render(content));
+            container.html(marked(content));
+            //
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });
+            //
         } else {
             self.view.display('previewer', 'empty', {}, container);
         }
@@ -38,12 +39,22 @@ App.module.extend('previewer', function() {
     };
 
     this.renderToc = function() {
-        let toc = [];
+        let toc = [], 
+            n = 1;
         $('#previewer').find('h1, h2, h3, h4, h5').each(function() {
+            let element = $(this)[0], 
+                nodeName = element.nodeName,
+                anchor = nodeName + '-' + n, 
+                anchorNodeCode = nodeName.replace('H', '');
+            //
+            $(this).attr('id', anchor);
             toc.push({
                 type: $(this)[0].nodeName,
-                title: $(this).text()
+                title: $(this).text(),
+                anchor: anchor,
+                code: anchorNodeCode
             });
+            n++;
         });
         //
         self.view.display('previewer', 'toc', {list: toc}, $('#toc'));

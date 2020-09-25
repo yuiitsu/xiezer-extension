@@ -1,9 +1,18 @@
+code {
+    font-family: inherit;
+    background-color: rgba(214, 202, 165, 0.2);
+    padding: 1px 2px;
+    border: 1px solid rgba(214, 202, 165, 0.5);
+    font-size: 16px;
+}
+
 .previewer-main {
     width: 100%;
     height: 100%;
     line-height: 1.6;
     background-color: #fff;
     font-size: 18px;
+    border-right: 1px solid #efefef;
 }
 
 .previewer-main #toc-switch.focus {
@@ -13,6 +22,11 @@
 .previewer-enity {
     padding: 20px;
     overflow-y: auto;
+}
+
+.previewer-main hr {
+    color: rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
 }
 
 .previewer-main h1, .previewer-main h2, .previewer-main h3, .previewer-main h4, .previewer-main h5 {
@@ -35,6 +49,8 @@
 
 .previewer-main pre code {
     font-family: inherit;
+    background-color: transparent;
+    border: 0;
 }
 
 .previewer-main dl, .previewer-main ol, .previewer-main ul {
@@ -48,7 +64,7 @@
 .previewer-main blockquote {
     border-left: 5px solid #efefef;
     padding-left: 10px;
-    color: #999;
+    color: rgba(0, 0, 0, 0.7);
     margin: 0;
     margin-bottom: 1rem;
 }

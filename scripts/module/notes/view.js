@@ -9,18 +9,17 @@ App.view.extend('notes', function() {
             {{ var notesOrder = 'order_' + data.notesOrder }}
             <div class="notes-main display-flex-column">
                 <div class="notes-header display-flex-row">
-                    <div class="notes-header-left display-flex-auto">
-                        <div class="notes-header-item" id="notes-header-action">
+                    <div class="notes-header-left display-flex-auto display-flex-row">
+                        <div class="notes-header-item notes-header-action" id="notes-header-action-edit" data-mode="isEditMode">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-justify" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
                             </svg>
                         </div>
-                        <div class="notes-header-item">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-                            </svg>
+                        <!--
+                        <div class="notes-header-item notes-header-action" id="notes-header-action-search" data-mode="isSearchMode">
+                            {{ this.view.getView('notes', 'searchIcon', {}) }}
                         </div>
+                        -->
                     </div>
                     <div class="notes-header-right">
                         <div class="notes-header-item" id="notes-order">
@@ -35,6 +34,24 @@ App.view.extend('notes', function() {
                 </div>
                 <div class="notes-items display-flex-auto display-flex-column">
                 </div>
+            </div>
+        `;
+    };
+
+    this.searchIcon = function() {
+        return `
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+            </svg>
+        `;
+    };
+
+    this.searchInput = function() {
+        return `
+            <div class="notes-search-container display-flex-row">
+                <input type="text" placeholder="Search note title" id="notes-search" class="display-flex-auto" value="{{ data.searchKey }}" />
+                {{ this.view.getView('notes', 'searchIcon', {}) }}
             </div>
         `;
     };
@@ -62,7 +79,12 @@ App.view.extend('notes', function() {
     this.list = function() {
         return `
             {{ if data && data.list && data.list.length > 0 }}
-            {{ if data.isNotesEditMode }}
+            {{ if data.isSearchMode }}
+            <div class="notes-edit-actions display-flex-row">
+                {{ this.view.getView('notes', 'searchInput', {searchKey: data.searchKey}) }}
+            </div>
+            {{ end }}
+            {{ if data.isEditMode }}
             {{ var selectedClassName = data.notesChecked.length > 0 ? 'is-selected' : '' }}
             <div class="notes-edit-actions display-flex-row {{ selectedClassName }}">
                 <div class="notes-edit-actions-left display-flex-auto">
@@ -89,7 +111,7 @@ App.view.extend('notes', function() {
                 {{ var item = data.list[i] }}
                 {{ var focusClassName = item.id == data.selectedNoteId ? 'focus' : '' }}
                 <div class="notes-item display-flex-row {{ focusClassName }}" data-id="{{ item['id'] }}">
-                    {{ if data.isNotesEditMode }}
+                    {{ if data.isEditMode }}
                     <div class="notes-checkbox">
                         {{ if data.notesChecked.indexOf(item.id.toString()) !== -1 }}
                         {{ this.view.getView('notes', 'checkboxChecked', {}) }}
@@ -117,8 +139,9 @@ App.view.extend('notes', function() {
                 {{ end }}
             </div>
             {{ else }}
-            <div class="notes-empty">Nothing</div>
+            <div class="notes-empty display-flex-auto">Nothing</div>
             {{ end }}
+            <div class="notes-bottom-bar"><span id="notes-count">0</span> notes</div>
         `;
     };
 

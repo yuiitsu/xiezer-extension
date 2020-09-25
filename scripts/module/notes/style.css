@@ -2,6 +2,7 @@
     height: 100%;
     background-color: rgba(214, 202, 165, 0.1);
     color: rgba(0, 0, 0, 0.5);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .notes-header {
@@ -29,6 +30,20 @@
 
 .notes-header-item.focus {
     color: rgba(201, 69, 54, 0.9);
+}
+
+.notes-search-container {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.notes-search-container input {
+    width: 100%;
+    border: 0;
+    font-size: 12px;
+    background-color: transparent;
 }
 
 .notes-items {
@@ -63,6 +78,7 @@
 .notes-edit-action-item {
     margin-right: 10px;
     cursor: pointer;
+    padding: 5px 0;
 }
 
 .notes-edit-actions-right {
@@ -75,6 +91,10 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     cursor: pointer;
     word-break:break-all;
+}
+
+.notes-item:last-child {
+    border-bottom: 1px solid transparent;
 }
 
 .notes-item.focus {
@@ -96,7 +116,7 @@
 }
 
 .notes-checkbox-checked {
-    color: #009900;
+    color: rgba(201, 69, 54, 0.9);
 }
 
 .notes-item:hover .notes-bottom-action {
@@ -125,4 +145,12 @@
     color: rgba(0, 0, 0, 0.2);
     text-align: center;
     padding: 20px;
+}
+
+.notes-bottom-bar {
+    padding: 10px 20px;
+    font-size: 12px;
+    background-color:rgba(214, 202, 165, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
 }

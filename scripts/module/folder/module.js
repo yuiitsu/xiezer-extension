@@ -11,6 +11,8 @@ App.module.extend('folder', function() {
         this.view.display('folder', 'layout', {}, $('#folder'));
         //
         Model.set('notebooks', '').watch('notebooks', this.renderNotebooks);
+        //
+        this.module.data.readAllNoteBooks();
     };
 
     this.renderNotebooks = function(notes) {

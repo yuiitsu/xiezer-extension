@@ -30,6 +30,22 @@ App.event.extend('prviewer', function() {
                 //
                 Model.set('editorScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
             });
+        },
+        toc: function() {
+            $('#toc').on('click', '.toc', function(e) {
+                let anchor = $(this).attr('data-anchor'), 
+                    code = $(this).attr('data-code'),
+                    previewerElement = $('#previewer'),
+                    scrollTop = previewerElement.prop('scrollTop'),
+                    target = previewerElement.find('#' + anchor), 
+                    targetTop = target.position().top, 
+                    targetHeight = target.outerHeight(), 
+                    p = (parseInt(code) - 1) * 20;
+                //
+                previewerElement.animate({scrollTop: targetTop - targetHeight + scrollTop - p}, 100);
+                //
+                e.stopPropagation();
+            });
         }
     }
 });

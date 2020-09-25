@@ -5,6 +5,7 @@
 App.module.extend('data', function() {
     //
     let self = this, 
+        dbVersion = 4,
         dbName = 'xiezer',
         db = null, 
         currentDataKey = 'currentData';
@@ -26,28 +27,29 @@ App.module.extend('data', function() {
             Model.set('notesOrder', notesOrder);
         }
         //
-        this.openDb();
+        // this.openDb();
         //
         Model.set('note', '').watch('note', this.saveNote);
         Model.set('noteBookId', '').watch('noteBookId', this.readAllNotes);
         Model.set('noteId', '').watch('noteId', this.readNote);
         Model.set('notesOrder', Model.default.notesOrder).watch('notesOrder', this.readAllNotes);
+        Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
     };
 
-    this.openDb = function() {
+    this.openDb = function(success, error) {
         //
-        let request = window.indexedDB.open(dbName, 1);
+        let request = window.indexedDB.open(dbName, dbVersion);
         //
         request.onerror = function(event) {
             self.log('open db error.');
+            error();
         };
         //
         request.onsuccess = function() {
             db = request.result;
             self.log('open db success.');
             //
-            self.readAllNotes();
-            self.readAllNoteBooks();
+            success();
         };
         //
         request.onupgradeneeded = function(event) {
@@ -65,6 +67,7 @@ App.module.extend('data', function() {
                 objectStore.createIndex('notebook', 'notebook', { unique: false });
                 objectStore.createIndex('createAt', 'createAt', {unique: false});
             }
+            //
         };
     };
 
@@ -72,7 +75,7 @@ App.module.extend('data', function() {
         if (!content) {
             return false;
         }
-        self.currentData.set(content);
+        // self.currentData.set(content);
         //
         let lines = content.split('\n'), 
             title = lines[0], 
@@ -81,28 +84,34 @@ App.module.extend('data', function() {
                 content: content
             };
         //
-        data['notebook'] = Model.get('noteBookId');
         let request = null, 
             noteId = Model.get('noteId'), 
-            action = Model.get('action'), 
-            currentNote = Model.get('currentNote');
+            action = Model.get('action'); 
+            // currentNote = Model.get('currentNote');
         //
         if (noteId && action === 'update') {
-            data['noteId'] = noteId;
-            data['createAt'] = currentNote['createAt'];
-            request = db.transaction(['notes'], 'readwrite')
-                .objectStore('notes')
-                .put(data);
-            //
-            request.onsuccess = function() {
-                self.log('add data success.');
-                self.readAllNotes();
-            };
-            //
-            request.onerror = function() {
-                self.log('add data error.')
-            };
+            self.getOneNote(noteId, function(status, result) {
+                if (status) {
+                    data['noteId'] = noteId;
+                    data['notebook'] = result.notebook;
+                    data['createAt'] = result.createAt;
+                    request = db.transaction(['notes'], 'readwrite')
+                        .objectStore('notes')
+                        .put(data);
+                    //
+                    request.onsuccess = function() {
+                        self.log('add data success.');
+                        self.readAllNotes();
+                    };
+                    //
+                    request.onerror = function() {
+                        self.log('add data error.')
+                    };
+                } else {
+                }
+            });
         } else {
+            data['notebook'] = Model.get('noteBookId');
             data['noteId'] = self._uuid();
             data['createAt'] = new Date().getTime();
             request = db.transaction(['notes'], 'readwrite')
@@ -194,10 +203,10 @@ App.module.extend('data', function() {
             result = [], 
             o = {};
         //
-        objectStore.openCursor().onsuccess = function (event) {
+        objectStore.index('name').openCursor(null, 'next').onsuccess = function (event) {
             let cursor = event.target.result; 
             if (cursor) {
-                let id = cursor.key, 
+                let id = cursor.value.noteBookId, 
                     parentId = cursor.value.parentId, 
                     name = cursor.value.name, 
                     showChildren = cursor.value.showChildren ? cursor.value.showChildren : '1',
@@ -213,7 +222,6 @@ App.module.extend('data', function() {
                     o[parentId] = [];
                 }
                 if (!parentId) {
-                    // o[id] = [];
                     result.push(d);
                 } else {
                     o[parentId].push(d);
@@ -237,31 +245,37 @@ App.module.extend('data', function() {
         let objectStore = db.transaction('notes').objectStore('notes'), 
             result = [], 
             noteBookId = Model.get('noteBookId'), 
+            searchKey = Model.get('searchKey'), 
             index = noteBookId ? 'notebook' : 'createAt', 
             order = Model.get('notesOrder');
-        //
-        let sortCreateAt = function(a, b) {
-            if (order === 'prev') {
-                return -(a.createAtInt - b.createAtInt);
-            } else {
-                return a.createAtInt - b.createAtInt;
-            }
-        };
         //
         noteBookId = noteBookId ? noteBookId : null;
         objectStore.index(index).openCursor(noteBookId, order).onsuccess = function (event) {
             var cursor = event.target.result;
             if (cursor) {
-                result.push({
+                let item = {
                     id: cursor.value.noteId,
                     title: cursor.value.title,
                     createAt: cursor.value.createAt ? self.module.component.timeToStr(cursor.value.createAt) : '',
                     createAtInt: cursor.value.createAt
-                });
+                }
+                if (searchKey) {
+                    if (cursor.value.title.indexOf(searchKey) !== -1) {
+                        result.push(item);
+                    }
+                } else {
+                    result.push(item);
+                }
                 cursor.continue();
             } else {
                 //
-                result.sort(sortCreateAt);
+                result.sort(function(a, b) {
+                    if (order === 'prev') {
+                        return -(a.createAtInt - b.createAtInt);
+                    } else {
+                        return a.createAtInt - b.createAtInt;
+                    }
+                });
                 //
                 Model.set('notes', result);
                 self.log(result);
@@ -272,29 +286,35 @@ App.module.extend('data', function() {
 
     this.readNote = function(noteId) {
         if (noteId) {
-            var transaction = db.transaction(['notes'], 'readonly');
-            var store = transaction.objectStore('notes');
-            var request = store.get(noteId);
-            //
-            request.onsuccess = function (e) {
-                var result = e.target.result;
-                if (result) {
+            self.getOneNote(noteId, function(status, result) {
+                if (status) {
                     Model.set('action', 'update');
                     Model.set('content', result.content);
-                    Model.set('currentNote', result);
+                    // Model.set('currentNote', result);
                     Model.set('editorData', result.content);
-                } else {
-                    // 
-                    self.log('data not existed.');
-                    // callback();
                 }
-                // self.readAllNoteBooks();
-            }
+            })
         } else {
             Model.set('action', 'new');
             Model.set('content', '');
-            Model.set('currentNote', {});
+            // Model.set('currentNote', {});
             Model.set('editorData', '');
+        }
+    };
+
+    this.getOneNote = function(noteId, callback) {
+        var transaction = db.transaction(['notes'], 'readonly');
+        var store = transaction.objectStore('notes');
+        var request = store.get(noteId);
+        //
+        request.onsuccess = function (e) {
+            var result = e.target.result;
+            if (result) {
+                callback(true, result);
+            } else {
+                self.log('data not existed.');
+                callback(false, result);
+            }
         }
     };
 

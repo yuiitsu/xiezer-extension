@@ -47,12 +47,25 @@ let App = {
             // 加载module
             for (let i in this) {
                 if (this.hasOwnProperty(i)) {
+                    if (this[i].hasOwnProperty('_init')) {
+                        this[i]['_init']();
+                        App.log('[Module] '+ i +' _init.');
+                    }
+                }
+            }
+        },
+
+        _init: function() {
+            for (let i in this) {
+                if (this.hasOwnProperty(i)) {
                     if (this[i].hasOwnProperty('init')) {
                         this[i]['init']();
                         App.log('[Module] '+ i +' init.');
                     }
                 }
             }
+            //
+            App.event.init();
         }
     },
 
@@ -375,7 +388,7 @@ let App = {
     run: function() {
         // this.checkBrowser();
         this.module.run();
-        this.event.init();
+        // this.event.init();
         //this.background_listening();
     }
 };
