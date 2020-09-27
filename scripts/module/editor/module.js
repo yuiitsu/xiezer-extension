@@ -29,7 +29,9 @@ App.module.extend('editor', function() {
         //
         self.event.editor.clearTimer();
         //
-        $('.editor-content').val(data);
+        let target = $('.editor-content');
+        target.val(data);
+        target.scrollTop(0);
         //
         Model.set('editorCharactersCount', data.length);
         Model.set('editorAutoSaved', '');

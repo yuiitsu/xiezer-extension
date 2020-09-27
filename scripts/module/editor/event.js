@@ -85,12 +85,16 @@ App.event.extend('editor', function() {
                         break;
                 }
                 //
+                let scrollTop = container.scrollTop();
+                //
                 var contentPrev = containerElement.value.substring(0, rangeStart);
                 var contentNext = containerElement.value.substring(rangeEnd);
                 container.val(contentPrev + selectedContent + contentNext);
                 container.focus();
-                console.log(rightOffset);
+                console.log(rangeEnd, rightOffset);
                 containerElement.setSelectionRange(rangeEnd + rightOffset, rangeEnd + rightOffset);
+                //
+                container.scrollTop(scrollTop);
                 //
                 container.trigger('change');
             });

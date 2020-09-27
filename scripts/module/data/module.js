@@ -81,7 +81,7 @@ App.module.extend('data', function() {
         let lines = content.split('\n'), 
             title = lines[0], 
             data = {
-                title: title.substr(0, 50),
+                title: title.substr(0, 80),
                 content: content
             };
         //

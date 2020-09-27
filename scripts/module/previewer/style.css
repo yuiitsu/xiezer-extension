@@ -108,3 +108,8 @@ code {
 .previewer-html {
     display: none;
 }
+
+.export-tips-container .gray {
+    color: #ccc;
+    font-size: 13px;
+}

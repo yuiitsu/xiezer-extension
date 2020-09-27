@@ -70,4 +70,14 @@ App.view.extend('previewer', function() {
             {{ end }}
         `;
     };
+
+    this.exportTips = function() {
+        return `
+            <div class="export-tips-container">
+                <p>{{ data.title }}</p>
+                <p><strong>Exporting to word...</strong></p>
+                <p class="gray">If the export has been completed, click the ok button to close this window.</p>
+            </div>
+        `;
+    };
 });
