@@ -66,8 +66,26 @@ code {
     padding-left: 10px;
     color: rgba(0, 0, 0, 0.7);
     margin: 0;
-    margin-bottom: 1rem;
 }
+
+/* .previewer-main blockquote + p, 
+.previewer-main blockquote + h1, 
+.previewer-main blockquote + h2, 
+.previewer-main blockquote + h3, 
+.previewer-main blockquote + h4, 
+.previewer-main blockquote + h5, 
+.previewer-main blockquote + h6, 
+.previewer-main blockquote + ul, 
+.previewer-main blockquote + ol, 
+.previewer-main blockquote + pre, 
+.previewer-main blockquote + hr 
+{ 
+    margin-top: 1rem;
+} */
+
+.previewer-main blockquote + *:not(blockquote) {
+    margin-top: 1rem;
+} 
 
 .previewer-main blockquote p {
     margin: 0;

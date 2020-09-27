@@ -102,7 +102,9 @@ App.module.extend('data', function() {
                     //
                     request.onsuccess = function() {
                         self.log('add data success.');
-                        self.readAllNotes();
+                        if (result.title !== title) {
+                            self.readAllNotes();
+                        }
                     };
                     //
                     request.onerror = function() {
@@ -237,7 +239,6 @@ App.module.extend('data', function() {
                     }
                 }
                 Model.set('notebooks', result);
-                self.log(result);
             }
         };
     };
@@ -279,7 +280,6 @@ App.module.extend('data', function() {
                 });
                 //
                 Model.set('notes', result);
-                self.log(result);
                 self.readAllNoteBooks();
             }
         };
@@ -291,14 +291,14 @@ App.module.extend('data', function() {
                 if (status) {
                     Model.set('action', 'update');
                     Model.set('content', result.content);
-                    // Model.set('currentNote', result);
+                    Model.set('currentNote', result);
                     Model.set('editorData', result.content);
                 }
             })
         } else {
             Model.set('action', 'new');
             Model.set('content', '');
-            // Model.set('currentNote', {});
+            Model.set('currentNote', {});
             Model.set('editorData', '');
         }
     };

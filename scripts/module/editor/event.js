@@ -37,8 +37,66 @@ App.event.extend('editor', function() {
         focusOnEditor: function() {
             $('.editor-content').focus();
         },
+        editor: function() {
+            $('.editor-icon').on('click', function() {
+                let action = $(this).attr('data-action'), 
+                    container = $('.editor-content'), 
+                    containerElement = container[0], 
+                    rangeStart = containerElement.selectionStart ,
+                    rangeEnd = containerElement.selectionEnd,
+                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
+                    rightOffset = 0, 
+                    lines;
+                //
+                switch (action) {
+                    case 'bold':
+                        rightOffset = selectedContent ? 6 : 3;
+                        selectedContent = ' **' + selectedContent + '** '
+                        break;
+                    case 'italic':
+                        rightOffset = selectedContent ? 4 : 2;
+                        selectedContent = ' *' + selectedContent + '* '
+                        break;
+                    case 'list':
+                        lines = selectedContent.split('\n');
+                        rightOffset = selectedContent ? lines.length * 3 + 3 : 2;
+                        selectedContent = '\n\n';
+                        lines.forEach(item => {
+                            if (item) {
+                                selectedContent += '- ' + item + '\n'
+                            }
+                        });
+                        selectedContent += '\n'
+                        break;
+                    case 'quote':
+                        lines = selectedContent.split('\n');
+                        rightOffset = selectedContent ? lines.length * 3 + 2 : 2;
+                        selectedContent = '\n\n';
+                        lines.forEach(item => {
+                            if (item) {
+                                selectedContent += '> ' + item + '\n'
+                            }
+                        });
+                        selectedContent += '\n'
+                        break;
+                    case 'code-slash':
+                        rightOffset = selectedContent ? 12 : 5;
+                        selectedContent = '\n\n```\n' + selectedContent + '\n```\n\n'
+                        break;
+                }
+                //
+                var contentPrev = containerElement.value.substring(0, rangeStart);
+                var contentNext = containerElement.value.substring(rangeEnd);
+                container.val(contentPrev + selectedContent + contentNext);
+                container.focus();
+                console.log(rightOffset);
+                containerElement.setSelectionRange(rangeEnd + rightOffset, rangeEnd + rightOffset);
+                //
+                container.trigger('change');
+            });
+        },
         contentChange: function() {
-            $('.editor-content').on('input', function(e) {
+            $('.editor-content').on('change input', function(e) {
                 let content = $(this).val();
                 if (!content) {
                     return false;
@@ -59,6 +117,8 @@ App.event.extend('editor', function() {
                     $(this).val(content);
                     el.focus();
                     el.setSelectionRange(currentPosition + 1, currentPosition + 1);
+                    //
+                    self.module.editor.previewNote(content);
                     //
                     self.autoSave();
                     return false;

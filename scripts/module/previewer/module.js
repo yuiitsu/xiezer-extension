@@ -8,7 +8,7 @@ App.module.extend('previewer', function() {
 
     this.init = function() {
         //
-        // this.md = window.markdownit();
+        this.md = window.markdownit();
         //
         Model.set('content', '').watch('content', this.renderContent);
         Model.set('toc', '').watch('toc', this.renderToc);
@@ -25,7 +25,8 @@ App.module.extend('previewer', function() {
         //
         let container = $('#previewer');
         if (content) {
-            container.html(marked(content));
+            // container.html(marked(content));
+            container.html(self.md.render(content));
             //
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
@@ -61,11 +62,15 @@ App.module.extend('previewer', function() {
     };
 
     this.renderTocIcon = function(status) {
-        let target = $('#toc-switch');
+        let target = $('#toc-switch'), 
+            container = $('.toc-container');
+        //
         if (status) {
             target.addClass('focus');
+            container.show();
         } else {
             target.removeClass('focus');
+            container.hide();
         }
     };
 

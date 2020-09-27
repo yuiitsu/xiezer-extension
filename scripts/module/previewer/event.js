@@ -61,6 +61,12 @@ App.event.extend('prviewer', function() {
                 document.execCommand("Copy");
                 self.module.component.notification('Copy successfully.');
             });
+        },
+        exportToWord: function() {
+            $('#export-word').on('click', function() {
+                let currentNote = Model.get('currentNote');
+                $('#previewer').wordExport(currentNote.title);
+            });
         }
     }
 });
