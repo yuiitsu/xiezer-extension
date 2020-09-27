@@ -25,7 +25,10 @@
 
 .notes-header-item {
     display: inline-block;
-    margin-right: 10px;
+}
+
+.notes-header-right .notes-header-item {
+    margin-left: 10px;
 }
 
 .notes-header-item.focus {
@@ -107,6 +110,26 @@
     color: rgba(0, 0, 0, 0.7);
 }
 
+.notes-edit-line, .notes-checkbox {
+    display: none;
+}
+
+.notes-edit-mode .notes-checkbox {
+    display: block;
+}
+
+.notes-edit-mode .notes-edit-line {
+    display: flex;
+}
+
+.notes-edit-selected .notes-checkbox-default {
+    display: none;
+}
+
+.notes-edit-selected .notes-checkbox-checked {
+    display: block;
+}
+
 .notes-checkbox {
     padding: 5px 5px 0 0;
 }
@@ -117,6 +140,7 @@
 
 .notes-checkbox-checked {
     color: rgba(201, 69, 54, 0.9);
+    display: none;
 }
 
 .notes-item:hover .notes-bottom-action {

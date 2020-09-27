@@ -23,7 +23,10 @@ App.view.extend('init', function() {
                                 </div>
                             </div>
                         </div>
-                        <div id="toc" class="toc-container display-flex-column"></div>
+                        <div class="toc-container display-flex-column">
+                            <div class="header">Table of Content</div>
+                            <div id="toc" class="toc-content display-flex-auto"></div>
+                        </div>
                     </div>
                 </div>
             </div>

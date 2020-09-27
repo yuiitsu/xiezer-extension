@@ -11,9 +11,9 @@ App.module.extend('notes', function() {
         this.view.display('notes', 'layout', {notesOrder: Model.get('notesOrder')}, $('#notes'));
         //
         Model.set('notes', '').watch('notes', this.renderNotes);
-        Model.set('isEditMode', false).watch('isEditMode', this.renderNotes);
+        Model.set('isEditMode', false).watch('isEditMode', this.renderEditMode);
         Model.set('isSearchMode', false).watch('isSearchMode', this.renderNotes);
-        Model.set('notesChecked', []).watch('notesChecked', this.renderNotes);
+        Model.set('notesChecked', []).watch('notesChecked', this.renderEditLine);
         Model.watch('notesOrder', this.renderOrderIcon);
         Model.watch('isEditMode', this.renderEditIcon);
         Model.watch('isSearchMode', this.renderSearchIcon);
@@ -29,7 +29,8 @@ App.module.extend('notes', function() {
             isEditMode = Model.get('isEditMode'),
             isSearchMode = Model.get('isSearchMode'),
             notesChecked = Model.get('notesChecked'), 
-            searchKey = Model.get('searchKey');
+            searchKey = Model.get('searchKey'), 
+            scrollTop = Model.get('notesScrollTop');
         //
         self.view.display('notes', 'list', {
             list: notes, 
@@ -39,6 +40,9 @@ App.module.extend('notes', function() {
             isSearchMode: isSearchMode,
             searchKey: searchKey
         }, $('.notes-items'));
+        //
+        $('.notes-items-container').scrollTop(scrollTop ? scrollTop : 0);
+        Model.set('notesScrollTop', 0);
         //
         $('#notes-count').text(notes.length);
     };
@@ -82,5 +86,23 @@ App.module.extend('notes', function() {
             width: 300
         }, view + actionView, '');
         //
+    };
+
+    this.renderEditMode = function(status) {
+        let target = $('.notes-items');
+        if (status) {
+            target.addClass('notes-edit-mode');
+        } else {
+            target.removeClass('notes-edit-mode');
+        }
+    };
+
+    this.renderEditLine = function(notesChecked) {
+        let target = $('.notes-edit-line');
+        if (notesChecked.length > 0) {
+            target.addClass('is-selected');
+        } else {
+            target.removeClass('is-selected');
+        }
     };
 });

@@ -81,7 +81,7 @@ App.module.extend('data', function() {
         let lines = content.split('\n'), 
             title = lines[0], 
             data = {
-                title: title,
+                title: title.substr(0, 50),
                 content: content
             };
         //
@@ -383,6 +383,7 @@ App.module.extend('data', function() {
                             self.log('update notebook success.');
                             Model.set('moveToNotebookId', '');
                             Model.set('isEditMode', false);
+                            Model.set('notesChecked', []);
                             self.readAllNotes();
                             self.module.component.notification('Update successfully!');
                         };

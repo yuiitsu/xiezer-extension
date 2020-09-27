@@ -46,6 +46,21 @@ App.event.extend('prviewer', function() {
                 //
                 e.stopPropagation();
             });
+        },
+        copy: function() {
+            $('#copy-html').on('click', function() {
+                if ($(this).hasClass('disabled')) {
+                    return false;
+                }
+                var div = document.getElementById('previewer');
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(div);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand("Copy");
+                self.module.component.notification('Copy successfully.');
+            });
         }
     }
 });

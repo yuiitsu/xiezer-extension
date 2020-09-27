@@ -11,8 +11,8 @@ App.module.extend('editor', function() {
         Model.set('editorData', '').watch('editorData', this.renderEditorData);
         Model.set('editorCharactersCount', 0).watch('editorCharactersCount', this.renderCharactersCount);
         Model.set('editorAutoSaved', '').watch('editorAutoSaved', this.renderAutoSaved);
-        Model.set('content', '').watch('content', this.renderEditorData);
         Model.set('editorScrollTop', 0).watch('editorScrollTop', this.renderScrollTop);
+        Model.set('notesOpened', false).watch('notesOpened', this.renderActionIcon);
         //
         self.view.display('editor', 'layout', {content: ''}, $('#editor'));
     };
@@ -33,6 +33,7 @@ App.module.extend('editor', function() {
         //
         Model.set('editorCharactersCount', data.length);
         Model.set('editorAutoSaved', '');
+        Model.set('notesOpened', true);
     };
 
     this.renderCharactersCount = function(n) {
@@ -56,4 +57,13 @@ App.module.extend('editor', function() {
         //
         $('.editor-content').animate({scrollTop: scrollTop}, 0);
     };
+
+    this.renderActionIcon = function(status) {
+        let target = $('.action-item-link-note');
+        if (status) {
+            target.removeClass('disabled');
+        } else {
+            target.addClass('disabled');
+        }
+    }
 });

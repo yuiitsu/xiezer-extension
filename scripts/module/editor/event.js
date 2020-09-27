@@ -67,6 +67,9 @@ App.event.extend('editor', function() {
         },
         save: function() {
             $('#editor-save-button').on('click', function() {
+                if ($(this).hasClass('disabled')) {
+                    return false;
+                }
                 self.save();
             });
         },
@@ -86,6 +89,17 @@ App.event.extend('editor', function() {
                     clientHeight = $(this).outerHeight();
                 //
                 Model.set('previewerScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
+            });
+        },
+        copy: function() {
+            $('#copy-source').on('click', function() {
+                if ($(this).hasClass('disabled')) {
+                    return false;
+                }
+                let target = $('.editor-content');
+                target.select();
+                document.execCommand('copy');
+                self.module.component.notification('Copy successfully.');
             });
         }
         // clickTab: function() {

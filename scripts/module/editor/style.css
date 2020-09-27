@@ -26,7 +26,12 @@
     color: rgba(0, 0, 0, 0.8);
 }
 
-.editor-entity {
+.action-item.disabled {
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.action-item.disabled:hover {
+    color: rgba(0, 0, 0, 0.2);
 }
 
 .editor-content {

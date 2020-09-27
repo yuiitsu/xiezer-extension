@@ -84,9 +84,7 @@ App.view.extend('notes', function() {
                 {{ this.view.getView('notes', 'searchInput', {searchKey: data.searchKey}) }}
             </div>
             {{ end }}
-            {{ if data.isEditMode }}
-            {{ var selectedClassName = data.notesChecked.length > 0 ? 'is-selected' : '' }}
-            <div class="notes-edit-actions display-flex-row {{ selectedClassName }}">
+            <div class="notes-edit-actions notes-edit-line display-flex-row">
                 <div class="notes-edit-actions-left display-flex-auto">
                     <div class="notes-edit-action-item" data-action="moveToNoteBook">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-journal-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -105,21 +103,15 @@ App.view.extend('notes', function() {
                     </div>
                 </div>
             </div>
-            {{ end }}
             <div class="display-flex-auto notes-items-container">
                 {{ for var i in data.list }}
                 {{ var item = data.list[i] }}
                 {{ var focusClassName = item.id == data.selectedNoteId ? 'focus' : '' }}
                 <div class="notes-item display-flex-row {{ focusClassName }}" data-id="{{ item['id'] }}">
-                    {{ if data.isEditMode }}
                     <div class="notes-checkbox">
-                        {{ if data.notesChecked.indexOf(item.id.toString()) !== -1 }}
                         {{ this.view.getView('notes', 'checkboxChecked', {}) }}
-                        {{ else }}
                         {{ this.view.getView('notes', 'checkboxDefault', {}) }}
-                        {{ end }}
                     </div>
-                    {{ end }}
                     <div class="display-flex-auto">
                         <div class="notes-name display-flex-row">
                             {{ item['title'] }}

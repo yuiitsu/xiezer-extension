@@ -26,8 +26,10 @@ App.event.extend('notes', function() {
                         i = notesChecked.indexOf(noteId);
                     if (i !== -1) {
                         notesChecked.splice(i, 1);
+                        $(this).removeClass('notes-edit-selected');
                     } else {
                         notesChecked.push(noteId);
+                        $(this).addClass('notes-edit-selected');
                     }
                     Model.set('notesChecked', notesChecked);
                 } else {
