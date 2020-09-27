@@ -219,11 +219,11 @@ App.view.extend('folder', function() {
                 <div class="folder-selector-box">
                     {{ for var i in data }}
                     {{ var item = data[i] }}
-                    <div class="folder-selector-item folder-selector-parent">{{ item.name }}</div>
+                    <div class="folder-selector-item folder-selector-parent" data-id="{{ item.id }}">{{ item.name }}</div>
                     {{ if item.children.length > 0 }}
                     {{ for var j in item.children }}
                     {{ var child = item.children[j] }}
-                    <div class="folder-selector-item folder-selector-child">{{ child.name }}</div>
+                    <div class="folder-selector-item folder-selector-child" data-id="{{ child.id }}">{{ child.name }}</div>
                     {{ end }}
                     {{ end }}
                     {{ end }}

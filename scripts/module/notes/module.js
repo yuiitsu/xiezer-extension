@@ -74,6 +74,13 @@ App.module.extend('notes', function() {
     };
 
     this.showMoveToNoteBook = function() {
-        self.module.component.module('Select Notebook', self.module.folder.getSelectorView(), '');
+        let view = self.module.folder.getSelectorView(), 
+            actionView = self.view.getView('notes', 'moveToNotebook', {});
+        //
+        self.module.component.module({
+            name: 'Select Notebook',
+            width: 300
+        }, view + actionView, '');
+        //
     };
 });

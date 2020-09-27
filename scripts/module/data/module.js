@@ -34,6 +34,7 @@ App.module.extend('data', function() {
         Model.set('noteId', '').watch('noteId', this.readNote);
         Model.set('notesOrder', Model.default.notesOrder).watch('notesOrder', this.readAllNotes);
         Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
+        Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
     };
 
     this.openDb = function(success, error) {
@@ -348,6 +349,8 @@ App.module.extend('data', function() {
             self.readAllNotes();
             //
             Model.set('notesChecked', []);
+            //
+            self.module.component.notification('Delete successfully!');
         });
     };
 
@@ -358,6 +361,40 @@ App.module.extend('data', function() {
         countRequest.onsuccess = function() {
             console.log(countRequest.result);
             callback(countRequest.result);
+        }
+    };
+
+    this.moveToNotebook = function() {
+        let notesChecked = Model.get('notesChecked'), 
+            moveToNotebookId = Model.get('moveToNotebookId');
+        //
+        moveToNotebookId = moveToNotebookId ? moveToNotebookId : '';
+        //
+        if (notesChecked.length > 0) {
+            notesChecked.forEach(element => {
+                self.getOneNote(element, function(status, data) {
+                    if (status) {
+                        data['notebook'] = moveToNotebookId;
+                        request = db.transaction(['notes'], 'readwrite')
+                            .objectStore('notes')
+                            .put(data);
+                        //
+                        request.onsuccess = function() {
+                            self.log('update notebook success.');
+                            Model.set('moveToNotebookId', '');
+                            Model.set('isEditMode', false);
+                            self.readAllNotes();
+                            self.module.component.notification('Update successfully!');
+                        };
+                        //
+                        request.onerror = function() {
+                            self.log('add notebook error.')
+                            self.module.component.notification('Update successfully!', 'warring');
+                        };
+                    } else {
+                    }
+                });
+            });
         }
     };
 

@@ -220,13 +220,23 @@
 }
 
 .folder-selector-item  {
+    padding: 5px 0;
     line-height: 1.6;
     cursor: pointer;
     border-bottom: 1px dotted #efefef;
 }
 
+.folder-selector-item.focus  {
+    background-color: #efefef;
+}
+
 .folder-selector-item:hover {
     color: rgba(0, 0, 0, 0.9);
+    background-color: #f7f7f7;
+}
+
+.folder-selector-parent {
+    padding-left: 10px;
 }
 
 .folder-selector-child {

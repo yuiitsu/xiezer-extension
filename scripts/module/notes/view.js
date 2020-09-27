@@ -165,4 +165,17 @@ App.view.extend('notes', function() {
             </div>
         `;
     };
+
+    this.moveToNotebook = function() {
+        return `
+            <div class="notes-move-to-notebook-action">
+                <div class="action-button">
+                    <button class="btn btn-primary notes-move-to-notebook-ok">OK</button>
+                </div>
+                <div class="action-button">
+                    <button class="btn btn-default module-close">Cancel</button>
+                </div>
+            </div>
+        `;
+    };
 });

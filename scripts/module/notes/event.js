@@ -89,6 +89,26 @@ App.event.extend('notes', function() {
                 //
                 localStorage.setItem('notesOrder', notesOrder);
             });
+        },
+        selectMoveToNotebookId: function() {
+            $('body').on('click', '.folder-selector-item', function(e) {
+                //
+                $('.folder-selector-item').removeClass('focus');
+                //
+                let notebookId = $(this).attr('data-id');
+                if (notebookId) {
+                    $(this).addClass('focus');
+                }
+                Model.set('moveToNotebookId', notebookId);
+                e.stopPropagation();
+            });
+        },
+        moveToNoteBook: function() {
+            $('body').on('click', '.notes-move-to-notebook-ok', function(e) {
+                Model.set('moveToNotebook', new Date().getTime());
+                $('.module-box').remove();
+                e.stopPropagation();
+            });
         }
     }
 });

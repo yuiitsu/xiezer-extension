@@ -83,7 +83,7 @@ App.module.extend('component', function() {
 
             focus.off('mouseleave').on('mouseleave', function() {
                 _this.timer = setTimeout(function() {
-                    // $('#tips-box').remove();
+                    $('#tips-box').remove();
                 }, 300);
             });
 
@@ -140,11 +140,11 @@ App.module.extend('component', function() {
                 .off('mouseenter').on('mouseenter', function() {
                     clearTimeout(_this.timer);
             }).off('mouseleave').on('mouseleave', function() {
-                // $(this).remove();
+                $(this).remove();
             });
         },
         remove: function() {
-            // $('#tips-box').remove();
+            $('#tips-box').remove();
         }
     };
 
@@ -172,30 +172,36 @@ App.module.extend('component', function() {
 
     /**
      * module
-     * @param name
+     * @param options
+     *  options.name
+     *  options.width
      * @param content
      * @param action
      */
-    this.module = function(name, content, action) {
+    this.module = function(options, content, action) {
         let module_id = Date.parse(new Date());
         $('body').append(this.view.getView('component', 'module', {
-            name: name,
+            name: options.name,
             content: content,
             action: action,
             module_id: module_id
         }));
 
-        $('.module-box-' + module_id).find('.js-handler').attr('data-module-id', module_id);
+        let container = $('.module-box-' + module_id);
+        container.find('.js-handler').attr('data-module-id', module_id);
+        if (options.width) {
+            container.find('.module-content').css({width: options.width});
+        }
 
         // 检查高度
         let target = $('.module-main');
         let target_height = target.outerHeight();
-        let content_height = target_height + 90 > 600 ? '600px' : target_height + 100;
+        // let content_height = target_height + 90 > 600 ? '600px' : target_height + 100;
         //$('.module-content').css('height', content_height);
         //target.css('height', target_height);
 
         $('.module-close').off('click').on('click', function() {
-            let module_id = $(this).attr('data-module-id');
+            // let module_id = $(this).attr('data-module-id');
             $('.module-box-' + module_id).remove();
         });
 
@@ -203,6 +209,8 @@ App.module.extend('component', function() {
             let module_id = $(this).attr('data-module-id');
             $('.module-box-' + module_id).remove();
         });
+        //
+        return container;
     };
 
     /**
