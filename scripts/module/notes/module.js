@@ -20,7 +20,7 @@ App.module.extend('notes', function() {
         //
         // Model.set('isSearchMode', true);
         //
-        this.module.data.readAllNotes();
+        // this.module.data.readAllNotes();
     };
 
     this.renderNotes = function() {

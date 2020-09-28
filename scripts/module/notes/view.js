@@ -79,10 +79,10 @@ App.view.extend('notes', function() {
 
     this.list = function() {
         return `
-            {{ if data && data.list && data.list.length > 0 }}
             <div class="notes-edit-actions display-flex-row">
                 {{ this.view.getView('notes', 'searchInput', {searchKey: data.searchKey}) }}
             </div>
+            {{ if data && data.list && data.list.length > 0 }}
             <div class="notes-edit-actions notes-edit-line display-flex-row">
                 <div class="notes-edit-actions-left display-flex-auto">
                     <div class="notes-edit-action-item" data-action="moveToNoteBook">

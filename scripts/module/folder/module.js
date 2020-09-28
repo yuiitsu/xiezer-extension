@@ -12,7 +12,9 @@ App.module.extend('folder', function() {
         //
         Model.set('notebooks', '').watch('notebooks', this.renderNotebooks);
         //
-        this.module.data.readAllNoteBooks();
+        this.module.data.readAllNoteBooks(function() {
+            self.module.data.readAllNotes();
+        });
     };
 
     this.renderNotebooks = function(notes) {

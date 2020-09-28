@@ -9,7 +9,9 @@ App.module.extend('data', function() {
         dbName = 'xiezer',
         db = null, 
         currentDataKey = 'currentData', 
-        noteLockCache = [];
+        noteLockCache = [],
+        notebookLockCache = [], 
+        notebookLocked = [];
 
     //
     Model.default = {
@@ -141,43 +143,52 @@ App.module.extend('data', function() {
      * @param {*} callback 
      */
     this.saveNoteBook = function(data, callback) {
-        this.getNoteBook(data.name, function() {
-            let noteBookId = self._uuid();
-            data['noteBookId'] = noteBookId;
-            let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').add(data);
-            request.onsuccess = function() {
-                self.log('add Notebook success.');
-                //
-                callback();
-                //
-                self.readAllNoteBooks();
-            };
-            request.onerror = function() {
-                self.log('add Notebook failed');
-            };
+        this.getNotebookByName(data.name, function(status, r) {
+            if (!status) {
+                let noteBookId = self._uuid();
+                data['noteBookId'] = noteBookId;
+                let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').add(data);
+                request.onsuccess = function() {
+                    self.log('add Notebook success.');
+                    //
+                    callback();
+                    //
+                    self.readAllNoteBooks();
+                };
+                request.onerror = function() {
+                    self.log('add Notebook failed');
+                };
+            }
         });
     };
 
     this.updateNoteBook = function(data, callback) {
-        let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').put({
-            noteBookId: data.noteBookId,
-            name: data.name,
-            parentId: data.parentId,
-            showChildren: data.showChildren
+        this.getNotebookById(data.noteBookId, function(status, r) {
+            if (status && data.name !== r.name) {
+                let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').put({
+                    noteBookId: data.noteBookId,
+                    name: data.name,
+                    parentId: data.parentId,
+                    showChildren: data.showChildren,
+                    password: r.password
+                });
+                request.onsuccess = function() {
+                    self.log('update Notebook success.');
+                    //
+                    callback();
+                    //
+                    self.readAllNoteBooks();
+                };
+                request.onerror = function() {
+                    self.log('update Notebook failed');
+                };
+            } else {
+                self.readAllNoteBooks();
+            }
         });
-        request.onsuccess = function() {
-            self.log('update Notebook success.');
-            //
-            callback();
-            //
-            self.readAllNoteBooks();
-        };
-        request.onerror = function() {
-            self.log('update Notebook failed');
-        };
     };
 
-    this.getNoteBook = function(name, callback) {
+    this.getNotebookByName = function(name, callback) {
         let transaction = db.transaction(['notebooks'], 'readonly');
         let store = transaction.objectStore('notebooks');
         let index = store.index('name');
@@ -187,12 +198,30 @@ App.module.extend('data', function() {
             let result = e.target.result;
             if (result) {
                 self.log('data existed.');
+                callback(true, result);
             } else {
                 // 
-                callback();
+                callback(false, null);
             }
         }
     };
+
+    this.getNotebookById = function(notebookId, callback) {
+        let transaction = db.transaction(['notebooks'], 'readonly');
+        let store = transaction.objectStore('notebooks');
+        let request = store.get(notebookId);
+        //
+        request.onsuccess = function (e) {
+            let result = e.target.result;
+            if (result) {
+                self.log('data existed.');
+                callback(true, result);
+            } else {
+                // 
+                callback(false, null);
+            }
+        }
+    }
 
     this.deleteNoteBook = function(noteBookId, callback) {
         let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').delete(noteBookId);
@@ -202,10 +231,12 @@ App.module.extend('data', function() {
         };
     };
 
-    this.readAllNoteBooks = function() {
+    this.readAllNoteBooks = function(callback) {
         let objectStore = db.transaction('notebooks').objectStore('notebooks'), 
             result = [], 
             o = {};
+
+        notebookLocked = [];
         //
         objectStore.index('name').openCursor(null, 'next').onsuccess = function (event) {
             let cursor = event.target.result; 
@@ -219,8 +250,13 @@ App.module.extend('data', function() {
                         parentId: parentId,
                         name: name,
                         showChildren: showChildren,
+                        isLocked: cursor.value.password ? true : false,
                         children: []
                     };
+                //
+                if (d.isLocked && notebookLocked.indexOf(id) === -1) {
+                    notebookLocked.push(id);
+                }
                 //
                 if (parentId && !o[parentId]) {
                     o[parentId] = [];
@@ -239,7 +275,12 @@ App.module.extend('data', function() {
                         result[i]['children'] = o[result[i]['id']];
                     }
                 }
+                // console.log(result);
                 Model.set('notebooks', result);
+                //
+                if ($.isFunction(callback)) {
+                    callback();
+                }
             }
         };
     };
@@ -261,14 +302,24 @@ App.module.extend('data', function() {
                     title: cursor.value.title,
                     createAt: cursor.value.createAt ? self.module.component.timeToStr(cursor.value.createAt) : '',
                     createAtInt: cursor.value.createAt,
-                    isLocked: cursor.value.password ? true : false 
+                    isLocked: cursor.value.password ? true : false,
+                    notebook: cursor.value.notebook ? cursor.value.notebook : ''
+                }, isLocked = false;
+                //
+                if (notebookLocked.indexOf(item.notebook) !== -1 && notebookLockCache.indexOf(item.notebook) === -1) {
+                    isLocked = true;
                 }
+                //
                 if (searchKey) {
                     if (cursor.value.title.indexOf(searchKey) !== -1) {
-                        result.push(item);
+                        if (!isLocked) {
+                            result.push(item);
+                        }
                     }
                 } else {
-                    result.push(item);
+                    if (!isLocked) {
+                        result.push(item);
+                    }
                 }
                 cursor.continue();
             } else {
@@ -281,9 +332,9 @@ App.module.extend('data', function() {
                     }
                 });
                 //
-                console.log(result);
+                // console.log(result);
                 Model.set('notes', result);
-                self.readAllNoteBooks();
+                // self.readAllNoteBooks();
             }
         };
     };
@@ -379,6 +430,84 @@ App.module.extend('data', function() {
                     //
                     request.onsuccess = function() {
                         self.module.component.notification('Clear successfully.');
+                        callback(true);
+                    };
+                    //
+                    request.onerror = function() {
+                        self.module.component.notification('Clear failed.', 'danger');
+                        callback(false);
+                    };
+                }
+            } else {
+                callback(false);
+            }
+        });
+    };
+
+    this.lockNotebook = function(noteBookId, password, callback) {
+        this.getNotebookById(noteBookId, function(status, data) {
+            if (status) {
+                data['password'] = self.module.component.md5(password);
+                request = db.transaction(['notebooks'], 'readwrite')
+                    .objectStore('notebooks')
+                    .put(data);
+                //
+                request.onsuccess = function() {
+                    self.module.component.notification('Lock successfully.')
+                    self.readAllNoteBooks(function() {
+                        self.readAllNotes();
+                    });
+                    callback();
+                };
+                //
+                request.onerror = function() {
+                    self.module.component.notification('Lock failed.', 'danger')
+                };
+            }
+        });
+    };
+
+    this.checkNotebookLock = function(notebookId, password, callback) {
+        if (notebookLockCache.indexOf(notebookId) !== -1) {
+            callback(true);
+            return false;
+        }
+        this.getNotebookById(notebookId, function(status, data) {
+            if (status) {
+                if (data.password === self.module.component.md5(password)) {
+                    notebookLockCache.push(data.noteBookId);
+                    callback(true);
+                    return false;
+                }
+            }
+            callback(false);
+        });
+    };
+
+    this.notebookHasUnlocked = function(notebookId) {
+        let i = notebookLockCache.indexOf(notebookId); 
+        if (i !== -1) {
+            notebookLockCache.splice(i, 1);
+            self.readAllNotes();
+            return true;
+        }
+        return false;
+    };
+
+    this.clearNotebookLockPassword = function(notebookId, password, callback) {
+        this.getNotebookById(notebookId, function(status, data) {
+            if (status) {
+                if (data.password === self.module.component.md5(password)) {
+                    data['password'] = '';
+                    request = db.transaction(['notebooks'], 'readwrite')
+                        .objectStore('notebooks')
+                        .put(data);
+                    //
+                    request.onsuccess = function() {
+                        self.module.component.notification('Clear successfully.');
+                        self.readAllNoteBooks(function() {
+                            self.readAllNotes();
+                        });
                         callback(true);
                     };
                     //

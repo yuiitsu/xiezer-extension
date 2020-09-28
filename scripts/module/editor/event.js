@@ -11,6 +11,7 @@ App.event.extend('editor', function() {
             self.log('clear auto save timer');
             clearTimeout(autoSaveTimer);
         }
+        Model.set('editorAutoSaved', '');
         self.log('set auto save timer');
         autoSaveTimer = setTimeout(function() {
             self.save();
@@ -88,7 +89,6 @@ App.event.extend('editor', function() {
                 var contentNext = containerElement.value.substring(rangeEnd);
                 container.val(contentPrev + selectedContent + contentNext);
                 container.focus();
-                console.log(rangeEnd, rightOffset);
                 containerElement.setSelectionRange(rangeEnd + rightOffset, rangeEnd + rightOffset);
                 //
                 container.scrollTop(scrollTop);

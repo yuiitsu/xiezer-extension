@@ -152,7 +152,7 @@
 
 .folder-action-item {
     display: inline-block;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .folder-item-action-list {
@@ -241,4 +241,24 @@
 
 .folder-selector-child {
     padding-left: 20px;
+}
+
+.folder-child .locked {
+    display: none;
+}
+
+.folder-child.is-locked .locked {
+    display: block;
+}
+
+.folder-child.is-locked .unlocked {
+    display: none;
+}
+
+.folder-child2.is-locked .locked {
+    display: block;
+}
+
+.folder-child2.is-locked .unlocked {
+    display: none;
 }
