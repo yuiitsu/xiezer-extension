@@ -42,7 +42,7 @@ App.module.extend('previewer', function() {
     this.renderToc = function() {
         let toc = [], 
             n = 1;
-        $('#previewer').find('h1, h2, h3, h4, h5').each(function() {
+        $('#previewer').find('h1, h2, h3, h4, h5, h6').each(function() {
             let element = $(this)[0], 
                 nodeName = element.nodeName,
                 anchor = nodeName + '-' + n, 

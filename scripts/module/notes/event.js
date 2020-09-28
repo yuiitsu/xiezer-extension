@@ -15,7 +15,8 @@ App.event.extend('notes', function() {
         },
         openNote: function() {
             $('.notes-items').on('click', '.notes-item', function() {
-                let noteId = $(this).attr('data-id');
+                let _this = $(this), 
+                    noteId = $(this).attr('data-id');
                 if (!noteId) {
                     return false;
                 }
@@ -34,10 +35,48 @@ App.event.extend('notes', function() {
                     Model.set('notesChecked', notesChecked);
                 } else {
                     //
-                    Model.set('noteId', noteId);
-                    //
-                    $('.notes-item').removeClass('focus');
-                    $(this).addClass('focus');
+                    if ($(this).hasClass('is-locked')) {
+                        let title = $(this).attr('data-title');
+                        
+                        let container = self.module.component.module({
+                            name: 'UnLock note',
+                            width: 300
+                        }, self.view.getView('component', 'unlockForm', {
+                            id: noteId,
+                            name: title
+                        }), '');
+                        //
+                        container.find('.unlock-confirm').off('click').on('click', function() {
+                            let passwordElement = container.find('#password'), 
+                                password = passwordElement.val();
+                            //
+                            passwordElement.removeClass('error');
+                            if (!password) {
+                                passwordElement.addClass('error');
+                                return false;
+                            }
+                            //
+                            self.module.data.checkNoteLock(noteId, password, function(status) {
+                                //
+                                if (status) {
+                                    Model.set('noteId', noteId);
+                                    _this.removeClass('is-locked');
+                                    container.remove();
+                                    //
+                                    $('.notes-item').removeClass('focus');
+                                    _this.addClass('focus');
+                                } else {
+                                    self.module.component.dialog().ok('Unlock failed. Password error.', function() {
+                                    });
+                                }
+                            });
+                        });
+                    } else {
+                        Model.set('noteId', noteId);
+                        //
+                        $('.notes-item').removeClass('focus');
+                        $(this).addClass('focus');
+                    }
                 }
             });
         },
@@ -109,6 +148,75 @@ App.event.extend('notes', function() {
             $('body').on('click', '.notes-move-to-notebook-ok', function(e) {
                 Model.set('moveToNotebook', new Date().getTime());
                 $('.module-box').remove();
+                e.stopPropagation();
+            });
+        },
+        lock: function() {
+            $('.notes-items').on('click', '.lock-container', function(e) {
+                let _this = $(this), 
+                    noteId = $(this).attr('data-id'), 
+                    name = $(this).attr('data-name'), 
+                    action = $(this).attr('data-action');
+                //
+                if (action === 'lock') {
+                    //
+                    if (self.module.data.noteHasUnlocked(noteId)) {
+                        _this.parent().parent().parent().parent().addClass('is-locked');
+                        return false;
+                    }
+                    let container = self.module.component.module({
+                        name: 'Lock note',
+                        width: 300
+                    }, self.view.getView('component', 'lockForm', {
+                        id: noteId,
+                        name: name
+                    }), '');
+                    //
+                    container.find('.lock-confirm').off('click').on('click', function() {
+                        let noteId = $(this).attr('data-id'), 
+                            password = container.find('#password').val(), 
+                            confirmPassword = container.find('#confirm-password').val();
+                        //
+                        if (!password || !confirmPassword || password !== confirmPassword) {
+                            container.find('.form-control').addClass('error');
+                            return false;
+                        } else {
+                            container.find('.form-control').removeClass('error');
+                        }
+                        //
+                        self.module.data.lockNote(noteId, password, function() {
+                            _this.parent().parent().parent().parent().addClass('is-locked');
+                            container.remove();
+                        });
+                    });
+                } else {
+                    let container = self.module.component.module({
+                        name: 'Clear lock password',
+                        width: 300
+                    }, self.view.getView('component', 'unlockForm', {
+                        id: noteId,
+                        name: name
+                    }), '');
+                    //
+                    container.find('.unlock-confirm').off('click').on('click', function() {
+                        let noteId = $(this).attr('data-id'), 
+                            password = container.find('#password').val(); 
+                        //
+                        if (!password) {
+                            container.find('.form-control').addClass('error');
+                            return false;
+                        } else {
+                            container.find('.form-control').removeClass('error');
+                        }
+                        //
+                        self.module.data.clearNoteLockPassword(noteId, password, function(status) {
+                            if (status) {
+                                _this.parent().parent().parent().parent().removeClass('is-locked');
+                                container.remove();
+                            }
+                        });
+                    });
+                }
                 e.stopPropagation();
             });
         }

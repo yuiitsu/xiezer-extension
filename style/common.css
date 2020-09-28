@@ -13,12 +13,13 @@ button, input, optgroup, select, textarea {
     font-size: inherit;
     line-height: inherit;
     font-size: 14px;
+    outline: none;
 }
 
 ol, ul, p {
     margin-bottom: 1rem;
 }
-
+gt
 a {
     color: #007bff;
     text-decoration: none;
@@ -51,6 +52,19 @@ button {outline: none;}
 .btn-default{background-color:#eee;border-color:#eee;color:#222;}
 .btn-default:hover{background-color:#ddd;}
 
+/* form input */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    color: #666;
+}
+
+.form-control.error {
+    border: 1px solid rgba(201, 69, 54, 1);
+}
+
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {width:0;height:5px;}
 /* 滚动槽 */
@@ -59,3 +73,11 @@ button {outline: none;}
 ::-webkit-scrollbar-thumb {border-radius:0;background:rgba(0, 0, 0, 0.1);box-shadow:rgba(0,0,0,0.2);}
 ::-webkit-scrollbar-thumb:window-inactive {background:rgba(0,0,0,0.2);}
 
+.loading svg {
+    animation: loading 800ms infinite linear;
+}
+
+@keyframes loading {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

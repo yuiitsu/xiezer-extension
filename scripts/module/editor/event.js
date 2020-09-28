@@ -38,52 +38,49 @@ App.event.extend('editor', function() {
             $('.editor-content').focus();
         },
         editor: function() {
-            $('.editor-icon').on('click', function() {
-                let action = $(this).attr('data-action'), 
-                    container = $('.editor-content'), 
-                    containerElement = container[0], 
-                    rangeStart = containerElement.selectionStart ,
-                    rangeEnd = containerElement.selectionEnd,
-                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
-                    rightOffset = 0, 
-                    lines;
-                //
-                switch (action) {
-                    case 'bold':
-                        rightOffset = selectedContent ? 6 : 3;
-                        selectedContent = ' **' + selectedContent + '** '
-                        break;
-                    case 'italic':
-                        rightOffset = selectedContent ? 4 : 2;
-                        selectedContent = ' *' + selectedContent + '* '
-                        break;
-                    case 'list':
-                        lines = selectedContent.split('\n');
-                        rightOffset = selectedContent ? lines.length * 3 + 3 : 2;
-                        selectedContent = '\n\n';
-                        lines.forEach(item => {
-                            if (item) {
-                                selectedContent += '- ' + item + '\n'
-                            }
-                        });
-                        selectedContent += '\n'
-                        break;
-                    case 'quote':
-                        lines = selectedContent.split('\n');
-                        rightOffset = selectedContent ? lines.length * 3 + 2 : 2;
-                        selectedContent = '\n\n';
-                        lines.forEach(item => {
-                            if (item) {
-                                selectedContent += '> ' + item + '\n'
-                            }
-                        });
-                        selectedContent += '\n'
-                        break;
-                    case 'code-slash':
-                        rightOffset = selectedContent ? 12 : 5;
-                        selectedContent = '\n\n```\n' + selectedContent + '\n```\n\n'
-                        break;
+            let b = {
+                bold: function(selectedContent, rightOffset) {
+                    rightOffset = selectedContent ? 6 : 3;
+                    selectedContent = ' **' + selectedContent + '** ';
+                    return [selectedContent, rightOffset];
+                },
+                italic: function(selectedContent, rightOffset) {
+                    rightOffset = selectedContent ? 4 : 2;
+                    selectedContent = ' *' + selectedContent + '* '
+                    return [selectedContent, rightOffset];
+                },
+                list: function(selectedContent, rightOffset) {
+                    let lines = selectedContent.split('\n');
+                    rightOffset = selectedContent ? lines.length * 3 + 3 : 2;
+                    selectedContent = '\n\n';
+                    lines.forEach(item => {
+                        if (item) {
+                            selectedContent += '- ' + item + '\n';
+                        }
+                    });
+                    selectedContent += '\n';
+                    return [selectedContent, rightOffset];
+                },
+                quote: function(selectedContent, rightOffset) {
+                    let lines = selectedContent.split('\n');
+                    rightOffset = selectedContent ? lines.length * 3 + 2 : 2;
+                    selectedContent = '\n\n';
+                    lines.forEach(item => {
+                        if (item) {
+                            selectedContent += '> ' + item + '\n';
+                        }
+                    });
+                    selectedContent += '\n';
+                    return [selectedContent, rightOffset];
+                },
+                'code-slash': function(selectedContent, rightOffset) {
+                    rightOffset = selectedContent ? 12 : 5;
+                    selectedContent = '\n\n```\n' + selectedContent + '\n```\n\n';
+                    return [selectedContent, rightOffset];
                 }
+            };
+            //
+            let d = function(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset) {
                 //
                 let scrollTop = container.scrollTop();
                 //
@@ -97,6 +94,62 @@ App.event.extend('editor', function() {
                 container.scrollTop(scrollTop);
                 //
                 container.trigger('change');
+            }
+            //
+            $('.editor-icon').on('click', function() {
+                let action = $(this).attr('data-action'), 
+                    container = $('.editor-content'), 
+                    containerElement = container[0], 
+                    rangeStart = containerElement.selectionStart ,
+                    rangeEnd = containerElement.selectionEnd,
+                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
+                    rightOffset = 0;
+                //
+                r = b[action](selectedContent, rightOffset);
+                selectedContent = r[0];
+                rightOffset = r[1];
+                //
+                d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+            });
+            //
+            $('.editor-content').on('keydown', function(e) {
+                let container = $('.editor-content'), 
+                    containerElement = container[0], 
+                    rangeStart = containerElement.selectionStart ,
+                    rangeEnd = containerElement.selectionEnd,
+                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
+                    rightOffset = 0, 
+                    k = '';
+                //
+                if (e.altKey && e.keyCode === 66) {
+                    console.log('option + b');
+                    k = 'bold';
+                }
+                if (e.altKey && e.keyCode === 73) {
+                    console.log('option + i');
+                    k = 'italic';   
+                }
+                if (e.altKey && e.keyCode === 85) {
+                    console.log('option + u');
+                    k = 'list';   
+                }
+                if (e.altKey && e.keyCode === 81) {
+                    console.log('option + q');
+                    k = 'quote';   
+                }
+                if (e.altKey && e.keyCode === 67) {
+                    console.log('option + c');
+                    k = 'code-slash';   
+                }
+                //
+                if (k) {
+                    r = b[k](selectedContent, rightOffset);
+                    selectedContent = r[0];
+                    rightOffset = r[1];
+                    //
+                    d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+                    return false;
+                }
             });
         },
         contentChange: function() {

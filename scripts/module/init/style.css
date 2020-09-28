@@ -32,10 +32,6 @@
     margin-right: 10px;
 }
 
-.prepare-loading svg {
-    animation: spin 800ms infinite linear;
-}
-
 .prepare-error {
     color: rgba(201, 69, 54, 1);
 }
@@ -127,6 +123,10 @@
     padding-left: 50px;
 }
 
+.toc-H6 {
+    padding-left: 60px;
+}
+
 .folder-mini {
     position: absolute;
     left: 70px;
@@ -149,11 +149,6 @@
     vertical-align: middle;
     margin-right: 5px;
     margin-top: -2px;
-}
-
-@keyframes spin {
-    0%   { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 @keyframes mini-show {

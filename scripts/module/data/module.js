@@ -8,7 +8,8 @@ App.module.extend('data', function() {
         dbVersion = 4,
         dbName = 'xiezer',
         db = null, 
-        currentDataKey = 'currentData';
+        currentDataKey = 'currentData', 
+        noteLockCache = [];
 
     //
     Model.default = {
@@ -259,7 +260,8 @@ App.module.extend('data', function() {
                     id: cursor.value.noteId,
                     title: cursor.value.title,
                     createAt: cursor.value.createAt ? self.module.component.timeToStr(cursor.value.createAt) : '',
-                    createAtInt: cursor.value.createAt
+                    createAtInt: cursor.value.createAt,
+                    isLocked: cursor.value.password ? true : false 
                 }
                 if (searchKey) {
                     if (cursor.value.title.indexOf(searchKey) !== -1) {
@@ -279,6 +281,7 @@ App.module.extend('data', function() {
                     }
                 });
                 //
+                console.log(result);
                 Model.set('notes', result);
                 self.readAllNoteBooks();
             }
@@ -317,6 +320,75 @@ App.module.extend('data', function() {
                 callback(false, result);
             }
         }
+    };
+
+    this.lockNote = function(noteId, password, callback) {
+        this.getOneNote(noteId, function(status, data) {
+            if (status) {
+                data['password'] = self.module.component.md5(password);
+                request = db.transaction(['notes'], 'readwrite')
+                    .objectStore('notes')
+                    .put(data);
+                //
+                request.onsuccess = function() {
+                    self.module.component.notification('Lock successfully.')
+                    callback();
+                };
+                //
+                request.onerror = function() {
+                    self.module.component.notification('Lock failed.', 'danger')
+                };
+            }
+        });
+    };
+
+    this.checkNoteLock = function(noteId, password, callback) {
+        if (noteLockCache.indexOf(noteId) !== -1) {
+            callback(true);
+            return false;
+        }
+        this.getOneNote(noteId, function(status, data) {
+            if (status) {
+                if (data.password === self.module.component.md5(password)) {
+                    noteLockCache.push(data.noteId);
+                    callback(true);
+                    return false;
+                }
+            }
+            callback(false);
+        });
+    };
+
+    this.noteHasUnlocked = function(noteId) {
+        if (noteLockCache.indexOf(noteId) !== -1) {
+            return true;
+        }
+        return false;
+    };
+
+    this.clearNoteLockPassword = function(noteId, password, callback) {
+        this.getOneNote(noteId, function(status, data) {
+            if (status) {
+                if (data.password === self.module.component.md5(password)) {
+                    data['password'] = '';
+                    request = db.transaction(['notes'], 'readwrite')
+                        .objectStore('notes')
+                        .put(data);
+                    //
+                    request.onsuccess = function() {
+                        self.module.component.notification('Clear successfully.');
+                        callback(true);
+                    };
+                    //
+                    request.onerror = function() {
+                        self.module.component.notification('Clear failed.', 'danger');
+                        callback(false);
+                    };
+                }
+            } else {
+                callback(false);
+            }
+        });
     };
 
     this.deleteNotes = function() {

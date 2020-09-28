@@ -54,6 +54,11 @@
     height: 100%;
 }
 
+.notes-items .loading {
+    text-align: center;
+    padding: 20px;
+}
+
 .notes-items-container {
     overflow-y: auto;
     height: 100%;
@@ -170,6 +175,10 @@
     padding: 20px;
 }
 
+.notes-nothing-icon {
+    font-size: 28px;
+}
+
 .notes-bottom-bar {
     padding: 10px 20px;
     font-size: 12px;
@@ -181,4 +190,20 @@
 .notes-move-to-notebook-action .action-button {
     height: 30px;
     margin-top: 10px;
+}
+
+.notes-item .locked {
+    display: none;
+}
+
+.notes-item .unlocked {
+    display: block;
+}
+
+.notes-item.is-locked .locked {
+    display: block;
+}
+
+.notes-item.is-locked .unlocked {
+    display: none;
 }

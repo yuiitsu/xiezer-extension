@@ -12,13 +12,13 @@ App.module.extend('notes', function() {
         //
         Model.set('notes', '').watch('notes', this.renderNotes);
         Model.set('isEditMode', false).watch('isEditMode', this.renderEditMode);
-        Model.set('isSearchMode', false).watch('isSearchMode', this.renderNotes);
+        // Model.set('isSearchMode', false).watch('isSearchMode', this.renderNotes);
         Model.set('notesChecked', []).watch('notesChecked', this.renderEditLine);
         Model.watch('notesOrder', this.renderOrderIcon);
         Model.watch('isEditMode', this.renderEditIcon);
         Model.watch('isSearchMode', this.renderSearchIcon);
         //
-        Model.set('isSearchMode', true);
+        // Model.set('isSearchMode', true);
         //
         this.module.data.readAllNotes();
     };

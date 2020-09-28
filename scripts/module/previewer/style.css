@@ -24,14 +24,45 @@ code {
     overflow-y: auto;
 }
 
+.previewer-main a {
+    color: rgba(201, 69, 54, 1);
+    text-decoration: none;
+    background-color: transparent;
+}
+
 .previewer-main hr {
     color: rgba(0, 0, 0, 0.3);
     margin-bottom: 1rem;
 }
 
-.previewer-main h1, .previewer-main h2, .previewer-main h3, .previewer-main h4, .previewer-main h5 {
+.previewer-main h1, .previewer-main h2, .previewer-main h3, .previewer-main h4, .previewer-main h5, .previewer-main h6 {
     margin-bottom: 1rem;
     line-height: 1.5;
+    font-weight: 500;
+}
+
+.previewer-main h1 {
+    font-size: 2.5rem;
+}
+
+.previewer-main h2 {
+    font-size: 2rem;
+}
+
+.previewer-main h3 {
+    font-size: 1.75rem;
+}
+
+.previewer-main h4 {
+    font-size: 1.5rem;
+}
+
+.previewer-main h5 {
+    font-size: 1.25rem;
+}
+
+.previewer-main h6 {
+    font-size: 1rem;
 }
 
 .previewer-main img {
@@ -89,6 +120,37 @@ code {
 
 .previewer-main blockquote p {
     margin: 0;
+}
+
+.previewer-main table {
+    border: 1px solid #efefef;
+}
+
+.previewer-main table th, .previewer-main table td {
+    padding: 5px;
+}
+
+.previewer-main table thead th {
+    border-bottom: 1px solid #efefef;
+    border-right: 1px solid #efefef;
+    font-weight: 500;
+}
+
+.previewer-main table thead th:last-child {
+    border-right: 0;
+}
+
+.previewer-main table tbody td {
+    border-bottom: 1px solid #efefef;
+    border-right: 1px solid #efefef;
+}
+
+.previewer-main table tbody td:last-child {
+    border-right: 0;
+}
+
+.previewer-main table tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 .previewer-empty {

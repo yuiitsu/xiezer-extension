@@ -33,6 +33,7 @@ App.view.extend('notes', function() {
                     </div>
                 </div>
                 <div class="notes-items display-flex-auto display-flex-column">
+                    {{ this.view.getView('component', 'loading', {}) }}
                 </div>
             </div>
         `;
@@ -79,11 +80,9 @@ App.view.extend('notes', function() {
     this.list = function() {
         return `
             {{ if data && data.list && data.list.length > 0 }}
-            {{ if data.isSearchMode }}
             <div class="notes-edit-actions display-flex-row">
                 {{ this.view.getView('notes', 'searchInput', {searchKey: data.searchKey}) }}
             </div>
-            {{ end }}
             <div class="notes-edit-actions notes-edit-line display-flex-row">
                 <div class="notes-edit-actions-left display-flex-auto">
                     <div class="notes-edit-action-item" data-action="moveToNoteBook">
@@ -107,7 +106,8 @@ App.view.extend('notes', function() {
                 {{ for var i in data.list }}
                 {{ var item = data.list[i] }}
                 {{ var focusClassName = item.id == data.selectedNoteId ? 'focus' : '' }}
-                <div class="notes-item display-flex-row {{ focusClassName }}" data-id="{{ item['id'] }}">
+                {{ var isLockedClassName = item.isLocked ? 'is-locked' : '' }}
+                <div class="notes-item display-flex-row {{ focusClassName }} {{ isLockedClassName }}" data-id="{{ item['id'] }}" data-title="{{ item.title }}">
                     <div class="notes-checkbox">
                         {{ this.view.getView('notes', 'checkboxChecked', {}) }}
                         {{ this.view.getView('notes', 'checkboxDefault', {}) }}
@@ -118,20 +118,24 @@ App.view.extend('notes', function() {
                         </div>
                         <div class="notes-bottom display-flex-row">
                             <div class="display-flex-auto notes-time">{{ item['createAt'] }}</div>
-                            <!--
                             <div class="notes-bottom-action">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                </svg>
+                                {{ this.view.getView('component', 'lock', {id: item.id, name: item.title, isLocked: item.isLocked}) }}
                             </div>
-                            -->
                         </div>
                     </div>
                 </div>
                 {{ end }}
             </div>
             {{ else }}
-            <div class="notes-empty display-flex-auto">Nothing</div>
+            <div class="notes-empty display-flex-auto">
+                <div class="notes-nothing-icon">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-layers-half" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3.188 8L.264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l-4.578 2.441a.5.5 0 0 1-.47 0L3.188 8z"/>
+                        <path fill-rule="evenodd" d="M7.765 1.559a.5.5 0 0 1 .47 0l7.5 4a.5.5 0 0 1 0 .882l-7.5 4a.5.5 0 0 1-.47 0l-7.5-4a.5.5 0 0 1 0-.882l7.5-4zM1.563 6L8 9.433 14.438 6 8 2.567 1.562 6z"/>
+                    </svg>
+                </div>
+                Empty
+            </div>
             {{ end }}
             <div class="notes-bottom-bar"><span id="notes-count">0</span> notes</div>
         `;
