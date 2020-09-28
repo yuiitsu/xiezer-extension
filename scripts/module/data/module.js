@@ -360,7 +360,9 @@ App.module.extend('data', function() {
     };
 
     this.noteHasUnlocked = function(noteId) {
-        if (noteLockCache.indexOf(noteId) !== -1) {
+        let i = noteLockCache.indexOf(noteId); 
+        if (i !== -1) {
+            noteLockCache.splice(i, 1);
             return true;
         }
         return false;

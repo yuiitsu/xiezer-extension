@@ -67,6 +67,9 @@ App.event.extend('notes', function() {
                                     _this.addClass('focus');
                                 } else {
                                     self.module.component.dialog().ok('Unlock failed. Password error.', function() {
+                                        let target = container.find('#password');
+                                        target.focus();
+                                        target.select();
                                     });
                                 }
                             });
