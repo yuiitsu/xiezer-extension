@@ -237,7 +237,7 @@ App.event.extend('folder', function() {
                     return false;
                 }
                 // action
-                self.module.component.dialog().show('confirm', 'Delete?', function() {
+                self.module.component.dialog().show('confirm', 'Are you sure you want to delete these?', function() {
                     self.module.data.deleteNoteBook(noteBookId, function() {});
                 });
             });

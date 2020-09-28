@@ -106,7 +106,7 @@ App.view.extend('component', function() {
                     if you want to encrypt the note, please set AES encryption.
                 </div>
                 <div class="lock-button">
-                    <button class="btn btn-primary lock-confirm" data-id="{{ data.id }}">Confirm</button>
+                    <button class="btn btn-primary lock-confirm" data-id="{{ data.id }}">Lock</button>
                 </div>
             </div>
         `;

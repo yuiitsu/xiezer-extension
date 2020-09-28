@@ -164,27 +164,23 @@ App.module.extend('data', function() {
 
     this.updateNoteBook = function(data, callback) {
         this.getNotebookById(data.noteBookId, function(status, r) {
-            if (status && data.name !== r.name) {
-                let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').put({
-                    noteBookId: data.noteBookId,
-                    name: data.name,
-                    parentId: data.parentId,
-                    showChildren: data.showChildren,
-                    password: r.password
-                });
-                request.onsuccess = function() {
-                    self.log('update Notebook success.');
-                    //
-                    callback();
-                    //
-                    self.readAllNoteBooks();
-                };
-                request.onerror = function() {
-                    self.log('update Notebook failed');
-                };
-            } else {
+            let request = db.transaction(['notebooks'], 'readwrite').objectStore('notebooks').put({
+                noteBookId: data.noteBookId,
+                name: data.name,
+                parentId: data.parentId,
+                showChildren: data.showChildren,
+                password: r.password
+            });
+            request.onsuccess = function() {
+                self.log('update Notebook success.');
+                //
+                callback();
+                //
                 self.readAllNoteBooks();
-            }
+            };
+            request.onerror = function() {
+                self.log('update Notebook failed');
+            };
         });
     };
 
