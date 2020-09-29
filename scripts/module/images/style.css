@@ -22,6 +22,7 @@
     padding: 10px;
     border-bottom: 1px solid #eaeaea;
     cursor: pointer;
+    height: 42px;
 }
 
 .images-lib-side ul li.focus, .images-lib-side ul li:hover {
@@ -41,12 +42,20 @@
 
 .images-lib-action-bar {
     text-align: right;
+    border-bottom: 1px solid #efefef;
+    padding: 2.7px 0;
+    height: 42px;
 }
 
 .images-lib-action {
     display: inline-block;
     padding: 10px;
     cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.images-lib-action:hover {
+    color: rgba(0, 0, 0, 0.9);
 }
 
 .images-lib-action label {
@@ -82,12 +91,24 @@
     display:flex;
 	align-items:center; 
     justify-content:center;
+    padding: 20px;
+}
+
+.images-lib-list-empty {
+    text-align: center;
+    color: #999;
+    height: 100%;
+    line-height: 250px;
+}
+
+.images-lib-list-empty svg {
+    margin-bottom: -2px;
 }
 
 .images-lib-list {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 10px;
+    padding: 10px;
     height: 100%;
 }
 
@@ -95,12 +116,32 @@
     width: 550px;
 }
 
+.images-lib-list-error-container {
+    color: rgba(201, 69, 54, 1);
+    padding: 20px;
+    text-align: center;
+}
+
+.images-lib-list-error-container svg {
+    margin-right: 5px;
+    margin-bottom: -2px;
+}
+
 .images-lib-item {
     float: left;
     margin-bottom: 10px;
 }
 
-.images-lib-item-img-container {
+.images-lib-list-nav {
+    padding: 10px;
+}
+
+.images-lib-list-nav span {
+    cursor: pointer;
+    color: rgba(201, 69, 54, 1);
+}
+
+.images-lib-item-container {
     width: 100px;
     height: 100px;
     border: 1px solid #efefef;
@@ -111,6 +152,13 @@
 	align-items:center; 
     justify-content:center;
     cursor: pointer;
+}
+
+.images-lib-item-img-container {
+}
+
+.images-lib-item-dir-container {
+    font-size: 52px;
 }
 
 .images-lib-item-img-container img {
@@ -158,4 +206,29 @@
 
 .images-lib-page button:disabled {
     color: #ccc;
+}
+
+.images-lib-setting-container {
+    padding: 20px 100px;
+}
+
+.images-lib-setting-line {
+    margin-bottom: 10px;
+}
+
+.images-lib-setting-line label {
+    margin-bottom: 5px;
+}
+
+.images-lib-setting-action-line {
+    height: 30px;
+    margin-top:20px;
+}
+
+.images-lib-setting-action-line button {
+    margin-right: 10px;
+}
+
+.images-lib-setting-action-line button:last-child {
+    margin-right: 0;
 }

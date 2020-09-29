@@ -167,7 +167,7 @@ App.module.extend('component', function() {
 
         notification_timer = setTimeout(function() {
             $('#notification-box').fadeOut();
-        }, 2000);
+        }, 3000);
     };
 
     /**
