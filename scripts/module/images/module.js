@@ -100,6 +100,10 @@ App.module.extend('images', function() {
             if (!Model.get('setting_' + useLib)) {
                 try {
                     setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
+                    if (!setting) {
+                        Model.set('imageListError', 'Please set the Github account first.');
+                        return false;
+                    }
                     Model.set('setting_' + useLib, setting);
                 } catch (e) {
                     self.module.component.notification('Setting data error. please check setting.', 'danger');
@@ -216,6 +220,11 @@ App.module.extend('images', function() {
             //
             try {
                 setting = JSON.parse(setting);
+                setting = setting ? setting : {
+                    user: '',
+                    repos: '',
+                    token: ''
+                };
             } catch (e) {
                 self.module.component.notification('Setting data error. please check setting.', 'danger');
                 return false;
