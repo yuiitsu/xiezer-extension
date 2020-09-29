@@ -129,15 +129,15 @@ App.module.extend('images', function() {
                         'Authorization': 'token ' + setting.token
                     }
                 }, {}, function(response, xhr) {
+                    isQueryLoading = false;
+                    self.loading.hide();
                     if (xhr.status !== 200) {
                         self.module.component.notification('Unauthorized, please check the token', 'danger');
                         Model.set('imageListError', 'Unauthorized, please check the token');
                         return false;
                     }
                     Model.set('imageList', response);
-                    isQueryLoading = false;
-                    self.loading.hide();
-                })
+                });
             },
             upload: function(xhr, name, base64Data) {
                 let setting = Model.get('setting_github');
@@ -257,6 +257,7 @@ App.module.extend('images', function() {
                 token: token
             };
             localStorage.setItem(settingKey.github, JSON.stringify(data));
+            Model.set('setting_' + Model.get('useLib'), data);
             self.module.component.notification('Save successfuly.');
             //
             self.lib.reload();
