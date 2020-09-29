@@ -95,6 +95,19 @@ App.event.extend('editor', function() {
                 //
                 container.trigger('change');
             }
+            $('.editor-content').on('blur', function() {
+                let container = $('.editor-content'), 
+                    containerElement = container[0], 
+                    rangeStart = containerElement.selectionStart ,
+                    rangeEnd = containerElement.selectionEnd,
+                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart);
+                // console.log(rangeStart, rangeEnd, selectedContent);
+                Model.set('editorRange', {
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd,
+                    selectedContent: selectedContent
+                });
+            });
             //
             $('.editor-icon').on('click', function() {
                 let action = $(this).attr('data-action'), 
@@ -217,6 +230,11 @@ App.event.extend('editor', function() {
                 target.select();
                 document.execCommand('copy');
                 self.module.component.notification('Copy successfully.');
+            });
+        },
+        images: function() {
+            $('#images').on('click', function() {
+                self.module.images.show();
             });
         }
         // clickTab: function() {

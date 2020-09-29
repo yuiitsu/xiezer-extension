@@ -13,6 +13,7 @@ App.module.extend('editor', function() {
         Model.set('editorAutoSaved', '').watch('editorAutoSaved', this.renderAutoSaved);
         Model.set('editorScrollTop', 0).watch('editorScrollTop', this.renderScrollTop);
         Model.set('notesOpened', false).watch('notesOpened', this.renderActionIcon);
+        Model.set('editorRange', {});
         //
         self.view.display('editor', 'layout', {content: ''}, $('#editor'));
     };
@@ -67,5 +68,30 @@ App.module.extend('editor', function() {
         } else {
             target.addClass('disabled');
         }
+    };
+    
+    this.insertContent = function(str) {
+        let container = $('.editor-content'), 
+            containerElement = container[0],
+            editorRange = Model.get('editorRange'), 
+            rangeStart = editorRange.rangeStart,
+            rangeEnd = editorRange.rangeEnd,
+            // selectedContent = editorRange.selectedContent,
+            content = '', 
+            scrollTop = container.scrollTop();
+        //
+        if (!editorRange.rangeStart) {
+            content = container.val() + str;
+        } else {
+            //
+            var contentPrev = containerElement.value.substring(0, rangeStart);
+            var contentNext = containerElement.value.substring(rangeEnd);
+            content = contentPrev + str + contentNext;
+            container.focus();
+            containerElement.setSelectionRange(rangeEnd, rangeEnd);
+        }
+        container.val(content);
+        container.trigger('change');
+        container.scrollTop(scrollTop);
     }
 });

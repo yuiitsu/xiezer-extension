@@ -75,7 +75,7 @@ App.event.extend('folder', function() {
                     if (_this.parent().hasClass('is-locked')) {
                         let name = _this.text();
                         let container = self.module.component.module({
-                            name: 'UnLock notebook',
+                            name: 'Unlock notebook',
                             width: 300
                         }, self.view.getView('component', 'unlockForm', {
                             id: noteBookId,

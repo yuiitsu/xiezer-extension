@@ -269,9 +269,15 @@ App.module.extend('data', function() {
                 for (let i = 0; i < result.length; i++) {
                     if (o[result[i]['id']]) {
                         result[i]['children'] = o[result[i]['id']];
+                        delete o[result[i]['id']];
                     }
                 }
-                // console.log(result);
+                for (let i in o) {
+                    if (o.hasOwnProperty(i)) {
+                        result = result.concat(o[i]);
+                    }
+                }
+                console.log(result);
                 Model.set('notebooks', result);
                 //
                 if ($.isFunction(callback)) {

@@ -101,7 +101,7 @@ App.view.extend('component', function() {
                 <div class="lock-line lock-title">{{ data.name }}</div>
                 <div class="lock-line"><input type="password" id="password" class="form-control" placeholder="Password" /></div>
                 <div class="lock-line"><input type="password" id="confirm-password" class="form-control" placeholder="Confirm password" /></div>
-                <div class="lock-line danger">
+                <div class="lock-line warring">
                     This will only create a query password and not encrypt the contents of note. 
                     if you want to encrypt the note, please set AES encryption.
                 </div>

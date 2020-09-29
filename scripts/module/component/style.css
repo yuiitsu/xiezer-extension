@@ -80,6 +80,10 @@
     padding: 5px 0;
 }
 
+.lock-line.warring {
+    color: #856404;
+}
+
 .lock-line.danger {
     color: rgba(201, 69, 54, 1);
 }

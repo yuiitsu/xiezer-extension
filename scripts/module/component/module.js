@@ -375,6 +375,28 @@ App.module.extend('component', function() {
     };
 
     /**
+     * 检查response的content_type类型
+     * @param content_type
+     * @param callback
+     * @private
+     */
+    this.get_response_content_type = function(content_type, callback) {
+        if (content_type) {
+            if (content_type.indexOf('application/json') !== -1) {
+                callback('json');
+            } else if (content_type.indexOf('image') !== -1) {
+                callback('img');
+            } else if (content_type.indexOf('text/xml') !== -1 || content_type.indexOf('application/xml') !== -1) {
+                callback('xml');
+            } else if (content_type.indexOf('text/html') !== -1) {
+                callback('html');
+            }
+        } else {
+            callback('');
+        }
+    };
+
+    /**
      * 屏幕/文档/滚动宽高
      * @param type 类型
      */
