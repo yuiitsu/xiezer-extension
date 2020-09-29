@@ -50,6 +50,7 @@ App.module.extend('images', function() {
                     list.push({
                         url: element.download_url,
                         name: element.name,
+                        sha: element.sha,
                         type: 'image'
                     });
                 }
@@ -80,7 +81,7 @@ App.module.extend('images', function() {
                 loaded = _this.attr('data-loaded'), 
                 img = new Image();
             //
-            if (loaded !== 'tru') {
+            if (loaded !== 'true') {
                 img.src = src;
                 img.onload = function() {
                     _this.attr('data-loaded', 'true');
@@ -149,6 +150,36 @@ App.module.extend('images', function() {
                     content: base64Data.split(',')[1]
                 }
                 xhr.send(JSON.stringify(formData));
+            },
+            delete: function(sha, name) {
+                if(isQueryLoading) {
+                    return false;
+                }
+                isQueryLoading = true;
+                self.loading.show();
+                //
+                let setting = Model.get('setting_github'), 
+                    data = {
+                        message: 'delete file.',
+                        sha: sha
+                    };
+                //
+                path = pathList.length > 0 ? '/' + pathList.join('/') : '';
+                self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'/' + name, {
+                    headers: {
+                        'Authorization': 'token ' + setting.token
+                    },
+                    type: 'DELETE'
+                }, JSON.stringify(data), function(response, xhr) {
+                    isQueryLoading = false;
+                    self.loading.hide();
+                    if (xhr.status !== 200) {
+                        self.module.component.notification('Unauthorized, please check the token', 'danger');
+                        Model.set('imageListError', 'Unauthorized, please check the token');
+                        return false;
+                    }
+                    self.lib.reload();
+                }, true);
             }
         }
     };
@@ -179,6 +210,15 @@ App.module.extend('images', function() {
             self.module.component.notification('Copy sucessfully.');
             e.stopPropagation();
         });
+        //
+        container.on('click', '.images-lib-item-delete', function(e) {
+            let sha = $(this).attr('data-sha'), 
+                name = $(this).attr('data-name');
+            //
+            self.module.component.dialog().show('confirm', 'Are you sure you want to delete it?', function() {
+                self.lib[Model.get('useLib')].delete(sha, name);
+            })
+        })
         //
         container.find('#fileUploader').on('change', function(e) {
             if (isUploading) {
@@ -336,6 +376,7 @@ App.module.extend('images', function() {
                 $('.images-lib-list-inbox').prepend(self.view.getView('images', 'imageListItem', {
                     name: content.name,
                     url: content.download_url,
+                    sha: content.sha,
                     type: 'image'
                 }));
                 self.renderImage();
