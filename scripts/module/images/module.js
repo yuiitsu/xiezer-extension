@@ -67,7 +67,7 @@ App.module.extend('images', function() {
             queryPage: function() {
                 self.module.component.request('https://api.github.com/repos/yuiitsu/image_lib/contents?page=1&per_page=10', {
                     headers: {
-                        'Authorization': 'token eb034ea63f10a54b60cff4c94cd07b882dff0bed'
+                        'Authorization': 'token 6e4c78d636edfc06c007fde2ee8832428696680a'
                     }
                 }, {}, function(response) {
                     console.log(response);
