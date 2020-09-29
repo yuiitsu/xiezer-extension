@@ -102,7 +102,7 @@ App.module.extend('images', function() {
                 try {
                     setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
                     if (!setting) {
-                        Model.set('imageListError', 'Please set the Github account first.');
+                        Model.set('imageListError', 'Please set up a Github account first.');
                         return false;
                     }
                     Model.set('setting_' + useLib, setting);
