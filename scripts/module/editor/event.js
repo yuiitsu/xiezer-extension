@@ -118,7 +118,7 @@ App.event.extend('editor', function() {
                     selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
                     rightOffset = 0;
                 //
-                r = b[action](selectedContent, rightOffset);
+                let r = b[action](selectedContent, rightOffset);
                 selectedContent = r[0];
                 rightOffset = r[1];
                 //
@@ -156,7 +156,7 @@ App.event.extend('editor', function() {
                 }
                 //
                 if (k) {
-                    r = b[k](selectedContent, rightOffset);
+                    let r = b[k](selectedContent, rightOffset);
                     selectedContent = r[0];
                     rightOffset = r[1];
                     //

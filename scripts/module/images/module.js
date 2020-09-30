@@ -21,14 +21,15 @@ App.module.extend('images', function() {
         let useLib = Model.get('useLib');
         if (!Model.get('setting_' + useLib)) {
             try {
-                setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
+                let setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
                 if (!setting) {
                     Model.set('imageListError', 'Please set up a Github account first.');
                     return false;
                 }
                 Model.set('setting_' + useLib, setting);
             } catch (e) {
-                self.module.component.notification('Setting data error. please check setting.', 'danger');
+                console.error(e);
+                // self.module.component.notification('Setting data error. please check setting.', 'danger');
                 return false;
             }
         }
@@ -114,14 +115,14 @@ App.module.extend('images', function() {
             let useLib = Model.get('useLib');
             if (!Model.get('setting_' + useLib)) {
                 try {
-                    setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
+                    let setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
                     if (!setting) {
                         Model.set('imageListError', 'Please set up a Github account first.');
                         return false;
                     }
                     Model.set('setting_' + useLib, setting);
                 } catch (e) {
-                    self.module.component.notification('Setting data error. please check setting.', 'danger');
+                    self.module.component.notification('Setting data error. please check first.', 'danger');
                     return false;
                 }
             }
@@ -138,7 +139,7 @@ App.module.extend('images', function() {
                 let setting = Model.get('setting_github'), 
                     time = new Date().getTime();
                 //
-                path = pathList.length > 0 ? '/' + pathList.join('/') : '';
+                let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
                 self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'?t=' + time, {
                     headers: {
                         'Authorization': 'token ' + setting.token
@@ -156,7 +157,13 @@ App.module.extend('images', function() {
             },
             upload: function(xhr, name, base64Data) {
                 let setting = Model.get('setting_github');
-                path = pathList.length > 0 ? pathList.join('/') + '/' : '';
+                if (!setting) {
+                    self.module.component.notification('Setting data error. please check first.', 'danger');
+                    Model.set('imageListError', 'Setting data error. please check first.');
+                    Model.set('imageUploadProgress', '');
+                    return false;
+                }
+                let path = pathList.length > 0 ? pathList.join('/') + '/' : '';
                 xhr.open('PUT', 'https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents/' + path + name, true);
                 xhr.setRequestHeader('Authorization', 'token ' + setting.token);
                 let formData = {
@@ -178,7 +185,7 @@ App.module.extend('images', function() {
                         sha: sha
                     };
                 //
-                path = pathList.length > 0 ? '/' + pathList.join('/') : '';
+                let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
                 self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'/' + name, {
                     headers: {
                         'Authorization': 'token ' + setting.token

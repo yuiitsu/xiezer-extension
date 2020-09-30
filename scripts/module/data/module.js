@@ -379,7 +379,7 @@ App.module.extend('data', function() {
         this.getOneNote(noteId, function(status, data) {
             if (status) {
                 data['password'] = self.module.component.md5(password);
-                request = db.transaction(['notes'], 'readwrite')
+                let request = db.transaction(['notes'], 'readwrite')
                     .objectStore('notes')
                     .put(data);
                 //
@@ -426,7 +426,7 @@ App.module.extend('data', function() {
             if (status) {
                 if (data.password === self.module.component.md5(password)) {
                     data['password'] = '';
-                    request = db.transaction(['notes'], 'readwrite')
+                    let request = db.transaction(['notes'], 'readwrite')
                         .objectStore('notes')
                         .put(data);
                     //
@@ -450,7 +450,7 @@ App.module.extend('data', function() {
         this.getNotebookById(noteBookId, function(status, data) {
             if (status) {
                 data['password'] = self.module.component.md5(password);
-                request = db.transaction(['notebooks'], 'readwrite')
+                let request = db.transaction(['notebooks'], 'readwrite')
                     .objectStore('notebooks')
                     .put(data);
                 //
@@ -501,7 +501,7 @@ App.module.extend('data', function() {
             if (status) {
                 if (data.password === self.module.component.md5(password)) {
                     data['password'] = '';
-                    request = db.transaction(['notebooks'], 'readwrite')
+                    let request = db.transaction(['notebooks'], 'readwrite')
                         .objectStore('notebooks')
                         .put(data);
                     //
@@ -532,7 +532,7 @@ App.module.extend('data', function() {
         //
         let del = function(list, callback) {
             let noteId = list.splice(0, 1);
-            var request = db.transaction(['notes'], 'readwrite')
+            let request = db.transaction(['notes'], 'readwrite')
                 .objectStore('notes')
                 .delete(noteId[0]);
 
@@ -580,7 +580,7 @@ App.module.extend('data', function() {
                 self.getOneNote(element, function(status, data) {
                     if (status) {
                         data['notebook'] = moveToNotebookId;
-                        request = db.transaction(['notes'], 'readwrite')
+                        let request = db.transaction(['notes'], 'readwrite')
                             .objectStore('notes')
                             .put(data);
                         //

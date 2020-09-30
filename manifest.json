@@ -26,7 +26,6 @@
             "scripts/app.js",
             "scripts/model.js",
             "scripts/module/content/module.js",
-            "scripts/module/content/view.js",
             "scripts/module/content/event.js",
             "scripts/run.js"
         ],
