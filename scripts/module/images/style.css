@@ -197,8 +197,12 @@
     height: auto;
 }
 
-.images-list-item-action-item {
-    cursor: pointer;
+.images-list-item-action {
+    font-size: 12px;
+}
+
+.images-list-item-action input {
+    font-size: 12px;
 }
 
 .images-lib-item-code {

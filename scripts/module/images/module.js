@@ -17,6 +17,21 @@ App.module.extend('images', function() {
         Model.set('imageList', []).watch('imageList', this.renderList);
         Model.set('imageListError', '').watch('imageListError', this.renderListError);
         Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
+        //
+        let useLib = Model.get('useLib');
+        if (!Model.get('setting_' + useLib)) {
+            try {
+                setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
+                if (!setting) {
+                    Model.set('imageListError', 'Please set up a Github account first.');
+                    return false;
+                }
+                Model.set('setting_' + useLib, setting);
+            } catch (e) {
+                self.module.component.notification('Setting data error. please check setting.', 'danger');
+                return false;
+            }
+        }
     };
 
     this.show = function() {
@@ -25,8 +40,7 @@ App.module.extend('images', function() {
         //
         let container = self.module.component.module({
             name: 'Picture Library'
-        }, self.view.getView('images', 'layout', {
-        }), '');
+        }, self.view.getView('images', 'layout', {}), '');
         //
         this.listen(container);
         //
@@ -444,4 +458,38 @@ App.module.extend('images', function() {
         let useLib = Model.get('useLib');
         self.lib[useLib].upload(xhr, name, base64Data);
     };
+
+    this.renderMiniUpload = function(file) {
+        //
+        if (isUploading) {
+            return false;
+        }
+        isUploading = true;
+        //
+        let container = self.module.component.module({
+            name: 'Picture Library Uploador'
+        }, self.view.getView('images', 'miniUpload', {}), '');       
+        //
+        let progressData = {
+            currentNum: 1,
+            total: 1,
+            complete: 0
+        }
+        Model.set('imageUploadProgress', progressData);
+        //
+        let fileType = file.type.split("/")[1],
+            name = self.module.data._uuid() + '.' + fileType;
+        //
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            self.uploadImg(progressData, name, e.target.result, function(response) {
+                let content = response.content;
+                    code = '![]('+ content.download_url +')';
+                self.module.editor.insertContent(code);
+                container.remove();
+                isUploading = false;
+            });
+        }
+        reader.readAsDataURL(file);       
+    }
 });

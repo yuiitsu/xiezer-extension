@@ -236,6 +236,24 @@ App.event.extend('editor', function() {
             $('#images').on('click', function() {
                 self.module.images.show();
             });
+        },
+        paste: function() {
+            document.getElementById('editor-content').addEventListener('paste', function (event) {
+                var items = event.clipboardData && event.clipboardData.items;
+                var file = null;
+                if (items && items.length) {
+                    for (var i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image') !== -1) {
+                            file = items[i].getAsFile();
+                            break;
+                        }
+                    }
+                }
+                console.log(file);
+                if (file) {
+                    self.module.images.renderMiniUpload(file);
+                }
+            });
         }
         // clickTab: function() {
         //     $('.editor-content').on('keydown', function(e) {

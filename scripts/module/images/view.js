@@ -216,5 +216,11 @@ App.view.extend('images', function() {
                 </div>
             </div>
         `;
+    };
+
+    this.miniUpload = function() {
+        return `
+            <div class="mini-upload-container images-uploading-progress-container display-flex-row"></div>
+        `;
     }
 });

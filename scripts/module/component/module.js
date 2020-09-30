@@ -175,6 +175,7 @@ App.module.extend('component', function() {
      * @param options
      *  options.name
      *  options.width
+     *  options.
      * @param content
      * @param action
      */
