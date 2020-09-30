@@ -16,6 +16,7 @@ App.module.extend('images', function() {
         Model.set('useLib', 'github');
         Model.set('imageList', []).watch('imageList', this.renderList);
         Model.set('imageListError', '').watch('imageListError', this.renderListError);
+        Model.watch('imageListError', this.renderMiniUploadError);
         Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
         //
         let useLib = Model.get('useLib');
@@ -79,6 +80,10 @@ App.module.extend('images', function() {
 
     this.renderListError = function(message) {
         self.view.display('images', 'imageListError', {message: message}, $('.images-lib-list-container'));
+    };
+
+    this.renderMiniUploadError = function(message) {
+        self.view.display('images', 'imageListError', {message: message}, $('.mini-upload-container'));
     };
 
     this.renderProgress = function(data) {
@@ -160,7 +165,7 @@ App.module.extend('images', function() {
                 if (!setting) {
                     self.module.component.notification('Setting data error. please check first.', 'danger');
                     Model.set('imageListError', 'Setting data error. please check first.');
-                    Model.set('imageUploadProgress', '');
+                    // Model.set('imageUploadProgress', '');
                     return false;
                 }
                 let path = pathList.length > 0 ? pathList.join('/') + '/' : '';
