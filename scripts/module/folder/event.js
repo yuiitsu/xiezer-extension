@@ -180,7 +180,7 @@ App.event.extend('folder', function() {
                         }, function() {});
                     } else {
                         // pass
-                        target.parent().parent().parent().remove();
+                        // target.parent().parent().parent().parent().remove();
                     }
                 }
             };
