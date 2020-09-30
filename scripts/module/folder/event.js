@@ -158,6 +158,7 @@ App.event.extend('folder', function() {
                     name = $.trim(target.val());
                 
                 //
+                debugger
                 parentId = parentId ? parentId : '';
                 //
                 if (noteBookId) {
@@ -193,7 +194,7 @@ App.event.extend('folder', function() {
             });
             //
             $('#folder-list').on('click', '.folder-item-edit-save-button', function(e) {
-                d($(this).prev());
+                d($(this).prev().find('input'));
             });
         },
 

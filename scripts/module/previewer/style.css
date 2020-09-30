@@ -124,6 +124,7 @@ code {
 
 .previewer-main table {
     border: 1px solid #efefef;
+    margin-bottom: 1rem;
 }
 
 .previewer-main table th, .previewer-main table td {
