@@ -158,7 +158,6 @@ App.event.extend('folder', function() {
                     name = $.trim(target.val());
                 
                 //
-                debugger
                 parentId = parentId ? parentId : '';
                 //
                 if (noteBookId) {
