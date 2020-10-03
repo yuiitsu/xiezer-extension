@@ -149,7 +149,12 @@ App.event.extend('notes', function() {
         },
         moveToNoteBook: function() {
             $('body').on('click', '.notes-move-to-notebook-ok', function(e) {
-                Model.set('moveToNotebook', new Date().getTime());
+                let noteId = $(this).attr('data-id');
+                if (noteId) {
+                    Model.set('moveToNotebookSingle', noteId);
+                } else {
+                    Model.set('moveToNotebook', new Date().getTime());
+                }
                 $('.module-box').remove();
                 e.stopPropagation();
             });
@@ -219,6 +224,39 @@ App.event.extend('notes', function() {
                             }
                         });
                     });
+                }
+                e.stopPropagation();
+            });
+        },
+        contexMenu: function() {
+            $('.notes-items').on('contextmenu', '.notes-item', function(e) {
+                let noteId = $(this).attr('data-id');
+                self.module.component.tips.show($(this), self.view.getView('notes', 'listActions', {
+                    noteId: noteId
+                }), {
+                }, null, e);
+                e.stopPropagation();
+                return false;
+            })
+        },
+        actionClick: function() {
+            $('body').on('click', '.notes-item-action-item', function(e) {
+                let action = $(this).attr('data-action'), 
+                    noteId = $(this).attr('data-id');
+                //
+                if (!action || !noteId) {
+                    return false;
+                }
+                // action
+                switch (action) {
+                    case "move":
+                        self.module.notes.showMoveToNoteBook(noteId);
+                        break;
+                    case "delete":
+                        self.module.component.dialog().show('confirm', 'Are you sure you want to delete it?', function() {
+                            self.module.data.deleteNote(noteId);
+                        });
+                        break;
                 }
                 e.stopPropagation();
             });

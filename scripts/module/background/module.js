@@ -10,5 +10,15 @@ App.module.extend('background', function() {
         chrome.browserAction.onClicked.addListener(function (tab) {
             chrome.tabs.create({url: chrome.extension.getURL("index.html")});
         });
+        //
+        chrome.contextMenus.create({
+            type: 'normal',
+            title: 'XZ - Upload the image',
+            contexts: ['image'],
+            id: 'XZ_UPLOADOR',
+            onclick: function(info, tab) {console.log(info);}
+        }, function () {
+            self.log('created context menus.');
+        });
     };
 });

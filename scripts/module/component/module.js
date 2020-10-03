@@ -56,14 +56,14 @@ App.module.extend('component', function() {
      */
     this.tips = {
         timer: null,
-        show: function(focus, content, options, parent) {
+        show: function(focus, content, options, parent, e) {
             let _this = this;
             let opt = options || {};
             let obj = $('#tips-box');
 
             obj.remove();
-            parent = parent || $('body');
-            parent.append(self.view.getView('component', 'tips', {
+            container = parent || $('body');
+            container.append(self.view.getView('component', 'tips', {
                 content: content
             }));
             obj = $('#tips-box');
@@ -90,8 +90,8 @@ App.module.extend('component', function() {
             let focus_offset = focus.offset(),
                 focus_width = focus.outerWidth(),
                 focus_height = focus.outerHeight(),
-                focus_top = focus_offset.top,
-                focus_left = focus_offset.left,
+                focus_top = parent ? focus_offset.top : e.clientY,
+                focus_left = parent ? focus_offset.left : e.clientX,
                 target_width = obj.outerWidth(),
                 target_height = obj.outerHeight(),
                 client_width = self.clientSize('clientWidth'),
@@ -117,15 +117,17 @@ App.module.extend('component', function() {
 
                     break;
                 default:
-                    if (focus_left + target_width > client_width) {
-                        focus_left = focus_left - target_width + focus_width;
+                    if (parent) {
+                        if (focus_left + target_width > client_width) {
+                            focus_left = focus_left - target_width + focus_width;
+                            focus_top = focus_top + focus_height;
+                            arr_obj.css('right', 13);
+                        } else {
+                            arr_obj.css('left', 8);
+                        }
+                        arr_obj.removeClass('tips-array-left tips-array-right tips-array-bottom').addClass('tips-array-top');
                         focus_top = focus_top + focus_height;
-                        arr_obj.css('right', 13);
-                    } else {
-                        arr_obj.css('left', 8);
                     }
-                    arr_obj.removeClass('tips-array-left tips-array-right tips-array-bottom').addClass('tips-array-top');
-                    focus_top = focus_top + focus_height;
 
                     // 检查位置和调试，如果超出屏幕，向上显示
                     if (focus_top + target_height > client_height) {

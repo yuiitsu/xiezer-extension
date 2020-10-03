@@ -81,7 +81,6 @@
 }
 
 .folder-root-title {
-    padding-bottom: 10px;
 }
 
 .folder-root-icon {
@@ -95,18 +94,16 @@
 .folder-root-title-icon {
     display: inline-block;
     margin-right: 5px;
-}
-
-.folder-item-container svg.bi-journals, .folder-item-container .bi-files {
-    margin-top: -4px;
+    vertical-align: middle;
+    margin-top: -3px;
 }
 
 .folder-child.focus {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .folder-child:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .folder-child:hover .folder-item-action {
@@ -140,14 +137,20 @@
 
 .folder-item {
     padding: 5px;
-    /* padding-left: 21px; */
     font-size: 14px;
     line-height: 1.6;
+    word-break: break-all;
 }
 
 .folder-item-action {
-    padding: 10px;
-    visibility: hidden;
+    padding: 8px 5px 0;
+    /* visibility: hidden; */
+    font-size: 12px;
+    /* position: absolute;
+    top: 0;
+    right: 0;
+    height: 32px; */
+    /* background-color: rgba(0, 0, 0, 0.8); */
 }
 
 .folder-action-item {
@@ -156,15 +159,35 @@
 }
 
 .folder-item-action-list {
-    color: rgba(0, 0, 0, 0.8);
+    color: #f0f0f0;
     font-size: 14px;
+    padding: 5px 0;
+    width: 150px;
 }
 
 .folder-item-action-list svg {
     margin-top: -3px;
 }
 
-.folder-child2 .folder-item {
+.folder-item-action-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.folder-item-action-item:last-child {
+    margin-bottom: 0;
+}
+
+.folder-item-action-item svg {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.folder-item-action-item:hover {
+    background-color: #000;
+}
+
+.folder-child2 {
     padding-left: 42px;
 }
 
@@ -209,7 +232,6 @@
 }
 
 .folder-selector-container {
-    padding: 20px;
     color: rgba(0, 0, 0, 0.7);
 }
 

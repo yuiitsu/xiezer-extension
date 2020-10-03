@@ -1,6 +1,6 @@
 /* tips */
-#tips-box{border-radius: 3px;padding: 10px;position: absolute;
-    left:0;top:0;background-color: #fff;}
+#tips-box{border-radius: 3px;position: absolute;
+    left:0;top:0;background-color: #202020;border: 1px solid #444;}
 .tips-array{position: absolute;width:8px;height:8px;display: none;}
 
 .tips-array-top{top:-8px;}

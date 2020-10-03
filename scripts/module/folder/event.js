@@ -229,7 +229,7 @@ App.event.extend('folder', function() {
         },
 
         actionClick: function() {
-            $('#folder-list').on('click', '.folder-item-action-item', function() {
+            $('#folder-list').on('click', '.folder-item-action-item', function(e) {
                 let action = $(this).attr('data-action'), 
                     noteBookId = $(this).attr('data-id');
                 //
@@ -237,9 +237,21 @@ App.event.extend('folder', function() {
                     return false;
                 }
                 // action
-                self.module.component.dialog().show('confirm', 'Are you sure you want to delete these?', function() {
-                    self.module.data.deleteNoteBook(noteBookId, function() {});
-                });
+                switch (action) {
+                    case "new":
+                        let parentId = $(this).attr('data-id'), 
+                            elementId = self.module.component.timeToStr();
+                        $('.folder-child[data-id="'+ parentId +'"]').after(self.view.getView('folder', 'newNoteBook', {parentId: parentId, elementId: elementId}))
+                        $('input[data-element-id="'+ elementId +'"]').focus();
+                        $('#tips-box').remove();
+                        break;
+                    case "delete":
+                        self.module.component.dialog().show('confirm', 'Are you sure you want to delete these?', function() {
+                            self.module.data.deleteNoteBook(noteBookId, function() {});
+                        });
+                        break;
+                }
+                e.stopPropagation();
             });
         },
 
@@ -311,6 +323,19 @@ App.event.extend('folder', function() {
                 }
                 e.stopPropagation();
             });
+        },
+        contexMenu: function() {
+            $('.notebooks-container').on('contextmenu', '.folder-item', function(e) {
+                let noteBookId = $(this).attr('data-id'), 
+                    parentId = $(this).attr('data-parent-id');
+                self.module.component.tips.show($(this), self.view.getView('folder', 'listActions', {
+                    noteBookId: noteBookId,
+                    parentId: parentId ? parentId : ''
+                }), {
+                }, $(this));
+                e.stopPropagation();
+                return false;
+            })
         }
     }
 });

@@ -77,9 +77,9 @@ App.module.extend('notes', function() {
         self.view.display('notes', 'order_' + order, {}, $('#notes-order'));
     };
 
-    this.showMoveToNoteBook = function() {
+    this.showMoveToNoteBook = function(noteId) {
         let view = self.module.folder.getSelectorView(), 
-            actionView = self.view.getView('notes', 'moveToNotebook', {});
+            actionView = self.view.getView('notes', 'moveToNotebook', {noteId: noteId ? noteId : ''});
         //
         self.module.component.module({
             name: 'Select Notebook',

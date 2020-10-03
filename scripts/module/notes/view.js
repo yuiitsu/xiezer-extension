@@ -107,6 +107,7 @@ App.view.extend('notes', function() {
                 {{ var item = data.list[i] }}
                 {{ var focusClassName = item.id == data.selectedNoteId ? 'focus' : '' }}
                 {{ var isLockedClassName = item.isLocked ? 'is-locked' : '' }}
+                {{ var lockShowClass = item.isLocked ? 'visibility-show' : 'visibility-hide' }}
                 <div class="notes-item display-flex-row {{ focusClassName }} {{ isLockedClassName }}" data-id="{{ item['id'] }}" data-title="{{ item.title }}">
                     <div class="notes-checkbox">
                         {{ this.view.getView('notes', 'checkboxChecked', {}) }}
@@ -118,7 +119,7 @@ App.view.extend('notes', function() {
                         </div>
                         <div class="notes-bottom display-flex-row">
                             <div class="display-flex-auto notes-time">{{ item['createAt'] }}</div>
-                            <div class="notes-bottom-action">
+                            <div class="notes-bottom-action {{ lockShowClass }}">
                                 {{ this.view.getView('component', 'lock', {id: item.id, name: item.title, isLocked: item.isLocked}) }}
                             </div>
                         </div>
@@ -166,10 +167,32 @@ App.view.extend('notes', function() {
         return `
             <div class="notes-move-to-notebook-action">
                 <div class="action-button">
-                    <button class="btn btn-primary notes-move-to-notebook-ok">OK</button>
+                    <button class="btn btn-primary notes-move-to-notebook-ok" data-id="{{ data.noteId }}">OK</button>
                 </div>
                 <div class="action-button">
                     <button class="btn btn-default module-close">Cancel</button>
+                </div>
+            </div>
+        `;
+    };
+
+    this.listActions = function() {
+        return `
+            <div class="folder-item-action-list">
+                <div class="folder-item-action-item notes-item-action-item" data-action="move" data-id="{{ data.noteId }}">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-journal-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                        <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+                    </svg> 
+                    Move
+                </div>
+                <div class="folder-item-action-item notes-item-action-item" data-action="delete" data-id="{{ data.noteId }}">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg> 
+                    Delete
                 </div>
             </div>
         `;

@@ -11,7 +11,7 @@ code {
     height: 100%;
     line-height: 1.6;
     background-color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     border-right: 1px solid #efefef;
 }
 
@@ -42,27 +42,27 @@ code {
 }
 
 .previewer-main h1 {
-    font-size: 2.5rem;
-}
-
-.previewer-main h2 {
     font-size: 2rem;
 }
 
-.previewer-main h3 {
+.previewer-main h2 {
     font-size: 1.75rem;
 }
 
-.previewer-main h4 {
+.previewer-main h3 {
     font-size: 1.5rem;
 }
 
-.previewer-main h5 {
+.previewer-main h4 {
     font-size: 1.25rem;
 }
 
-.previewer-main h6 {
+.previewer-main h5 {
     font-size: 1rem;
+}
+
+.previewer-main h6 {
+    font-size: 0.75rem;
 }
 
 .previewer-main img {

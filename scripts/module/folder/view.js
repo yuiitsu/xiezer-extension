@@ -66,6 +66,34 @@ App.view.extend('folder', function() {
                             <div class="folder-root-icon"></div>
                         </div>
                     </div>
+                    <div class="folder-item-container folder-root">
+                        <div class="folder-root-title display-flex display-flex-row">
+                            <div class="display-flex-auto">
+                                <div class="folder-root-title-icon">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-images" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M12.002 4h-10a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1zm-10-1a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-10zm4 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        <path fill-rule="evenodd" d="M4 2h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1v1a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2h1a1 1 0 0 1 1-1z"/>
+                                    </svg> 
+                                </div>
+                                Picture Library 
+                            </div>
+                            <div class="folder-root-icon"></div>
+                        </div>
+                    </div>
+                    <div class="folder-item-container folder-root">
+                        <div class="folder-root-title display-flex display-flex-row">
+                            <div class="display-flex-auto">
+                                <div class="folder-root-title-icon">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-tags-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M3 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 7.586 1H3zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        <path d="M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z"/>
+                                    </svg> 
+                                </div>
+                                Tags 
+                            </div>
+                            <div class="folder-root-icon"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="bottom-bar display-flex-row">
                     <div class="bottom-bar-left display-flex-auto">
@@ -121,17 +149,20 @@ App.view.extend('folder', function() {
             {{ var child = children[j] }}
             {{ var focus = child.id === data.selectedNoteBookId ? 'focus': '' }}
             {{ var isChildLockedClassName = child.isLocked ? 'is-locked' : '' }}
+            {{ var lockShowClass = child.isLocked ? 'visibility-show' : 'visibility-hide' }}
             <div class="folder-child folder-child2 display-flex display-flex-row {{ focus }} {{ isChildLockedClassName }}">
                 <div class="folder-item display-flex-auto" data-id="{{ child['id'] }}" data-name="{{ child.name }}" data-parent-id="{{ child['parentId'] }}">{{ child['name'] }}</div>
-                <div class="folder-item-action">
+                <div class="folder-item-action {{ lockShowClass }}">
                     <div class="folder-action-item">
                         {{ this.view.getView('component', 'lock', {id: child.id, name: child.name, isLocked: child.isLocked}) }}
                     </div>
+                    <!--
                     <div class="folder-action-item folder-action-item-more" data-id="{{ child['id'] }}">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                         </svg>
                     </div>
+                    -->
                 </div>
             </div>
             {{ end }}
@@ -142,11 +173,13 @@ App.view.extend('folder', function() {
 
     this.list_item = function() {
         return `
+            {{ var lockShowClass = data.isLocked ? 'visibility-show' : 'visibility-hide' }}
             <div class="folder-item display-flex-auto" data-id="{{ data['id'] }}">{{ data['name'] }}</div>
-            <div class="folder-item-action">
+            <div class="folder-item-action {{ lockShowClass }}">
                 <div class="folder-action-item">
                     {{ this.view.getView('component', 'lock', {id: data.id, name: data.name, isLocked: data.isLocked}) }}
                 </div>
+                <!--
                 <div class="folder-action-item folder-action-item-more" data-id="{{ data['id'] }}">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
@@ -157,6 +190,7 @@ App.view.extend('folder', function() {
                         <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
                 </div>
+                -->
             </div>
         `;
     };
@@ -181,7 +215,17 @@ App.view.extend('folder', function() {
     this.listActions = function() {
         return `
             <div class="folder-item-action-list">
-                <div class="color-red folder-item-action-item" data-action="delete" data-id="{{ data.noteBookId }}">
+                {{ if !data.parentId }}
+                <div class="folder-item-action-item" data-action="new" data-id="{{ data.noteBookId }}">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-journal-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                        <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+                    </svg> 
+                    New Notebook
+                </div>
+                {{ end }}
+                <div class="folder-item-action-item" data-action="delete" data-id="{{ data.noteBookId }}">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>

@@ -30,6 +30,14 @@ a {
     display: none;
 }
 
+.visibility-show {
+    visibility: visible;
+}
+
+.visibility-hide {
+    visibility: hidden;
+}
+
 /* text align */
 .align-right {
     text-align: right;

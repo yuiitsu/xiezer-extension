@@ -38,6 +38,7 @@ App.module.extend('data', function() {
         Model.set('notesOrder', Model.default.notesOrder).watch('notesOrder', this.readAllNotes);
         Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
+        Model.set('moveToNotebookSingle', '').watch('moveToNotebookSingle', this.moveToNotebookSingle);
     };
 
     this.openDb = function(success, error) {
@@ -524,6 +525,26 @@ App.module.extend('data', function() {
         });
     };
 
+    this.deleteNote = function(noteId) {
+        if (!noteId) {
+            return false;
+        }
+
+        let request = db.transaction(['notes'], 'readwrite')
+            .objectStore('notes')
+            .delete(noteId);
+
+        request.onsuccess = function (event) {
+            console.log('deleted: ' + noteId);
+            if (noteId === Model.get('noteId')) {
+                Model.set('noteId', '');
+            }
+            //
+            self.readAllNotes();
+            self.module.component.notification('Delete successfully!');
+        };
+    };
+
     this.deleteNotes = function() {
         let notesChecked = Model.get('notesChecked');
         if (!notesChecked || notesChecked.length === 0) {
@@ -602,6 +623,34 @@ App.module.extend('data', function() {
                 });
             });
         }
+    };
+
+    this.moveToNotebookSingle = function(noteId) {
+        let moveToNotebookId = Model.get('moveToNotebookId');
+        //
+        moveToNotebookId = moveToNotebookId ? moveToNotebookId : '';
+        //
+        self.getOneNote(noteId, function(status, data) {
+            if (status) {
+                data['notebook'] = moveToNotebookId;
+                let request = db.transaction(['notes'], 'readwrite')
+                    .objectStore('notes')
+                    .put(data);
+                //
+                request.onsuccess = function() {
+                    self.log('update notebook success.');
+                    Model.set('moveToNotebookId', '');
+                    self.readAllNotes();
+                    self.module.component.notification('Update successfully!');
+                };
+                //
+                request.onerror = function() {
+                    self.log('add notebook error.')
+                    self.module.component.notification('Update successfully!', 'warring');
+                };
+            } else {
+            }
+        });
     };
 
     this.currentData = {
