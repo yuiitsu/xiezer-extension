@@ -346,16 +346,26 @@ App.module.extend('data', function() {
         if (noteId) {
             self.getOneNote(noteId, function(status, result) {
                 if (status) {
+                    if (result.password && noteLockCache.indexOf(noteId) === -1) {
+                        // show unlock note window
+                        Model.set('noteId', '');
+                        return false;
+                    }
+                    if (result.notebook && notebookLocked.indexOf(result.notebook) !== -1 && notebookLockCache.indexOf(result.notebook) === -1) {
+                        // show unlock notebook window
+                        return false;
+                    }
                     Model.set('action', 'update');
                     Model.set('content', result.content);
-                    Model.set('currentNote', result);
+                    // Model.set('currentNote', result);
                     Model.set('editorData', result.content);
+                    localStorage.setItem('lastNoteId', noteId);
                 }
             })
         } else {
             Model.set('action', 'new');
             Model.set('content', '');
-            Model.set('currentNote', {});
+            // Model.set('currentNote', {});
             Model.set('editorData', '');
         }
     };
@@ -672,5 +682,5 @@ App.module.extend('data', function() {
             d = Math.floor(d / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
-    }
+    };
 });

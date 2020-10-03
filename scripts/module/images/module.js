@@ -241,7 +241,7 @@ App.module.extend('images', function() {
             let sha = $(this).attr('data-sha'), 
                 name = $(this).attr('data-name');
             //
-            self.module.component.dialog().show('confirm', 'Are you sure you want to delete it?', function() {
+            self.module.component.dialog().show('confirm', 'Delete picture', 'Are you sure you want to delete it?', function() {
                 self.lib[Model.get('useLib')].delete(sha, name);
             })
         })

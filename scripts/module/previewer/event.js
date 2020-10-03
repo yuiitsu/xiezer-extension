@@ -67,7 +67,7 @@ App.event.extend('prviewer', function() {
                 let currentNote = Model.get('currentNote'), 
                     title = currentNote.title;
                 //
-                self.module.component.dialog().show('ok', self.view.getView('previewer', 'exportTips', {title: title}), function() {
+                self.module.component.dialog().show('ok', 'Export', self.view.getView('previewer', 'exportTips', {title: title}), function() {
                 });
                 //
                 $('#previewer').wordExport(title);

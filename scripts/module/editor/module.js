@@ -93,5 +93,5 @@ App.module.extend('editor', function() {
         container.val(content);
         container.trigger('change');
         container.scrollTop(scrollTop);
-    }
+    };
 });

@@ -39,7 +39,7 @@ App.event.extend('notes', function() {
                         let title = $(this).attr('data-title');
                         
                         let container = self.module.component.module({
-                            name: 'UnLock note',
+                            name: 'Unlock note',
                             width: 300
                         }, self.view.getView('component', 'unlockForm', {
                             id: noteId,
@@ -114,7 +114,7 @@ App.event.extend('notes', function() {
                 //
                 switch (action) {
                     case 'delete':
-                        self.module.component.dialog().show('confirm', 'Are you sure you want to delete these?', function() {
+                        self.module.component.dialog().show('confirm', 'Delte notes', 'Are you sure you want to delete these?', function() {
                             self.module.data.deleteNotes();
                         });
                         break;
@@ -199,7 +199,7 @@ App.event.extend('notes', function() {
                     });
                 } else {
                     let container = self.module.component.module({
-                        name: 'Clear lock password',
+                        name: 'Clear password',
                         width: 300
                     }, self.view.getView('component', 'unlockForm', {
                         id: noteId,
@@ -253,7 +253,7 @@ App.event.extend('notes', function() {
                         self.module.notes.showMoveToNoteBook(noteId);
                         break;
                     case "delete":
-                        self.module.component.dialog().show('confirm', 'Are you sure you want to delete it?', function() {
+                        self.module.component.dialog().show('confirm', 'Delete Note', 'Are you sure you want to delete it?', function() {
                             self.module.data.deleteNote(noteId);
                         });
                         break;

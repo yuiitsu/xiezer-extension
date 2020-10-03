@@ -246,7 +246,7 @@ App.event.extend('folder', function() {
                         $('#tips-box').remove();
                         break;
                     case "delete":
-                        self.module.component.dialog().show('confirm', 'Are you sure you want to delete these?', function() {
+                        self.module.component.dialog().show('confirm', 'Delete notebook', 'Are you sure you want to delete these?', function() {
                             self.module.data.deleteNoteBook(noteBookId, function() {});
                         });
                         break;
@@ -295,7 +295,7 @@ App.event.extend('folder', function() {
                     });
                 } else {
                     let container = self.module.component.module({
-                        name: 'Clear lock password',
+                        name: 'Clear password',
                         width: 300
                     }, self.view.getView('component', 'unlockForm', {
                         id: notebookId,

@@ -222,10 +222,11 @@ App.module.extend('component', function() {
      */
     this.dialog = function() {
         return {
-            show: function(type, msg, confirm_callback, cancel_callback) {
+            show: function(type, title, msg, confirm_callback, cancel_callback) {
                 let dialog_id = Date.parse(new Date());
                 $('body').append(self.view.getView('component', 'dialog', {
                     type: type,
+                    title: title,
                     msg: msg,
                     dialog_id: dialog_id
                 }));
