@@ -12,6 +12,9 @@
             "scripts/lib/jquery-3.4.1.min.js",
             "scripts/model.js",
             "scripts/app.js",
+            "scripts/module/component/module.js",
+            "scripts/module/data/module.js",
+            "scripts/module/images/module.js",
             "scripts/module/background/module.js",
             "scripts/run.js"
         ]

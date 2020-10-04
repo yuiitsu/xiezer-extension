@@ -11,13 +11,8 @@ App.module.extend('images', function() {
         }, 
         pathList = [];
 
-    //
-    this.init = function() {
+    this._init = function() {
         Model.set('useLib', 'github');
-        Model.set('imageList', []).watch('imageList', this.renderList);
-        Model.set('imageListError', '').watch('imageListError', this.renderListError);
-        Model.watch('imageListError', this.renderMiniUploadError);
-        Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
         //
         let useLib = Model.get('useLib');
         if (!Model.get('setting_' + useLib)) {
@@ -34,6 +29,14 @@ App.module.extend('images', function() {
                 return false;
             }
         }
+    };
+
+    //
+    this.init = function() {
+        Model.set('imageList', []).watch('imageList', this.renderList);
+        Model.set('imageListError', '').watch('imageListError', this.renderListError);
+        Model.watch('imageListError', this.renderMiniUploadError);
+        Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
     };
 
     this.show = function() {
@@ -503,5 +506,27 @@ App.module.extend('images', function() {
             });
         }
         reader.readAsDataURL(file);       
+    };
+
+    this.ajaxUpload = function(url, callback) {
+        self.module.component.request(url, {}, {}, function(res) {
+            //
+            debugger
+            let fileType = res.type.split("/")[1],
+                name = self.module.data._uuid() + '.' + fileType, 
+                progressData = {
+                    currentNum: 1,
+                    total: 1,
+                    complete: 0
+                }
+            //
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                self.uploadImg(progressData, name, e.target.result, function(response) {
+                    callback(response);
+                });
+            }
+            reader.readAsDataURL(res);       
+        });
     }
 });

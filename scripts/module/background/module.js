@@ -16,7 +16,12 @@ App.module.extend('background', function() {
             title: 'XZ - Upload the image',
             contexts: ['image'],
             id: 'XZ_UPLOADOR',
-            onclick: function(info, tab) {console.log(info);}
+            onclick: function(info, tab) {
+                console.log(info);
+                self.module.images.ajaxUpload(info.srcUrl, function(response) {
+                    console.log(response);
+                });
+            }
         }, function () {
             self.log('created context menus.');
         });
