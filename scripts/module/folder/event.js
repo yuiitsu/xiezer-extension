@@ -82,6 +82,8 @@ App.event.extend('folder', function() {
                             name: name
                         }), '');
                         //
+                        container.find('#password').focus();
+                        //
                         container.find('.unlock-confirm').off('click').on('click', function() {
                             let passwordElement = container.find('#password'), 
                                 password = passwordElement.val();
@@ -103,7 +105,7 @@ App.event.extend('folder', function() {
                                     _this.parent().addClass('focus');
                                     allNotesElement.removeClass('focus');
                                 } else {
-                                    self.module.component.dialog().ok('Unlock failed. Password error.', function() {
+                                    self.module.component.dialog().ok('Unlock failed. Password error.', 'Unlock note', function() {
                                         let target = container.find('#password');
                                         target.focus();
                                         target.select();

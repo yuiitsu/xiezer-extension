@@ -187,7 +187,8 @@ App.module.extend('component', function() {
             name: options.name,
             content: content,
             action: action,
-            module_id: module_id
+            module_id: module_id,
+            noClose: options.noClose
         }));
 
         let container = $('.module-box-' + module_id);
@@ -203,15 +204,17 @@ App.module.extend('component', function() {
         //$('.module-content').css('height', content_height);
         //target.css('height', target_height);
 
-        $('.module-close').off('click').on('click', function() {
-            // let module_id = $(this).attr('data-module-id');
-            $('.module-box-' + module_id).remove();
-        });
+        if (!options.noClose) {
+            $('.module-close').off('click').on('click', function() {
+                // let module_id = $(this).attr('data-module-id');
+                $('.module-box-' + module_id).remove();
+            });
 
-        $('.module-mask').off('click').on('click', function() {
-            let module_id = $(this).attr('data-module-id');
-            $('.module-box-' + module_id).remove();
-        });
+            $('.module-mask').off('click').on('click', function() {
+                let module_id = $(this).attr('data-module-id');
+                $('.module-box-' + module_id).remove();
+            });
+        }
         //
         return container;
     };
@@ -255,11 +258,11 @@ App.module.extend('component', function() {
                     }
                 });
             },
-            confirm: function(msg, confirm_callback, cancel_callback) {
-                this.show('confirm', msg, confirm_callback, cancel_callback);
+            confirm: function(msg, title, confirm_callback, cancel_callback) {
+                this.show('confirm', title, msg, confirm_callback, cancel_callback);
             },
-            ok: function(msg, confirm_callback, cancel_callback) {
-                this.show('ok', msg, confirm_callback, cancel_callback);
+            ok: function(msg, title, confirm_callback, cancel_callback) {
+                this.show('ok', title, msg, confirm_callback, cancel_callback);
             }
         }
     };

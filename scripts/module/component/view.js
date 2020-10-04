@@ -9,8 +9,17 @@ App.view.extend('component', function() {
             <div class="module-box module-box-{{ data['module_id'] }}">
                 <div class="module-mask" data-module-id="{{ data['module_id'] }}"></div>
                 <div class="module-content bg-level-4 border-level-2">
-                    <div class="module-header border-bottom-level-1">{{ data['name'] }}
-                        <i class="mdi mdi-close fr module-close" data-module-id="{{ data['module_id'] }}"></i>
+                    <div class="module-header border-bottom-level-1 display-flex-row">
+                        <div class="display-flex-auto">
+                            {{ data['name'] }}
+                        </div>
+                        {{ if !data.noClose }}
+                        <div class="module-close">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </div>
+                        {{ end }}
                     </div>
                     <div class="module-main">{{ data['content'] }}</div>
                     <div class="module-actions">{{ data['action'] }}</div>
@@ -99,7 +108,7 @@ App.view.extend('component', function() {
         return `
             <div class="lockForm">
                 <div class="lock-line lock-title">{{ data.name }}</div>
-                <div class="lock-line"><input type="password" id="password" class="form-control" placeholder="Password" /></div>
+                <div class="lock-line"><input type="password" id="password" class="form-control" placeholder="Password" autofocus="autofocus" /></div>
                 <div class="lock-line"><input type="password" id="confirm-password" class="form-control" placeholder="Confirm password" /></div>
                 <div class="lock-line warring">
                     This will only create a query password and not encrypt the contents of note. 
@@ -116,7 +125,7 @@ App.view.extend('component', function() {
         return `
             <div class="lockForm">
                 <div class="lock-line lock-title">{{ data.name }}</div>
-                <div class="lock-line"><input type="password" id="password" class="form-control" placeholder="Password" /></div>
+                <div class="lock-line"><input type="password" id="password" class="form-control" placeholder="Password" autofocus="autofocus" /></div>
                 <div class="lock-button">
                     <button class="btn btn-primary unlock-confirm" data-id="{{ data.id }}">Unlock</button>
                 </div>

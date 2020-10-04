@@ -40,11 +40,13 @@ App.event.extend('notes', function() {
                         
                         let container = self.module.component.module({
                             name: 'Unlock note',
-                            width: 300
+                            width: 300,
                         }, self.view.getView('component', 'unlockForm', {
                             id: noteId,
                             name: title
                         }), '');
+                        //
+                        container.find('#password').focus();
                         //
                         container.find('.unlock-confirm').off('click').on('click', function() {
                             let passwordElement = container.find('#password'), 
@@ -66,7 +68,7 @@ App.event.extend('notes', function() {
                                     $('.notes-item').removeClass('focus');
                                     _this.addClass('focus');
                                 } else {
-                                    self.module.component.dialog().ok('Unlock failed. Password error.', function() {
+                                    self.module.component.dialog().ok('Unlock failed. Password error.', 'Unlock note', function() {
                                         let target = container.find('#password');
                                         target.focus();
                                         target.select();

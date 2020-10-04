@@ -482,7 +482,8 @@ App.module.extend('images', function() {
         isUploading = true;
         //
         let container = self.module.component.module({
-            name: 'Picture Library Uploador'
+            name: 'Picture Library Uploador',
+            noClose: true
         }, self.view.getView('images', 'miniUpload', {}), '');       
         //
         let progressData = {
