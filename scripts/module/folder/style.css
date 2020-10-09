@@ -59,6 +59,10 @@
     overflow-y: auto;
 }
 
+#folder-list {
+    padding-top: 10px;
+}
+
 .folder-item-container {
     padding: 10px;
     cursor: pointer;

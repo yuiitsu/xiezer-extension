@@ -65,89 +65,60 @@ App.event.extend('folder', function() {
                 let _this = $(this), 
                     noteBookId = $(this).attr('data-id'); 
                 //
-                clickTimer = setTimeout(function() {
-                    if (!noteBookId || dbClick) {
-                        dbClick = false;
-                        return false;
-                    }
-                    //
-                    // allNotesElement.removeClass('focus');
-                    if (_this.parent().hasClass('is-locked')) {
-                        let name = _this.text();
-                        let container = self.module.component.module({
-                            name: 'Unlock notebook',
-                            width: 300
-                        }, self.view.getView('component', 'unlockForm', {
-                            id: noteBookId,
-                            name: name
-                        }), '');
-                        //
-                        container.find('#password').focus();
-                        //
-                        container.find('.unlock-confirm').off('click').on('click', function() {
-                            let passwordElement = container.find('#password'), 
-                                password = passwordElement.val();
-                            //
-                            passwordElement.removeClass('error');
-                            if (!password) {
-                                passwordElement.addClass('error');
-                                return false;
-                            }
-                            //
-                            self.module.data.checkNotebookLock(noteBookId, password, function(status) {
-                                //
-                                if (status) {
-                                    Model.set('noteBookId', noteBookId);
-                                    _this.parent().removeClass('is-locked');
-                                    container.remove();
-                                    //
-                                    $('.folder-child').removeClass('focus');
-                                    _this.parent().addClass('focus');
-                                    allNotesElement.removeClass('focus');
-                                } else {
-                                    self.module.component.dialog().ok('Unlock failed. Password error.', 'Unlock note', function() {
-                                        let target = container.find('#password');
-                                        target.focus();
-                                        target.select();
-                                    });
-                                }
-                            });
-                        });
-                    } else {
-                        Model.set('noteBookId', noteBookId);
-                        //
-                        $('.folder-child').removeClass('focus');
-                        _this.parent().addClass('focus');
-                        allNotesElement.removeClass('focus');
-                    }
-                    //
-                    // Model.set('noteBookId', noteBookId);
-                }, 200);
-                //
-                e.stopPropagation();
-            });
-        },
-
-        editShow: function() {
-            $('#folder-list').on('dblclick', '.folder-item', function(e) {
-                clearTimeout(clickTimer);
-                dbClick = true;
-                //
-                let noteBookId = $(this).attr('data-id'), 
-                    parentId = $(this).attr('data-parent-id'),
-                    name = $(this).text();
-                if (!noteBookId || !name) {
+                if (!noteBookId || dbClick) {
+                    dbClick = false;
                     return false;
                 }
-                parentId = parentId ? parentId : '';
                 //
-                self.view.display('folder', 'list_item_edit', {
-                    id: noteBookId,
-                    name: name,
-                    parentId: parentId,
-                    elementId: ''
-                }, $(this).parent());
-                //
+                // allNotesElement.removeClass('focus');
+                if (_this.parent().hasClass('is-locked')) {
+                    let name = _this.text();
+                    let container = self.module.component.module({
+                        name: 'Unlock notebook',
+                        width: 300
+                    }, self.view.getView('component', 'unlockForm', {
+                        id: noteBookId,
+                        name: name
+                    }), '');
+                    //
+                    container.find('#password').focus();
+                    //
+                    container.find('.unlock-confirm').off('click').on('click', function() {
+                        let passwordElement = container.find('#password'), 
+                            password = passwordElement.val();
+                        //
+                        passwordElement.removeClass('error');
+                        if (!password) {
+                            passwordElement.addClass('error');
+                            return false;
+                        }
+                        //
+                        self.module.data.checkNotebookLock(noteBookId, password, function(status) {
+                            //
+                            if (status) {
+                                Model.set('noteBookId', noteBookId);
+                                _this.parent().removeClass('is-locked');
+                                container.remove();
+                                //
+                                $('.folder-child').removeClass('focus');
+                                _this.parent().addClass('focus');
+                                allNotesElement.removeClass('focus');
+                            } else {
+                                self.module.component.dialog().ok('Unlock failed. Password error.', 'Unlock note', function() {
+                                    let target = container.find('#password');
+                                    target.focus();
+                                    target.select();
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    Model.set('noteBookId', noteBookId);
+                    //
+                    $('.folder-child').removeClass('focus');
+                    _this.parent().addClass('focus');
+                    allNotesElement.removeClass('focus');
+                }
                 e.stopPropagation();
             });
         },
@@ -156,7 +127,6 @@ App.event.extend('folder', function() {
             let d = function(target) {
                 let noteBookId = target.attr('data-id'), 
                     parentId = target.attr('data-parent-id'),
-                    originalName = target.attr('data-name'), 
                     name = $.trim(target.val());
                 
                 //
@@ -182,7 +152,6 @@ App.event.extend('folder', function() {
                         }, function() {});
                     } else {
                         // pass
-                        // target.parent().parent().parent().parent().remove();
                     }
                 }
             };
@@ -218,22 +187,11 @@ App.event.extend('folder', function() {
             });
         },
 
-        actionsShow: function() {
-            $('#folder-list').on('click', '.folder-action-item-more', function(e) {
-                let noteBookId = $(this).attr('data-id');
-                self.module.component.tips.show($(this), self.view.getView('folder', 'listActions', {
-                    noteBookId: noteBookId
-                }), {
-                }, $(this).parent());
-                //
-                e.stopPropagation();
-            });
-        },
-
         actionClick: function() {
             $('#folder-list').on('click', '.folder-item-action-item', function(e) {
                 let action = $(this).attr('data-action'), 
-                    noteBookId = $(this).attr('data-id');
+                    noteBookId = $(this).attr('data-id'), 
+                    parentId = $(this).attr('data-parent-id');
                 //
                 if (!action || !noteBookId) {
                     return false;
@@ -241,11 +199,24 @@ App.event.extend('folder', function() {
                 // action
                 switch (action) {
                     case "new":
-                        let parentId = $(this).attr('data-id'), 
-                            elementId = self.module.component.timeToStr();
+                        let elementId = self.module.component.timeToStr();
                         $('.folder-child[data-id="'+ parentId +'"]').after(self.view.getView('folder', 'newNoteBook', {parentId: parentId, elementId: elementId}))
                         $('input[data-element-id="'+ elementId +'"]').focus();
                         $('#tips-box').remove();
+                        break;
+                    case "edit":
+                        let name = $(this).attr('data-name');
+                        if (!noteBookId || !name) {
+                            return false;
+                        }
+                        parentId = parentId ? parentId : '';
+                        //
+                        self.view.display('folder', 'list_item_edit', {
+                            id: noteBookId,
+                            name: name,
+                            parentId: parentId,
+                            elementId: ''
+                        }, $(".folder-child[data-id='"+ noteBookId +"']"));
                         break;
                     case "delete":
                         self.module.component.dialog().show('confirm', 'Delete notebook', 'Are you sure you want to delete these?', function() {
@@ -329,10 +300,12 @@ App.event.extend('folder', function() {
         contexMenu: function() {
             $('.notebooks-container').on('contextmenu', '.folder-item', function(e) {
                 let noteBookId = $(this).attr('data-id'), 
-                    parentId = $(this).attr('data-parent-id');
+                    parentId = $(this).attr('data-parent-id'), 
+                    name = $(this).text();
                 self.module.component.tips.show($(this), self.view.getView('folder', 'listActions', {
                     noteBookId: noteBookId,
-                    parentId: parentId ? parentId : ''
+                    parentId: parentId ? parentId : '',
+                    name: name
                 }), {
                 }, $(this));
                 e.stopPropagation();

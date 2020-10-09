@@ -95,7 +95,7 @@ App.event.extend('editor', function() {
                 //
                 container.trigger('change');
             }
-            $('.editor-content').on('blur', function() {
+            $('.editor-content').on('focus', function() {
                 let container = $('.editor-content'), 
                     containerElement = container[0], 
                     rangeStart = containerElement.selectionStart ,

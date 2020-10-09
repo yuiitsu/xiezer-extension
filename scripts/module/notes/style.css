@@ -101,9 +101,6 @@
     word-break:break-all;
 }
 
-.notes-item:last-child {
-}
-
 .notes-item.focus {
     background-color: rgba(214, 202, 165, 0.2);
     color: rgba(0, 0, 0, 0.7);
@@ -112,6 +109,10 @@
 .notes-item:hover {
     background-color: rgba(214, 202, 165, 0.2);
     color: rgba(0, 0, 0, 0.7);
+}
+
+.notes-name {
+    font-size: 14px;
 }
 
 .notes-edit-line, .notes-checkbox {

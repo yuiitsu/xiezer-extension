@@ -20,6 +20,7 @@ App.module.extend('editor', function() {
 
     this.previewNote = function(content) {
         Model.set('content', content);
+        Model.set('editorModifyTime', new Date().getTime());
     };
 
     this.saveNote = function(content) {
