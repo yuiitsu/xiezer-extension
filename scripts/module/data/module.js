@@ -5,7 +5,7 @@
 App.module.extend('data', function() {
     //
     let self = this, 
-        dbVersion = 4,
+        dbVersion = 5,
         dbName = 'xiezer',
         db = null, 
         currentDataKey = 'currentData', 
@@ -73,6 +73,10 @@ App.module.extend('data', function() {
                 objectStore.createIndex('createAt', 'createAt', {unique: false});
             }
             //
+            if (!db.objectStoreNames.contains('currentImages')) {
+                objectStore = db.createObjectStore('currentImages', {keyPath: 'imageId'});
+                objectStore.createIndex('createAt', 'createAt', {unique: false});
+            }
         };
     };
 
@@ -358,6 +362,7 @@ App.module.extend('data', function() {
                     Model.set('action', 'update');
                     Model.set('content', result.content);
                     // Model.set('currentNote', result);
+                    // Model.set('currentNote', result);
                     Model.set('editorData', result.content);
                     localStorage.setItem('lastNoteId', noteId);
                 }
@@ -470,6 +475,7 @@ App.module.extend('data', function() {
                     self.readAllNoteBooks(function() {
                         self.readAllNotes();
                     });
+                    //
                     callback();
                 };
                 //
@@ -661,6 +667,11 @@ App.module.extend('data', function() {
             } else {
             }
         });
+    };
+
+    this.clearCurrentNote = function () {
+        Model.set('content', '');
+        Model.set('editorData', '');
     };
 
     this.currentData = {

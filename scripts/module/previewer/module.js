@@ -12,9 +12,9 @@ App.module.extend('previewer', function() {
         //
         this.md = window.markdownit();
         //
-        Model.set('editorModifyTime', new Date().getTime());
-        // Model.set('content', '').watch('content', this.renderContent);
-        Model.set('content', '').watch('content', this.renderPreview);
+        // Model.set('editorModifyTime', new Date().getTime());
+        Model.set('content', '').watch('content', this.renderContent);
+        // Model.set('content', '').watch('content', this.renderPreview);
         Model.set('toc', '').watch('toc', this.renderToc);
         Model.watch('showToc', this.renderTocIcon);
         Model.set('previewerScrollTop', 0).watch('previewerScrollTop', this.renderScrollTop);
@@ -25,22 +25,22 @@ App.module.extend('previewer', function() {
         Model.set('showToc', showToc === 'true' ? true : false);
     };
 
-    this.renderPreview = function(content) {
-        if (editorModifyLastTime === 0) {
-            console.log(1);
-            self.renderContent(content);
-            editorModifyLastTime = Model.get('editorModifyTime');
-        } else {
-            clearInterval(previewerTimer);
-            previewerTimer = setInterval(function() {
-                let editorModifyTime = Model.get('editorModifyTime');
-                if (editorModifyTime > editorModifyLastTime) {
-                    editorModifyLastTime = editorModifyTime;
-                    self.renderContent(content);
-                }
-            }, 1000);
-        }
-    };
+    // this.renderPreview = function(content) {
+    //     if (editorModifyLastTime === 0) {
+    //         console.log(1);
+    //         self.renderContent(content);
+    //         editorModifyLastTime = Model.get('editorModifyTime');
+    //     } else {
+    //         clearInterval(previewerTimer);
+    //         previewerTimer = setInterval(function() {
+    //             let editorModifyTime = Model.get('editorModifyTime');
+    //             if (editorModifyTime > editorModifyLastTime) {
+    //                 editorModifyLastTime = editorModifyTime;
+    //                 self.renderContent(content);
+    //             }
+    //         }, 1000);
+    //     }
+    // };
 
     this.renderContent = function(content) {
         //

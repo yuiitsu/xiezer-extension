@@ -200,6 +200,7 @@ App.event.extend('folder', function() {
                 switch (action) {
                     case "new":
                         let elementId = self.module.component.timeToStr();
+                        parentId = $(this).attr('data-id');
                         $('.folder-child[data-id="'+ parentId +'"]').after(self.view.getView('folder', 'newNoteBook', {parentId: parentId, elementId: elementId}))
                         $('input[data-element-id="'+ elementId +'"]').focus();
                         $('#tips-box').remove();
