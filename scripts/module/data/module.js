@@ -302,7 +302,7 @@ App.module.extend('data', function() {
         //
         noteBookId = noteBookId ? noteBookId : null;
         objectStore.index(index).openCursor(noteBookId, order).onsuccess = function (event) {
-            var cursor = event.target.result;
+            let cursor = event.target.result;
             if (cursor) {
                 let item = {
                     id: cursor.value.noteId,
@@ -339,7 +339,7 @@ App.module.extend('data', function() {
                     }
                 });
                 //
-                // console.log(result);
+                console.log(result);
                 Model.set('notes', result);
                 // self.readAllNoteBooks();
             }

@@ -1,7 +1,7 @@
 code {
     font-family: inherit;
     background-color: rgba(214, 202, 165, 0.2);
-    padding: 1px 2px;
+    padding: 0 2px;
     border: 1px solid rgba(214, 202, 165, 0.5);
     font-size: 16px;
 }
@@ -20,7 +20,7 @@ code {
 }
 
 .previewer-enity {
-    padding: 20px;
+    padding: 20px 20px 80px;
     overflow-y: auto;
 }
 

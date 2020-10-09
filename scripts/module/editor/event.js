@@ -95,13 +95,13 @@ App.event.extend('editor', function() {
                 //
                 container.trigger('change');
             }
-            $('.editor-content').on('focus', function() {
+            $('.editor-content').on('blur', function() {
                 let container = $('.editor-content'), 
                     containerElement = container[0], 
                     rangeStart = containerElement.selectionStart ,
                     rangeEnd = containerElement.selectionEnd,
                     selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart);
-                // console.log(rangeStart, rangeEnd, selectedContent);
+                console.log(rangeStart, rangeEnd, selectedContent);
                 Model.set('editorRange', {
                     rangeStart: rangeStart,
                     rangeEnd: rangeEnd,
@@ -191,6 +191,13 @@ App.event.extend('editor', function() {
                     self.module.editor.previewNote(content);
                     //
                     self.autoSave();
+                    //
+                    let scrollHeight = $(this).prop('scrollHeight'), 
+                        scrollTop = $(this).prop('scrollTop'), 
+                        clientHeight = $(this).outerHeight();
+                    if (scrollTop + clientHeight + 50 >= scrollHeight) {
+                        $(this).scrollTop(scrollHeight);
+                    }
                     return false;
                 }
             });
