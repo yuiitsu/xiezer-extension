@@ -13,7 +13,7 @@ App.module.extend('init', function() {
         this.module.data.openDb(function() {
             setTimeout(function() {
                 self.module._init();
-            }, 1000);
+            }, 500);
         }, function() {
             self.view.display('init', 'error', {message: 'Failed to open DB.'}, $('.prepare-content'));
         });

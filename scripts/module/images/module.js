@@ -4,12 +4,19 @@
 App.module.extend('images', function() {
 
     let self = this, 
+        ajax = null,
         isQueryLoading = false,
         isUploading = false, 
         settingKey = {
             github: 'settingGithub'
         }, 
-        pathList = [];
+        pathList = [], 
+        libs = [
+            'latest',
+            'Github'
+            // 'Gitee', 
+            // 'Qiniu'
+        ];
 
     this._init = function() {
         Model.set('useLib', 'github');
@@ -33,10 +40,13 @@ App.module.extend('images', function() {
 
     //
     this.init = function() {
+        // Model.set('imageLibs', libs);
         Model.set('imageList', []).watch('imageList', this.renderList);
         Model.set('imageListError', '').watch('imageListError', this.renderListError);
         Model.watch('imageListError', this.renderMiniUploadError);
         Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
+        Model.set('currentLib').watch('currentLib', this.lib.router);
+        Model.watch('currentLib', this.renderLibs);
     };
 
     this.show = function() {
@@ -44,13 +54,21 @@ App.module.extend('images', function() {
         pathList = [];
         //
         let container = self.module.component.module({
-            name: 'Picture Library'
+            name: 'Picture Library',
+            width: 800,
         }, self.view.getView('images', 'layout', {}), '');
         //
         this.listen(container);
         //
-        this.lib.load();
-        // $('.images-lib-create-folder').trigger('click');
+        Model.set('currentLib', 'latest');
+        Model.set('imageLibs', libs);
+    };
+
+    this.renderLibs = function() {
+        self.view.display('images', 'libs', {
+            list: libs,
+            selected: Model.get('currentLib')
+        }, $('.images-lib-side'));
     };
 
     this.renderList = function(data) {
@@ -61,16 +79,18 @@ App.module.extend('images', function() {
                 dir.push({
                     name: element.name,
                     path: element.path,
-                    type: 'dir'
+                    type: 'dir',
+                    lib: element.lib
                 });
             }
             if (element.type === 'file') {
                 if (['png', 'jpg', 'jpeg', 'gif'].indexOf(element.name.substring(element.name.lastIndexOf('.') + 1)) !== -1) {
                     list.push({
-                        url: element.download_url,
+                        url: element.url,
                         name: element.name,
                         sha: element.sha,
-                        type: 'image'
+                        type: 'image',
+                        lib: element.lib
                     });
                 }
             }
@@ -91,7 +111,11 @@ App.module.extend('images', function() {
 
     this.renderProgress = function(data) {
         if (data) {
-            self.view.display('images', 'progress', data, $('.images-uploading-progress-container'));
+            let viewName = 'progress';
+            if (data.currentNum === data.total && data.complete === 100) {
+                viewName = 'uploadComplete';
+            }
+            self.view.display('images', viewName, data, $('.images-uploading-progress-container'));
         } else {
             $('.images-uploading-progress-container').html('');
         }
@@ -115,6 +139,23 @@ App.module.extend('images', function() {
     };
 
     this.lib = {
+        router: function(currentLib) {
+            currentLib = currentLib;
+            if (currentLib === 'latest') {
+                if (isQueryLoading) {
+                    return false;
+                }
+                isQueryLoading = true;
+                self.loading.show();
+                self.module.data.latestImages.query(function() {
+                    self.loading.hide();
+                    isQueryLoading = false;
+                });
+            } else {
+                Model.set('useLib', currentLib);
+                self.lib.load();
+            }
+        },
         reload: function() {
             self.view.display('images', 'listLoading', {}, $('.images-lib-list-container'));
             this.load();
@@ -137,7 +178,7 @@ App.module.extend('images', function() {
             this[useLib].queryPage();
         },
         github: {
-            queryPage: function() {
+            queryPage: function(callback) {
                 if (isQueryLoading) {
                     return false;
                 }
@@ -148,7 +189,7 @@ App.module.extend('images', function() {
                     time = new Date().getTime();
                 //
                 let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
-                self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'?t=' + time, {
+                ajax = self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'?t=' + time, {
                     headers: {
                         'Authorization': 'token ' + setting.token
                     }
@@ -160,7 +201,21 @@ App.module.extend('images', function() {
                         Model.set('imageListError', 'Unauthorized, please check the token');
                         return false;
                     }
-                    Model.set('imageList', response);
+                    //
+                    let result = [];
+                    response.forEach(item => {
+                        result.push({
+                            name: item.name,
+                            url: item.download_url,
+                            sha: item.sha,
+                            type: item.type,
+                            lib: 'github'
+                        });
+                    })
+                    Model.set('imageList', result);
+                    if ($.isFunction(callback)) {
+                        callback();
+                    }
                 });
             },
             upload: function(xhr, name, base64Data) {
@@ -207,7 +262,12 @@ App.module.extend('images', function() {
                         Model.set('imageListError', 'Unauthorized, please check the token');
                         return false;
                     }
-                    self.lib.reload();
+                    // delete local data, if it exists.
+                    self.module.data.latestImages.delete(sha, function() {
+                        Model.set('currentLib', Model.get('currentLib'));
+                    });
+                    //
+                    // self.lib.reload();
                 }, true);
             }
         }
@@ -215,10 +275,11 @@ App.module.extend('images', function() {
 
     this.loading = {
         show: function() {
-            $('.images-lib-list-nav-loading').show();
+            // $('.images-lib-list-nav-loading').show();
+            $('.images-lib-loading').show();
         },
         hide: function() {
-            $('.images-lib-list-nav-loading').hide();
+            $('.images-lib-loading').hide();
         }
     }
 
@@ -242,10 +303,11 @@ App.module.extend('images', function() {
         //
         container.on('click', '.images-lib-item-delete', function(e) {
             let sha = $(this).attr('data-sha'), 
-                name = $(this).attr('data-name');
+                name = $(this).attr('data-name'), 
+                lib = $(this).attr('data-lib');
             //
             self.module.component.dialog().show('confirm', 'Delete picture', 'Are you sure you want to delete it?', function() {
-                self.lib[Model.get('useLib')].delete(sha, name);
+                self.lib[lib].delete(sha, name);
             })
         })
         //
@@ -329,12 +391,12 @@ App.module.extend('images', function() {
             Model.set('setting_' + Model.get('useLib'), data);
             self.module.component.notification('Save successfuly.');
             //
-            self.lib.reload();
+            Model.set('currentLib', Model.get('currentLib'));
             e.stopPropagation();
         });
         //
         container.on('click', '.images-lib-setting-cancel', function(e) {
-            self.lib.reload();
+            Model.set('currentLib', Model.get('currentLib'));
             e.stopPropagation();
         });
         //
@@ -353,7 +415,7 @@ App.module.extend('images', function() {
             }
             //
             self.createFolder(path + '/temp.md', 'base64,dGVtcA==', function(res) {
-                self.lib.reload();
+                Model.set('currentLib', Model.get('currentLib'));
             });
             e.stopPropagation();
         });
@@ -361,10 +423,17 @@ App.module.extend('images', function() {
         container.on('click', '.images-lib-item-dir-container', function(e) {
             let name = $(this).attr('data-name'), 
                 path = $(this).attr('data-path'), 
-                useLib = Model.get('useLib');
+                useLib = Model.get('useLib'), 
+                disabled = $(this).attr('disabled');
             //
+            if (disabled) {
+                return false;
+            }
+            $(this).attr('disabled', true);
             pathList.push(name);
-            self.lib[useLib].queryPage();
+            self.lib[useLib].queryPage(function() {
+                $(this).removeAttr('disabled');
+            });
             e.stopPropagation();
         });
         //
@@ -384,6 +453,16 @@ App.module.extend('images', function() {
             let url = $(this).attr('data-url');
             window.open(url + Model.get('useLib'), "_blank");
         });
+        //
+        container.on('click', '.images-lib-side li', function(e) {
+            if ($(this).hasClass('disabled')) {
+                return false;
+            }
+            pathList = [];
+            let currentLib = $(this).text().toLowerCase();
+            Model.set('currentLib', currentLib);
+            e.stopPropagation();
+        });
     };
 
     this.prepareUploadData = function(files, num) {
@@ -399,19 +478,25 @@ App.module.extend('images', function() {
             Model.set('imageUploadProgress', progressData);
             //
             self.uploadImg(progressData, name, e.target.result, function(response) {
-                console.log(response);
                 //
-                let content = response.content;
-                $('.images-lib-list-inbox').prepend(self.view.getView('images', 'imageListItem', {
-                    name: content.name,
-                    url: content.download_url,
-                    sha: content.sha,
-                    type: 'image'
-                }));
+                let content = response.content, 
+                    container = $('.images-lib-list-inbox'), 
+                    imageData = {
+                        name: content.name,
+                        url: content.download_url,
+                        sha: content.sha,
+                        type: 'image',
+                        lib: Model.get('useLib')
+                    };
+                //
+                if (container.find('.images-lib-list-empty').length > 0) {
+                    self.view.display('images', 'imageListItem', imageData, container);
+                } else {
+                    container.prepend(self.view.getView('images', 'imageListItem', imageData));
+                }
                 self.renderImage();
                 //
                 if (files.length > 0) {
-                    
                     self.prepareUploadData(files, num + 1);
                 } else {
                     isUploading = false;
@@ -426,7 +511,6 @@ App.module.extend('images', function() {
     this.uploadImg = function(progressData, name, base64Data, callback) {
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', (e)=>{
-            console.log(e.loaded / e.total)
             progressData.complete = parseInt(e.loaded / e.total * 100);
             Model.set('imageUploadProgress', progressData);
         }, false);
@@ -439,7 +523,14 @@ App.module.extend('images', function() {
                     break;
                 case 4:
                     if (xhr.status === 200 || xhr.status === 201) {
-                        console.log('upload success');
+                        // save to latestImages
+                        let result = xhr.response;
+                        Model.set('latestImage', {
+                            name: result.content.name,
+                            url: result.content.download_url,
+                            sha: result.content.sha
+                        });
+                        //
                         callback(xhr.response);
                     } else {
                         self.module.component.notification('Upload failed.', 'danger');
@@ -512,7 +603,6 @@ App.module.extend('images', function() {
     this.ajaxUpload = function(url, callback) {
         self.module.component.request(url, {}, {}, function(res) {
             //
-            debugger
             let fileType = res.type.split("/")[1],
                 name = self.module.data._uuid() + '.' + fileType, 
                 progressData = {

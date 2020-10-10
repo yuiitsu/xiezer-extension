@@ -5,10 +5,10 @@
 App.module.extend('data', function() {
     //
     let self = this, 
-        dbVersion = 5,
+        dbVersion = 6,
         dbName = 'xiezer',
         db = null, 
-        currentDataKey = 'currentData', 
+        // currentDataKey = 'currentData', 
         noteLockCache = [],
         notebookLockCache = [], 
         notebookLocked = [];
@@ -39,6 +39,7 @@ App.module.extend('data', function() {
         Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
         Model.set('moveToNotebookSingle', '').watch('moveToNotebookSingle', this.moveToNotebookSingle);
+        Model.set('latestImage', '').watch('latestImage', this.latestImages.save);
     };
 
     this.openDb = function(success, error) {
@@ -73,9 +74,10 @@ App.module.extend('data', function() {
                 objectStore.createIndex('createAt', 'createAt', {unique: false});
             }
             //
-            if (!db.objectStoreNames.contains('currentImages')) {
-                objectStore = db.createObjectStore('currentImages', {keyPath: 'imageId'});
+            if (!db.objectStoreNames.contains('latestImages')) {
+                objectStore = db.createObjectStore('latestImages', {keyPath: 'imageId'});
                 objectStore.createIndex('createAt', 'createAt', {unique: false});
+                // objectStore.createIndex('sha', 'sha', {unique: false});
             }
         };
     };
@@ -282,7 +284,7 @@ App.module.extend('data', function() {
                         result = result.concat(o[i]);
                     }
                 }
-                console.log(result);
+                // console.log(result);
                 Model.set('notebooks', result);
                 //
                 if ($.isFunction(callback)) {
@@ -339,7 +341,7 @@ App.module.extend('data', function() {
                     }
                 });
                 //
-                console.log(result);
+                // console.log(result);
                 Model.set('notes', result);
                 // self.readAllNoteBooks();
             }
@@ -674,12 +676,62 @@ App.module.extend('data', function() {
         Model.set('editorData', '');
     };
 
-    this.currentData = {
-        get: function() {
-            return localStorage.getItem(currentDataKey);
+    this.latestImages = {
+        /**
+         * @param {*} data 
+         *  data.name
+         *  data.url
+         */
+        save: function(data) {
+            if (!data || !data.name || !data.url || !data.sha) {
+                return false;
+            }
+            data['imageId'] = data.sha;
+            data['createAt'] = new Date().getTime();
+            data['lib'] = Model.get('useLib');
+            data['type'] = 'file';
+            request = db.transaction(['latestImages'], 'readwrite')
+                .objectStore('latestImages')
+                .add(data);
+            //
+            request.onsuccess = function() {
+            };
+            //
+            request.onerror = function() {
+                self.log('add data error.')
+            };
         },
-        set: function() {
-            localStorage.setItem(currentDataKey, Model.get('content'));
+        query: function(callback) {
+            let objectStore = db.transaction('latestImages').objectStore('latestImages'), 
+                result = [], 
+                index = 'createAt';
+            //
+            objectStore.index(index).openCursor(null, 'prev').onsuccess = function (event) {
+                let cursor = event.target.result;
+                if (cursor) {
+                    result.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    //
+                    // console.log(result);
+                    Model.set('imageList', result);
+                }
+                if ($.isFunction(callback)) {
+                    callback();
+                }
+            };
+        },
+        delete: function(imageId, callback) {
+            let request = db.transaction(['latestImages'], 'readwrite')
+                .objectStore('latestImages')
+                .delete(imageId);
+
+            request.onsuccess = function (event) {
+                self.log('delete latest image successfully. imageId: ' + imageId);
+                if ($.isFunction(callback)) {
+                    callback();
+                }
+            };   
         }
     };
 

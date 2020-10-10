@@ -41,7 +41,7 @@
 .module-header{height:40px;border-bottom:1px solid #eaeaea;font-size:20px;font-weight:bold;}
 .module-close{padding-top: 6px;}
 .module-close svg{vertical-align: middle;}
-.module-main{word-wrap: break-word;word-break: normal;overflow-y:auto;max-height:500px;}
+.module-main{word-wrap: break-word;word-break: normal;overflow-y:auto;max-height:800px;}
 .module-actions button{height:30px;}
 
 /* notification */
