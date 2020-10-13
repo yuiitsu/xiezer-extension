@@ -25,5 +25,17 @@ App.module.extend('background', function() {
         }, function () {
             self.log('created context menus.');
         });
+        //
+        chrome.contextMenus.create({
+            type: 'normal',
+            title: 'XZ - Collections',
+            contexts: ['selection'],
+            id: 'XZ_COLLECTIONS',
+            onclick: function(info, tab) {
+                console.log(info);
+            }
+        }, function () {
+            self.log('created context menus.');
+        });
     };
 });

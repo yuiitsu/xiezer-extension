@@ -64,3 +64,8 @@
     margin-bottom: -3px;
     margin-right: 5px;
 }
+
+.editor-link-form-container {
+    height: 230px;
+    padding: 10px 0;
+}

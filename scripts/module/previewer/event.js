@@ -15,21 +15,21 @@ App.event.extend('prviewer', function() {
         },
         scroll: function() {
             //
-            $('#previewer').mouseenter(function() {
+            $('#previewer-container').on('mouseenter', '#previewer', function() {
                 Model.set('scrollMaster', 'previewer');
             });
             //
-            $('#previewer').scroll(function() {
-                let scrollMaster = Model.get('scrollMaster');
-                if (scrollMaster !== 'previewer') {
-                    return false;
-                }
-                let scrollHeight = $(this).prop('scrollHeight'), 
-                    scrollTop = $(this).prop('scrollTop'), 
-                    clientHeight = $(this).outerHeight();
-                //
-                Model.set('editorScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
-            });
+            // $('#previewer-container').on('scroll', '#previewer', function() {
+            //     let scrollMaster = Model.get('scrollMaster');
+            //     if (scrollMaster !== 'previewer') {
+            //         return false;
+            //     }
+            //     let scrollHeight = $(this).prop('scrollHeight'), 
+            //         scrollTop = $(this).prop('scrollTop'), 
+            //         clientHeight = $(this).outerHeight();
+            //     //
+            //     Model.set('editorScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
+            // });
         },
         toc: function() {
             $('#toc').on('click', '.toc', function(e) {
@@ -71,6 +71,40 @@ App.event.extend('prviewer', function() {
                 });
                 //
                 $('#previewer').wordExport(title);
+            });
+        },
+        previewMode: function() {
+            $('#previewer-container').on('click', '.preview-action-preview-mode', function(e) {
+                let mode = $(this).attr('data-mode'), 
+                    previewOnly = mode === 'edit' ? 'false' : 'true';
+                //
+                self.module.init.switchPreviewMode(previewOnly);
+                e.stopPropagation();
+            });
+        },
+        switchPreviewWith: function() {
+            $('#previewer-container').on('click', '.preview-width-item', function(e) {
+                console.log(1);
+                let action = $(this).attr('data-action'), 
+                    previewWith = Model.get('previewWith');
+                //
+                if (action === 'minus') {
+                    if (previewWith <= 50) {
+                        return false;
+                    }
+                    previewWith = previewWith - 25;
+                }
+                //
+                if (action === 'plus') {
+                    if (previewWith >= 100) {
+                        return false;
+                    }
+                    previewWith = previewWith + 25;
+                }
+                //
+                Model.set('previewWith', previewWith);
+                localStorage.setItem('previewWith', previewWith);
+                e.stopPropagation();
             });
         }
     }

@@ -4,11 +4,15 @@
  */
 App.module.extend('init', function() {
     //
-    let self = this;
+    let self = this, 
+        previewOnly = 'false';
 
     this._init = function() {
         // open db
         this.view.display('init', 'prepare', {}, $('#main-container'));
+        //
+        previewOnly = localStorage.getItem('previewOnly');
+        previewOnly = previewOnly ? previewOnly : 'false';
         //
         this.module.data.openDb(function() {
             setTimeout(function() {
@@ -24,9 +28,18 @@ App.module.extend('init', function() {
         Model.set('showToc', Model.default.showToc).watch('showToc', this.renderToc);
         Model.set('showNoteBook', Model.default.showNoteBook).watch('showNoteBook', this.renderNoteBook);
         Model.set('miniSwitch', false).watch('miniSwitch', this.renderMini);
+        Model.set('previewOnly', previewOnly).watch('previewOnly', this.renderEditorHide);
         //
-        this.view.display('init', 'layout', {}, $('#main-container'));
+        this.view.display('init', 'layout', {previewOnly: previewOnly}, $('#main-container'));
         //
+    };
+
+    this.renderEditorHide = function(v) {
+        if (v === 'true') {
+            $('#editor').addClass('hide');
+        } else {
+            $('#editor').removeClass('hide');
+        }
     };
 
     this.renderMini = function(status) {
@@ -58,4 +71,13 @@ App.module.extend('init', function() {
             noteBookContainer.hide();
         }
     };
+
+    this.switchPreviewMode = function(previewOnly) {
+        if (!previewOnly) {
+            previewOnly = Model.get('previewOnly');
+            previewOnly = previewOnly === 'true' ? 'false' : 'true';
+        }
+        Model.set('previewOnly', previewOnly);
+        localStorage.setItem('previewOnly', previewOnly);
+    }
 });

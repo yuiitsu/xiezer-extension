@@ -6,7 +6,7 @@ App.module.extend('content', function() {
     //
     this.init = function() {
         // todo.
-        chrome.extension.onMessage.addListener(function(request, _, response) {
+        chrome.runtime.onMessage.addListener(function(request, _, response) {
             let method = request.method;
             if (self.hasOwnProperty(method)) {
                 self[method]();

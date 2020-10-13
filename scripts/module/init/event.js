@@ -13,6 +13,14 @@ App.event.extend('initEvent', function() {
                 window.open(host + url, "_blank");
                 e.stopPropagation();
             });
+        },
+        switchPreviewMode: function() {
+            $(document).on('keydown', function(e) {
+                if (e.altKey && e.keyCode === 69) {
+                    self.module.init.switchPreviewMode();
+                    e.stopPropagation();
+                }
+            });
         }
     }
 });

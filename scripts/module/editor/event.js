@@ -39,6 +39,22 @@ App.event.extend('editor', function() {
             $('.editor-content').focus();
         },
         editor: function() {
+            //
+            let d = function(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset) {
+                //
+                let scrollTop = container.scrollTop();
+                //
+                var contentPrev = containerElement.value.substring(0, rangeStart);
+                var contentNext = containerElement.value.substring(rangeEnd);
+                container.val(contentPrev + selectedContent + contentNext);
+                container.focus();
+                containerElement.setSelectionRange(rangeEnd + rightOffset, rangeEnd + rightOffset);
+                //
+                container.scrollTop(scrollTop);
+                //
+                container.trigger('change');
+            }
+            //
             let b = {
                 bold: function(selectedContent, rightOffset) {
                     rightOffset = selectedContent ? 6 : 3;
@@ -78,36 +94,29 @@ App.event.extend('editor', function() {
                     rightOffset = selectedContent ? 12 : 5;
                     selectedContent = '\n\n```\n' + selectedContent + '\n```\n\n';
                     return [selectedContent, rightOffset];
+                },
+                link: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd) {
+                    //
+                    let module = self.module.component.module({
+                        name: 'Link',
+                        width: 300,
+                    }, self.view.getView('editor', 'linkForm', {text: selectedContent}), '');
+                    //
+                    module.find('.form-confirm').on('click', function() {
+                        let title = $.trim(module.find('input[name="title"]').val()), 
+                            url = $.trim(module.find('input[name="url"]').val()), 
+                            replaceLink = '['+ title +']('+ url +')';
+                        //
+                        rightOffset = replaceLink.length - selectedContent.length;
+                        d(container, containerElement, rangeStart, rangeEnd, replaceLink, rightOffset);
+                        module.remove();
+                    });
+                    //
+                    module.find('.form-cancel').on('click', function() {
+                        module.remove();
+                    });
                 }
             };
-            //
-            let d = function(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset) {
-                //
-                let scrollTop = container.scrollTop();
-                //
-                var contentPrev = containerElement.value.substring(0, rangeStart);
-                var contentNext = containerElement.value.substring(rangeEnd);
-                container.val(contentPrev + selectedContent + contentNext);
-                container.focus();
-                containerElement.setSelectionRange(rangeEnd + rightOffset, rangeEnd + rightOffset);
-                //
-                container.scrollTop(scrollTop);
-                //
-                container.trigger('change');
-            }
-            $('.editor-content').on('blur', function() {
-                let container = $('.editor-content'), 
-                    containerElement = container[0], 
-                    rangeStart = containerElement.selectionStart ,
-                    rangeEnd = containerElement.selectionEnd,
-                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart);
-                console.log(rangeStart, rangeEnd, selectedContent);
-                Model.set('editorRange', {
-                    rangeStart: rangeStart,
-                    rangeEnd: rangeEnd,
-                    selectedContent: selectedContent
-                });
-            });
             //
             $('.editor-icon').on('click', function() {
                 let action = $(this).attr('data-action'), 
@@ -118,21 +127,61 @@ App.event.extend('editor', function() {
                     selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
                     rightOffset = 0;
                 //
-                let r = b[action](selectedContent, rightOffset);
-                selectedContent = r[0];
-                rightOffset = r[1];
-                //
-                d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+                let r = b[action](selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd);
+                if (r) {
+                    selectedContent = r[0];
+                    rightOffset = r[1];
+                    //
+                    d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+                }
             });
             //
             $('.editor-content').on('keydown', function(e) {
-                let container = $('.editor-content'), 
+                let container = $(this), 
                     containerElement = container[0], 
                     rangeStart = containerElement.selectionStart ,
                     rangeEnd = containerElement.selectionEnd,
                     selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
                     rightOffset = 0, 
+                    content = container.val(),
                     k = '';
+                //
+                console.log(rangeStart, rangeEnd, selectedContent);
+                Model.set('editorRange', {
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd,
+                    selectedContent: selectedContent
+                });
+                //
+                if (e.keyCode === 13) {
+                    //
+                    content = content.substr(0, rangeStart) + '\n' + content.substr(rangeStart);
+                    container.val(content);
+                    containerElement.focus();
+                    containerElement.setSelectionRange(rangeStart + 1, rangeStart + 1);
+                    //
+                    self.module.editor.previewNote(content);
+                    //
+                    self.autoSave();
+                    //
+                    let scrollHeight = container.prop('scrollHeight'), 
+                        scrollTop = container.prop('scrollTop'), 
+                        clientHeight = container.outerHeight();
+                    if (scrollTop + clientHeight + 50 >= scrollHeight) {
+                        container.scrollTop(scrollHeight);
+                    }
+                    return false;
+                }
+                //
+                if (e.key === 'Tab') {
+                    content = content.substr(0, rangeStart) + '\t' + content.substr(rangeStart);
+                    container.val(content);
+                    containerElement.focus();
+                    containerElement.setSelectionRange(rangeStart + 1, rangeStart + 1);
+                    self.module.editor.previewNote(content);
+                    self.autoSave();
+                    return false;
+                }
                 //
                 if (e.altKey && e.keyCode === 66) {
                     console.log('option + b');
@@ -164,9 +213,44 @@ App.event.extend('editor', function() {
                     return false;
                 }
             });
+            //
+            $('.editor-content').on('click', function(e) {
+                let container = $(this), 
+                    containerElement = container[0], 
+                    rangeStart = containerElement.selectionStart ,
+                    rangeEnd = containerElement.selectionEnd,
+                    selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart);
+                console.log(rangeStart, rangeEnd, selectedContent);
+                Model.set('editorRange', {
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd,
+                    selectedContent: selectedContent
+                });
+            });
         },
         contentChange: function() {
-            $('.editor-content').on('change input', function(e) {
+            let cpLock = false;
+            $('.editor-content').on('compositionstart', function() {
+                cpLock = true;
+            });
+            $('.editor-content').on('compositionend', function() {
+                cpLock = false;
+            });
+            //
+            $('.editor-content').on('input', function(e) {
+                let _this = $(this);
+                setTimeout(function() {
+                    if (!cpLock) {
+                        let content = _this.val();
+                        if (!content) {
+                            return false;
+                        }
+                        self.module.editor.previewNote(content);
+                        self.autoSave();
+                    }
+                });
+            });
+            $('.editor-content').on('change', function(e) {
                 let content = $(this).val();
                 if (!content) {
                     return false;
@@ -174,32 +258,6 @@ App.event.extend('editor', function() {
                 self.module.editor.previewNote(content);
                 //
                 self.autoSave();
-            });
-
-            $('.editor-content').on('keydown', function(e) {
-                if (e.keyCode === 13) {
-                    //
-                    let el = $(this).get(0), 
-                        currentPosition = el.selectionStart, 
-                        content = $(this).val();
-                    //
-                    content = content.substr(0, currentPosition) + '\n' + content.substr(currentPosition);
-                    $(this).val(content);
-                    el.focus();
-                    el.setSelectionRange(currentPosition + 1, currentPosition + 1);
-                    //
-                    self.module.editor.previewNote(content);
-                    //
-                    self.autoSave();
-                    //
-                    let scrollHeight = $(this).prop('scrollHeight'), 
-                        scrollTop = $(this).prop('scrollTop'), 
-                        clientHeight = $(this).outerHeight();
-                    if (scrollTop + clientHeight + 50 >= scrollHeight) {
-                        $(this).scrollTop(scrollHeight);
-                    }
-                    return false;
-                }
             });
         },
         save: function() {
@@ -246,6 +304,7 @@ App.event.extend('editor', function() {
         },
         paste: function() {
             document.getElementById('editor-content').addEventListener('paste', function (event) {
+                console.log(event.clipboardData.getData('text/html'))
                 var items = event.clipboardData && event.clipboardData.items;
                 var file = null;
                 if (items && items.length) {
@@ -261,28 +320,6 @@ App.event.extend('editor', function() {
                     self.module.images.renderMiniUpload(file);
                 }
             });
-        }
-        // clickTab: function() {
-        //     $('.editor-content').on('keydown', function(e) {
-        //         if (e.key === 'Tab') {
-        //             // let el = $(this).get(0), 
-        //             //     pos = 0;
-        //             // //
-        //             // if ('selectionStart' in el) {
-        //             //     pos = el.selectionStart;
-        //             // }
-        //             // console.log(pos);
-        //             // let currentPosition = pos, 
-        //             //     content = Model.get('content');
-        //             // //
-        //             // content = content.substr(0, currentPosition) + '    ' + content.substr(currentPosition);
-        //             // Model.set('content', content);
-        //             return false;
-        //         }
-        //     });
-        // },
-        // scroll: function() {
-
-        // }
+        },
     }
 });

@@ -161,6 +161,12 @@ App.event.extend('notes', function() {
                 e.stopPropagation();
             });
         },
+        previewOnly: function() {
+            $('.notes-items').on('click', '.preview-only', function(e) {
+                self.module.init.switchPreviewMode('true');
+                e.stopPropagation();
+            });
+        },
         lock: function() {
             $('.notes-items').on('click', '.lock-container', function(e) {
                 let _this = $(this), 

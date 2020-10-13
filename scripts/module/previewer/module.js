@@ -10,6 +10,9 @@ App.module.extend('previewer', function() {
 
     this.init = function() {
         //
+        let previewWith = localStorage.getItem('previewWith');
+        previewWith = previewWith ? parseInt(previewWith) : 75;
+        //
         this.md = window.markdownit();
         //
         // Model.set('editorModifyTime', new Date().getTime());
@@ -18,11 +21,32 @@ App.module.extend('previewer', function() {
         Model.set('toc', '').watch('toc', this.renderToc);
         Model.watch('showToc', this.renderTocIcon);
         Model.set('previewerScrollTop', 0).watch('previewerScrollTop', this.renderScrollTop);
+        Model.watch('previewOnly', this.renderPreviewMode);
+        Model.set('previewWith', previewWith).watch('previewWith', this.renderPreviewMode);
         //
-        this.view.display('previewer', 'layout', {}, $('#previewer-container'));
+        this.renderLayout();
         //
         let showToc = localStorage.getItem('showToc');
         Model.set('showToc', showToc === 'true' ? true : false);
+    };
+
+    this.renderLayout = function() {
+        let previewOnly = Model.get('previewOnly'), 
+            previewWith = Model.get('previewWith');
+        //
+        this.view.display('previewer', 'layout', {previewOnly: previewOnly, width: previewWith}, $('#previewer-container'));
+        //
+        $('#previewer').scroll(function() {
+            let scrollMaster = Model.get('scrollMaster');
+            if (scrollMaster !== 'previewer') {
+                return false;
+            }
+            let scrollHeight = $(this).prop('scrollHeight'), 
+                scrollTop = $(this).prop('scrollTop'), 
+                clientHeight = $(this).outerHeight();
+            //
+            Model.set('editorScrollTop', scrollHeight > 0 && scrollHeight > clientHeight ? scrollTop / (scrollHeight - clientHeight) : 0);
+        });
     };
 
     // this.renderPreview = function(content) {
@@ -49,15 +73,25 @@ App.module.extend('previewer', function() {
             // container.html(marked(content));
             container.html(self.md.render(content));
             //
+            container.find('a').each(function() {
+                $(this).attr('target', '_blank');
+            });
+            //
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });
             //
+            container.scrollTop(0);
         } else {
             self.view.display('previewer', 'empty', {}, container);
         }
         //
         Model.set('toc', new Date().getTime());
+    };
+
+    this.renderPreviewMode = function(v) {
+        self.renderLayout();
+        Model.set('content', Model.get('content'));
     };
 
     this.renderToc = function() {

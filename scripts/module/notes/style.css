@@ -159,6 +159,11 @@
     margin-top: 5px;
 }
 
+.notes-bottom-action-item {
+    display: inline-block;
+    margin-right: 5px;
+}
+
 .notes-bottom-action svg {
     margin-top: 3px;
 }
@@ -195,7 +200,7 @@
 }
 
 .notes-item .unlocked {
-    display: block;
+    display: inline-block;
 }
 
 .notes-item.is-locked .locked {

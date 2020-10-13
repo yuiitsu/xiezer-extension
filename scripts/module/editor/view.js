@@ -41,6 +41,12 @@ App.view.extend('editor', function() {
                                 <path fill-rule="evenodd" d="M4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0zm-.999-3.124a.5.5 0 0 1 .33.625l-4 13a.5.5 0 0 1-.955-.294l4-13a.5.5 0 0 1 .625-.33z"/>
                             </svg>
                         </button>
+                        <button class="action-item editor-icon" data-action="link">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-link-45deg" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4.715 6.542L3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.001 1.001 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 0 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 0 0-4.243-4.243L6.586 4.672z"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="action-right">
                         <div class="action-item usage-link" title="About markdown" data-url="/help/usage/markdown">
@@ -76,6 +82,25 @@ App.view.extend('editor', function() {
                 <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
             </svg>
             auto saved at <span class="auto-save-time">{{ data.savedAt }}</span>
+        `;
+    };
+
+    this.linkForm = function() {
+        return `
+            <div class="editor-link-form-container form-container">
+                <div class="form-liner">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" value="{{ data.text }}" />
+                </div>
+                <div class="form-liner">
+                    <label class="form-label">Link</label>
+                    <input type="text" class="form-control" name="url" value="{{ data.text }}" />
+                </div>
+                <div class="form-action-liner">
+                    <button class="btn btn-primary form-confirm">Ok</button>
+                    <button class="btn btn-default form-cancel">Cancel</button>
+                </div>
+            </div>
         `;
     };
 });

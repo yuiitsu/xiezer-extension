@@ -24,6 +24,41 @@ code {
     overflow-y: auto;
 }
 
+.preview-only .previewer-enity {
+    margin: 0 auto;
+}
+
+.action-middle {
+    text-align: center;
+}
+
+.preview-action-preview-width-container {
+    display: inline-block;
+}
+
+.preview-width-item {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.preview-width-item:hover {
+    color: rgba(0, 0, 0, 1);
+}
+
+.preview-width-item.disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.preview-action-preview-width-container svg {
+    display: inline-block;
+    margin-bottom: -2px;
+}
+
+.preview-action-preview-width-container span {
+    margin: 0 10px;
+}
+
 .previewer-main a {
     color: rgba(201, 69, 54, 1);
     text-decoration: none;

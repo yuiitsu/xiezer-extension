@@ -6,6 +6,7 @@ App.view.extend('init', function() {
 
     this.layout = function() {
         return `
+            {{ var previewOnlyEditorHideClass = data.previewOnly === 'true' ? 'hide' : '' }}
             <div class="display-flex display-flex-column main-container">
                 <div class="viewpoint-container display-flex display-flex-row display-flex-auto">
                     <div id="folder" class="folder-container"></div>
@@ -13,7 +14,7 @@ App.view.extend('init', function() {
                     <div class="viewpoint display-flex display-flex-row display-flex-auto">
                         <div class="display-flex-auto display-flex-column editor-previewer-container">
                             <div class="display-flex-auto display-flex-row editor-column">
-                                <div id="editor" class="editor-container display-flex-auto"></div>
+                                <div id="editor" class="editor-container display-flex-auto {{ previewOnlyEditorHideClass }}"></div>
                                 <div id="previewer-container" class="preview-container display-flex-auto"></div>
                             </div>
                             <div class="editor-entity-status-bar display-flex-row">
