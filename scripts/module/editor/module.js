@@ -37,7 +37,7 @@ App.module.extend('editor', function() {
         //
         Model.set('editorCharactersCount', data.length);
         Model.set('editorAutoSaved', '');
-        Model.set('notesOpened', true);
+        // Model.set('notesOpened', true);
     };
 
     this.renderCharactersCount = function(n) {

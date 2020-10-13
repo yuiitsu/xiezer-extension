@@ -19,6 +19,7 @@ App.event.extend('initEvent', function() {
                 if (e.altKey && e.keyCode === 69) {
                     self.module.init.switchPreviewMode();
                     e.stopPropagation();
+                    return false;
                 }
             });
         }

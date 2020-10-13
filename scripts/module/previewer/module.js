@@ -25,9 +25,6 @@ App.module.extend('previewer', function() {
         Model.set('previewWith', previewWith).watch('previewWith', this.renderPreviewMode);
         //
         this.renderLayout();
-        //
-        let showToc = localStorage.getItem('showToc');
-        Model.set('showToc', showToc === 'true' ? true : false);
     };
 
     this.renderLayout = function() {
@@ -35,6 +32,8 @@ App.module.extend('previewer', function() {
             previewWith = Model.get('previewWith');
         //
         this.view.display('previewer', 'layout', {previewOnly: previewOnly, width: previewWith}, $('#previewer-container'));
+        let showToc = localStorage.getItem('showToc');
+        Model.set('showToc', showToc === 'true' ? true : false);
         //
         $('#previewer').scroll(function() {
             let scrollMaster = Model.get('scrollMaster');
@@ -87,6 +86,7 @@ App.module.extend('previewer', function() {
         }
         //
         Model.set('toc', new Date().getTime());
+        Model.set('notesOpened', true);
     };
 
     this.renderPreviewMode = function(v) {

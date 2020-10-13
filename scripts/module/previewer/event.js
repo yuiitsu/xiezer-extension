@@ -7,7 +7,7 @@ App.event.extend('prviewer', function() {
 
     this.event = {
         switchToc: function() {
-            $('#toc-switch').on('click', function() {
+            $('#previewer-container').on('click', '#toc-switch', function() {
                 let showToc = Model.get('showToc');
                 Model.set('showToc', !showToc);
                 localStorage.setItem('showToc', !showToc);
@@ -48,7 +48,7 @@ App.event.extend('prviewer', function() {
             });
         },
         copy: function() {
-            $('#copy-html').on('click', function() {
+            $('#previewer-container').on('click', '#copy-html', function() {
                 if ($(this).hasClass('disabled')) {
                     return false;
                 }
@@ -63,7 +63,7 @@ App.event.extend('prviewer', function() {
             });
         },
         exportToWord: function() {
-            $('#export-word').on('click', function() {
+            $('#previewer-container').on('click', '#export-word', function() {
                 let currentNote = Model.get('currentNote'), 
                     title = currentNote.title;
                 //
@@ -84,22 +84,21 @@ App.event.extend('prviewer', function() {
         },
         switchPreviewWith: function() {
             $('#previewer-container').on('click', '.preview-width-item', function(e) {
-                console.log(1);
                 let action = $(this).attr('data-action'), 
                     previewWith = Model.get('previewWith');
                 //
                 if (action === 'minus') {
-                    if (previewWith <= 50) {
+                    previewWith = previewWith - 25;
+                    if (previewWith < 50) {
                         return false;
                     }
-                    previewWith = previewWith - 25;
                 }
                 //
                 if (action === 'plus') {
-                    if (previewWith >= 100) {
+                    previewWith = previewWith + 25;
+                    if (previewWith > 100) {
                         return false;
                     }
-                    previewWith = previewWith + 25;
                 }
                 //
                 Model.set('previewWith', previewWith);

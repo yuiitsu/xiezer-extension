@@ -204,7 +204,7 @@
 }
 
 .notes-item.is-locked .locked {
-    display: block;
+    display: inline-block;
 }
 
 .notes-item.is-locked .unlocked {
