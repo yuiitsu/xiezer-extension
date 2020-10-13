@@ -62,6 +62,7 @@ App.event.extend('notes', function() {
                                 //
                                 if (status) {
                                     Model.set('noteId', noteId);
+                                    Model.set('previewerScrollTop', 0);
                                     _this.removeClass('is-locked');
                                     container.remove();
                                     //
@@ -78,6 +79,7 @@ App.event.extend('notes', function() {
                         });
                     } else {
                         Model.set('noteId', noteId);
+                        Model.set('previewerScrollTop', 0);
                         //
                         $('.notes-item').removeClass('focus');
                         $(this).addClass('focus');

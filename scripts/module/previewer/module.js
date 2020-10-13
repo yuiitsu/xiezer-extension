@@ -23,6 +23,7 @@ App.module.extend('previewer', function() {
         Model.set('previewerScrollTop', 0).watch('previewerScrollTop', this.renderScrollTop);
         Model.watch('previewOnly', this.renderPreviewMode);
         Model.set('previewWith', previewWith).watch('previewWith', this.renderPreviewMode);
+        Model.set('previewerScrollTop', 0).watch('previewerScrollTop', this.renderScrollTop);
         //
         this.renderLayout();
     };
@@ -80,7 +81,7 @@ App.module.extend('previewer', function() {
                 hljs.highlightBlock(block);
             });
             //
-            container.scrollTop(0);
+            // container.scrollTop(0);
         } else {
             self.view.display('previewer', 'empty', {}, container);
         }

@@ -212,3 +212,11 @@ code {
     color: #ccc;
     font-size: 13px;
 }
+
+.image-placeholder {
+    width: 100%;
+    /* border: 1px solid #efefef; */
+    background-color: #f7f7f7;
+    padding: 20px;
+    text-align: center;
+}
