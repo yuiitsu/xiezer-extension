@@ -38,7 +38,7 @@
 
 .folder-container {
     height: 100%;
-    width: 200px;
+    width: 220px;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -97,6 +97,7 @@
     line-height: 1.6;
     cursor: pointer;
     border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
+    word-break: break-all;
 }
 
 .toc:hover {

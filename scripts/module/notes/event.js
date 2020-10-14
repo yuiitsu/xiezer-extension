@@ -11,6 +11,7 @@ App.event.extend('notes', function() {
                 let content = '# Untitled\n';
                 Model.set('action', 'new');
                 Model.set('note', content);
+                self.module.init.switchPreviewMode('false');
             });
         },
         openNote: function() {

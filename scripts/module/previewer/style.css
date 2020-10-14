@@ -19,9 +19,13 @@ code {
     color: rgba(201, 69, 54, 1);
 }
 
+.previewer-box {
+    overflow-y: auto;
+}
+
 .previewer-enity {
     padding: 20px 20px 80px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .preview-only .previewer-enity {

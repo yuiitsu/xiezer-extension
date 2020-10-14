@@ -72,9 +72,11 @@ App.view.extend('previewer', function() {
                         </div>
                     </div>
                 </div>
-                {{ var width = data.previewOnly === 'true' ? data.width : 100 }}
-                <div id="previewer" class="previewer-enity display-flex-auto" style="width: {{ width }}%;">
-                    {{ this.view.getView('previewer', 'empty', {}) }}   
+                <div class="previewer-box display-flex-auto">
+                    {{ var width = data.previewOnly === 'true' ? data.width : 100 }}
+                    <div id="previewer" class="previewer-enity" style="width: {{ width }}%;">
+                        {{ this.view.getView('previewer', 'empty', {}) }}   
+                    </div>
                 </div>
             </div>
         `;

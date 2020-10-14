@@ -15,7 +15,7 @@ App.event.extend('prviewer', function() {
         },
         scroll: function() {
             //
-            $('#previewer-container').on('mouseenter', '#previewer', function() {
+            $('#previewer-container').on('mouseenter', '.previewer-box', function() {
                 Model.set('scrollMaster', 'previewer');
             });
             //
@@ -35,7 +35,7 @@ App.event.extend('prviewer', function() {
             $('#toc').on('click', '.toc', function(e) {
                 let anchor = $(this).attr('data-anchor'), 
                     code = $(this).attr('data-code'),
-                    previewerElement = $('#previewer'),
+                    previewerElement = $('.previewer-box'),
                     scrollTop = previewerElement.prop('scrollTop'),
                     target = previewerElement.find('#' + anchor), 
                     targetTop = target.position().top, 

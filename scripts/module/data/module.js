@@ -363,7 +363,7 @@ App.module.extend('data', function() {
                     }
                     Model.set('action', 'update');
                     Model.set('content', result.content);
-                    // Model.set('currentNote', result);
+                    Model.set('currentNote', result);
                     // Model.set('currentNote', result);
                     Model.set('editorData', result.content);
                     localStorage.setItem('lastNoteId', noteId);

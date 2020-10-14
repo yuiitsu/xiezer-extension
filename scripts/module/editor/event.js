@@ -56,6 +56,21 @@ App.event.extend('editor', function() {
             }
             //
             let b = {
+                h: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let preContent = content.substr(0, rangeStart), 
+                        symbol = [],
+                        lines = preContent.split('\n'), 
+                        linesLen = lines.length, 
+                        currentLine = lines[linesLen - 1], 
+                        currentLineLen = currentLine.length, 
+                        currentLineStart = rangeStart - currentLineLen;
+                    //
+                    for (let i = 0; i < v; i++) {
+                        symbol.push('#');
+                    }
+                    selectedContent = symbol.join('') + ' ' + currentLine;
+                    return [selectedContent, v + 1, currentLineStart];
+                },
                 bold: function(selectedContent, rightOffset) {
                     rightOffset = selectedContent ? 6 : 3;
                     selectedContent = ' **' + selectedContent + '** ';
@@ -68,8 +83,8 @@ App.event.extend('editor', function() {
                 },
                 list: function(selectedContent, rightOffset) {
                     let lines = selectedContent.split('\n');
-                    rightOffset = selectedContent ? lines.length * 3 + 3 : 2;
-                    selectedContent = '\n\n';
+                    rightOffset = selectedContent ? lines.length * 3 + 2 : 2;
+                    selectedContent = '\n';
                     lines.forEach(item => {
                         if (item) {
                             selectedContent += '- ' + item + '\n';
@@ -102,7 +117,7 @@ App.event.extend('editor', function() {
                         width: 300,
                     }, self.view.getView('editor', 'linkForm', {text: selectedContent}), '');
                     //
-                    module.find('.form-confirm').on('click', function() {
+                    let p = function() {
                         let title = $.trim(module.find('input[name="title"]').val()), 
                             url = $.trim(module.find('input[name="url"]').val()), 
                             replaceLink = '['+ title +']('+ url +')';
@@ -110,11 +125,74 @@ App.event.extend('editor', function() {
                         rightOffset = replaceLink.length - selectedContent.length;
                         d(container, containerElement, rangeStart, rangeEnd, replaceLink, rightOffset);
                         module.remove();
+                    };
+                    //
+                    module.find('input[name="title"]').focus();
+                    module.find('input[name="title"]').on('keydown', function(e) {
+                        if (e.keyCode === 13) {
+                            p();
+                            return false;
+                        }
+                    });
+                    module.find('.form-confirm').on('click', function() {
+                        p();
                     });
                     //
                     module.find('.form-cancel').on('click', function() {
                         module.remove();
                     });
+                },
+                blankUp: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let preContent = content.substr(0, rangeStart), 
+                        lines = preContent.split('\n'), 
+                        linesLen = lines.length, 
+                        currentLine = lines[linesLen - 1], 
+                        currentLineLen = currentLine.length, 
+                        currentLineStart = rangeStart - currentLineLen;
+                    //
+                    selectedContent = '\n' + currentLine;
+                    return [selectedContent, 1, currentLineStart];
+                },
+                blankDown: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let text = content.substr(rangeStart), 
+                        lines = text.split('\n'), 
+                        // linesLen = lines.length, 
+                        currentLine = lines[0], 
+                        currentLineLen = currentLine.length, 
+                        currentLineStart = rangeStart + currentLineLen;
+                    //
+                    selectedContent = '\n' + currentLine;
+                    return [selectedContent, 0, currentLineStart];
+                },
+                duplicate: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let preText = content.substr(0, rangeStart), 
+                        nextText = content.substr(rangeStart),
+                        preLines = preText.split('\n'), 
+                        preLinesLen = preLines.length, 
+                        currentLinePreText = preLines[preLinesLen - 1], 
+                        nextLines = nextText.split('\n'),
+                        currentLineNextText = nextLines[0],
+                        currentLineText = currentLinePreText + currentLineNextText,
+                        currentLineNextTextLen = currentLineNextText.length, 
+                        nextLineStart = rangeStart + currentLineNextTextLen;
+                    //
+                    selectedContent = '\n' + currentLineText;
+                    return [selectedContent, currentLineText.length + 1, nextLineStart, nextLineStart];
+                },
+                delLine: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let preText = content.substr(0, rangeStart), 
+                        nextText = content.substr(rangeStart),
+                        preLines = preText.split('\n'), 
+                        preLinesLen = preLines.length, 
+                        currentLinePreText = preLines[preLinesLen - 1], 
+                        nextLines = nextText.split('\n'),
+                        currentLineNextText = nextLines[0],
+                        currentLineText = currentLinePreText + currentLineNextText, 
+                        currentLineTextLen = currentLineText.length;
+                    //
+                    rangeStart = rangeStart - currentLinePreText.length;
+                    rangeEnd = rangeStart + currentLineTextLen;
+                    return ['', -currentLineTextLen - 1, rangeStart - 1, rangeEnd];
                 }
             };
             //
@@ -144,7 +222,8 @@ App.event.extend('editor', function() {
                     selectedContent = containerElement.value.substr(rangeStart, rangeEnd - rangeStart),
                     rightOffset = 0, 
                     content = container.val(),
-                    k = '';
+                    k = '', 
+                    v = 0;
                 //
                 console.log(rangeStart, rangeEnd, selectedContent);
                 Model.set('editorRange', {
@@ -152,26 +231,6 @@ App.event.extend('editor', function() {
                     rangeEnd: rangeEnd,
                     selectedContent: selectedContent
                 });
-                //
-                if (e.keyCode === 13) {
-                    //
-                    content = content.substr(0, rangeStart) + '\n' + content.substr(rangeStart);
-                    container.val(content);
-                    containerElement.focus();
-                    containerElement.setSelectionRange(rangeStart + 1, rangeStart + 1);
-                    //
-                    self.module.editor.previewNote(content);
-                    //
-                    self.autoSave();
-                    //
-                    let scrollHeight = container.prop('scrollHeight'), 
-                        scrollTop = container.prop('scrollTop'), 
-                        clientHeight = container.outerHeight();
-                    if (scrollTop + clientHeight + 50 >= scrollHeight) {
-                        container.scrollTop(scrollHeight);
-                    }
-                    return false;
-                }
                 //
                 if (e.key === 'Tab') {
                     content = content.substr(0, rangeStart) + '\t' + content.substr(rangeStart);
@@ -183,6 +242,7 @@ App.event.extend('editor', function() {
                     return false;
                 }
                 //
+                console.log(e.keyCode);
                 if (e.altKey && e.keyCode === 66) {
                     console.log('option + b');
                     k = 'bold';
@@ -203,13 +263,91 @@ App.event.extend('editor', function() {
                     console.log('option + c');
                     k = 'code-slash';   
                 }
+                if (e.altKey && e.keyCode === 76) {
+                    console.log('option + l');
+                    k = 'link';
+                }
+                if (e.altKey && e.keyCode === 49) {
+                    console.log('option + 1');
+                    k = 'h';
+                    v = 1;
+                }
+                if (e.altKey && e.keyCode === 50) {
+                    console.log('option + 2');
+                    k = 'h';
+                    v = 2;
+                }
+                if (e.altKey && e.keyCode === 51) {
+                    console.log('option + 3');
+                    k = 'h';
+                    v = 3;
+                }
+                if (e.altKey && e.keyCode === 52) {
+                    console.log('option + 4');
+                    k = 'h';
+                    v = 4;
+                }
+                if (e.altKey && e.keyCode === 53) {
+                    console.log('option + 5');
+                    k = 'h';
+                    v = 5;
+                }
+                if (e.altKey && e.keyCode === 54) {
+                    console.log('option + 6');
+                    k = 'h';
+                    v = 6;
+                }
+                if (e.altKey && e.keyCode === 38) {
+                    console.log('option + up');
+                    k = 'blankUp';
+                }
+                if (e.altKey && e.keyCode === 40) {
+                    console.log('option + down');
+                    k = 'blankDown';
+                }
+                if (e.altKey && e.keyCode === 68) {
+                    console.log('option + d');
+                    k = 'duplicate';
+                }
+                if (e.altKey && e.keyCode === 8) {
+                    console.log('option + backspace');
+                    k = 'delLine';
+                } 
                 //
                 if (k) {
-                    let r = b[k](selectedContent, rightOffset);
-                    selectedContent = r[0];
-                    rightOffset = r[1];
+                    let r = b[k](selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v);
+                    if (r) {
+                        selectedContent = r[0];
+                        rightOffset = r[1];
+                        if (r[2]) {
+                            rangeStart = r[2];
+                        }
+                        if (r[3] !== null) {
+                            rangeEnd = r[3];
+                        }
+                        //
+                        d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+                    }
+                    return false;
+                }
+                //
+                if (e.keyCode === 13) {
                     //
-                    d(container, containerElement, rangeStart, rangeEnd, selectedContent, rightOffset);
+                    content = content.substr(0, rangeStart) + '\n' + content.substr(rangeStart);
+                    container.val(content);
+                    containerElement.focus();
+                    containerElement.setSelectionRange(rangeStart + 1, rangeStart + 1);
+                    //
+                    self.module.editor.previewNote(content);
+                    //
+                    self.autoSave();
+                    //
+                    let scrollHeight = container.prop('scrollHeight'), 
+                        scrollTop = container.prop('scrollTop'), 
+                        clientHeight = container.outerHeight();
+                    if (scrollTop + clientHeight + 50 >= scrollHeight) {
+                        container.scrollTop(scrollHeight);
+                    }
                     return false;
                 }
             });

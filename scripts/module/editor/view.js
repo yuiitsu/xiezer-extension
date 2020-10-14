@@ -70,7 +70,8 @@ App.view.extend('editor', function() {
                     </div>
                 </div>
                 <div class="editor-entity display-flex-auto">
-                    <textarea class="editor-content" id="editor-content" placeholder="Enter something to start a new note, or update it." spellcheck="false">{{ data.content }}</textarea>
+                    <textarea class="editor-content" id="editor-content" 
+                        placeholder="Enter something to start a new note, or update it." spellcheck="false">{{ data.content }}</textarea>
                 </div>
             </div>
         `;

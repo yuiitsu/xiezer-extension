@@ -36,7 +36,7 @@ App.module.extend('previewer', function() {
         let showToc = localStorage.getItem('showToc');
         Model.set('showToc', showToc === 'true' ? true : false);
         //
-        $('#previewer').scroll(function() {
+        $('.previewer-box').scroll(function() {
             let scrollMaster = Model.get('scrollMaster');
             if (scrollMaster !== 'previewer') {
                 return false;
@@ -107,7 +107,7 @@ App.module.extend('previewer', function() {
             $(this).attr('id', anchor);
             toc.push({
                 type: $(this)[0].nodeName,
-                title: $(this).text(),
+                title: self.module.component.encodeHtml($(this).text()),
                 anchor: anchor,
                 code: anchorNodeCode
             });
@@ -131,11 +131,11 @@ App.module.extend('previewer', function() {
     };
 
     this.renderScrollTop = function(percent) {
-        let target = $('#previewer'), 
+        let target = $('.previewer-box'), 
             scrollHeight = target.prop('scrollHeight'), 
             clientHeight = target.outerHeight(),
             scrollTop = (scrollHeight - clientHeight) * percent;
         //
-        $('#previewer').animate({scrollTop: scrollTop}, 0);
+        target.animate({scrollTop: scrollTop}, 0);
     };
 });
