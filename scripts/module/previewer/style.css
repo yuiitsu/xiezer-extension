@@ -30,6 +30,9 @@ code {
 
 .preview-only .previewer-enity {
     margin: 0 auto;
+    /* background-color: rgba(214, 202, 165, 0.1); */
+    background-color: #f7f7f7;
+    min-height: 100%;
 }
 
 .action-middle {

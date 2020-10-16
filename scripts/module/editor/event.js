@@ -161,8 +161,8 @@ App.event.extend('editor', function() {
                         currentLineLen = currentLine.length, 
                         currentLineStart = rangeStart + currentLineLen;
                     //
-                    selectedContent = '\n' + currentLine;
-                    return [selectedContent, 0, currentLineStart];
+                    selectedContent = '\n';
+                    return [selectedContent, 1, currentLineStart, currentLineStart];
                 },
                 duplicate: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
                     let preText = content.substr(0, rangeStart), 
@@ -193,6 +193,21 @@ App.event.extend('editor', function() {
                     rangeStart = rangeStart - currentLinePreText.length;
                     rangeEnd = rangeStart + currentLineTextLen;
                     return ['', -currentLineTextLen - 1, rangeStart - 1, rangeEnd];
+                },
+                horizontal: function(selectedContent, rightOffset, container, containerElement, rangeStart, rangeEnd, content, v) {
+                    let preText = content.substr(0, rangeStart), 
+                        nextText = content.substr(rangeStart),
+                        preLines = preText.split('\n'), 
+                        preLinesLen = preLines.length, 
+                        currentLinePreText = preLines[preLinesLen - 1], 
+                        nextLines = nextText.split('\n'),
+                        currentLineNextText = nextLines[0],
+                        currentLineText = currentLinePreText + currentLineNextText,
+                        currentLineNextTextLen = currentLineNextText.length, 
+                        nextLineStart = rangeStart + currentLineNextTextLen;
+                    //
+                    selectedContent = '\n\n***\n';
+                    return [selectedContent, 5, nextLineStart, nextLineStart];
                 }
             };
             //
@@ -312,6 +327,10 @@ App.event.extend('editor', function() {
                 if (e.altKey && e.keyCode === 8) {
                     console.log('option + backspace');
                     k = 'delLine';
+                }
+                if (e.altKey && e.keyCode === 72) {
+                    console.log('option + h');
+                    k = 'horizontal';
                 } 
                 //
                 if (k) {
@@ -322,7 +341,7 @@ App.event.extend('editor', function() {
                         if (r[2]) {
                             rangeStart = r[2];
                         }
-                        if (r[3] !== null) {
+                        if (r[3] !== undefined) {
                             rangeEnd = r[3];
                         }
                         //
