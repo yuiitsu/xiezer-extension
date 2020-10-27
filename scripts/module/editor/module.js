@@ -21,6 +21,7 @@ App.module.extend('editor', function() {
     this.previewNote = function(content) {
         Model.set('content', content);
         Model.set('editorModifyTime', new Date().getTime());
+        Model.set('editorCharactersCount', content.length);
     };
 
     this.saveNote = function(content) {

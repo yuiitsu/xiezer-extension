@@ -253,7 +253,7 @@ App.module.extend('data', function() {
                         parentId: parentId,
                         name: name,
                         showChildren: showChildren,
-                        isLocked: cursor.value.password ? true : false,
+                        isLocked: !!cursor.value.password,
                         children: []
                     };
                 //
@@ -288,7 +288,7 @@ App.module.extend('data', function() {
                 Model.set('notebooks', result);
                 //
                 if ($.isFunction(callback)) {
-                    callback();
+                    callback(result);
                 }
             }
         };
@@ -311,7 +311,7 @@ App.module.extend('data', function() {
                     title: cursor.value.title,
                     createAt: cursor.value.createAt ? self.module.component.timeToStr(cursor.value.createAt) : '',
                     createAtInt: cursor.value.createAt,
-                    isLocked: cursor.value.password ? true : false,
+                    isLocked: !!cursor.value.password,
                     notebook: cursor.value.notebook ? cursor.value.notebook : ''
                 }, isLocked = false;
                 //

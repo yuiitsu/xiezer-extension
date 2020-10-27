@@ -28,13 +28,21 @@
             "scripts/lib/jquery-3.4.1.min.js",
             "scripts/app.js",
             "scripts/model.js",
+            "scripts/module/component/module.js",
+            "scripts/module/component/view.js",
+            "scripts/module/editor/module.js",
+            "scripts/module/editor/event.js",
+            "scripts/module/editor/view.js",
             "scripts/module/content/module.js",
             "scripts/module/content/event.js",
-            "scripts/module/content/view_.js",
+            "scripts/module/content/view.js",
             "scripts/run.js"
         ],
         "css": [
-            "style/content.css"
+            "scripts/module/component/style.css",
+            "scripts/module/content/style.css",
+            "scripts/module/editor/style.css",
+            "scripts/module/images/style.css"
         ]
     }],
     "browser_action": {

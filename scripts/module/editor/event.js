@@ -25,7 +25,7 @@ App.event.extend('editor', function() {
             return false;
         }
         self.module.editor.saveNote(content);
-        self.log('auto save: ', content);
+        console.log('auto save: ', content);
         Model.set('editorAutoSaved', self.module.component.timeToStr());
     };
 
@@ -229,7 +229,8 @@ App.event.extend('editor', function() {
                 }
             });
             //
-            $('.editor-content').on('keydown', function(e) {
+            let target = $('.editor-content');
+            target.on('keydown', function(e) {
                 let container = $(this), 
                     containerElement = container[0], 
                     rangeStart = containerElement.selectionStart ,
@@ -371,7 +372,7 @@ App.event.extend('editor', function() {
                 }
             });
             //
-            $('.editor-content').on('click', function(e) {
+            target.on('click', function(e) {
                 let container = $(this), 
                     containerElement = container[0], 
                     rangeStart = containerElement.selectionStart ,
@@ -386,15 +387,15 @@ App.event.extend('editor', function() {
             });
         },
         contentChange: function() {
-            let cpLock = false;
-            $('.editor-content').on('compositionstart', function() {
+            let cpLock = false, target = $('.editor-content');
+            target.on('compositionstart', function() {
                 cpLock = true;
             });
-            $('.editor-content').on('compositionend', function() {
+            target.on('compositionend', function() {
                 cpLock = false;
             });
             //
-            $('.editor-content').on('input', function(e) {
+            target.on('input', function(e) {
                 let _this = $(this);
                 setTimeout(function() {
                     if (!cpLock) {
@@ -407,7 +408,7 @@ App.event.extend('editor', function() {
                     }
                 });
             });
-            $('.editor-content').on('change', function(e) {
+            target.on('change', function(e) {
                 let content = $(this).val();
                 if (!content) {
                     return false;
@@ -427,11 +428,12 @@ App.event.extend('editor', function() {
         },
         scroll: function() {
             //
-            $('.editor-content').mouseenter(function() {
+            let target = $('.editor-content');
+            target.mouseenter(function() {
                 Model.set('scrollMaster', 'editor');
             });
             //
-            $('.editor-content').scroll(function() {
+            target.scroll(function() {
                 let scrollMaster = Model.get('scrollMaster');
                 if (scrollMaster !== 'editor') {
                     return false;

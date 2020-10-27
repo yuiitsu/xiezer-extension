@@ -306,6 +306,17 @@ let App = {
         f = JSON.parse(f);
         //
         delete f.content_security_policy;
+        let contentScripts = f.content_scripts;
+        contentScripts.forEach(element => {
+            let newJsList = [];
+            element.js.forEach(item => {
+                if (!item.endsWith('view.js')) {
+                    newJsList.push(item);
+                }
+            });
+            newJsList.push('scripts/view.js');
+            element.js = newJsList;
+        });
         //
         Fs.writeFileSync(distDir + '/manifest.json', JSON.stringify(f), 'utf-8');
         console.log('build manifest.json success.');
@@ -314,20 +325,21 @@ let App = {
     this.buildIndex = function() {
         console.log('build index.html start...');
         let indexText = Fs.readFileSync('index.html', 'utf-8'), 
-            $ = cheerio.load(indexText);
+            $ = cheerio.load(indexText),
+            elementHead = $('head');
         //
         if (!$) {
             console.log('build index dom failed');
             return false;
         }
         //
-        $('head').find('script').each(function() {
+        elementHead.find('script').each(function() {
             let modulePath = $(this).attr('src');
             if (modulePath.endsWith('view.js')) {
                 $(this).remove();
             }
         });
-        $('head').append('<script src="scripts/view.js" type="text/javascript"></script>');
+        elementHead.append('<script src="scripts/view.js" type="text/javascript"></script>');
         Fs.writeFileSync(distDir + '/index.html', $.html(), 'utf-8');
         console.log('build index.html success.');
     };

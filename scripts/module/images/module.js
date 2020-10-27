@@ -140,7 +140,7 @@ App.module.extend('images', function() {
 
     this.lib = {
         router: function(currentLib) {
-            currentLib = currentLib;
+            // currentLib = currentLib;
             if (currentLib === 'latest') {
                 if (isQueryLoading) {
                     return false;

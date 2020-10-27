@@ -24,14 +24,14 @@ code {
 }
 
 .previewer-enity {
-    padding: 20px 20px 80px;
+    padding: 0 20px 80px;
     /* overflow-y: auto; */
 }
 
 .preview-only .previewer-enity {
     margin: 0 auto;
     /* background-color: rgba(214, 202, 165, 0.1); */
-    background-color: #f7f7f7;
+    /* background-color: #f7f7f7; */
     min-height: 100%;
 }
 
@@ -82,6 +82,11 @@ code {
     margin-bottom: 1rem;
     line-height: 1.5;
     font-weight: 500;
+}
+
+.previewer-main h1 {
+    border-bottom: 1px solid #efefef;
+    padding: 10px 0;
 }
 
 .previewer-main h1 {
