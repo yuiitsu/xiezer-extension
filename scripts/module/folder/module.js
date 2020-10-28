@@ -46,7 +46,7 @@ App.module.extend('folder', function() {
     };
 
     this.lock = function(result) {
-        let _this = Model.get('currentNotebookLock'),
+        let _this = $(Model.get('currentNotebookLock')),
             status = result.status,
             notebookId = result.notebookId;
         //
