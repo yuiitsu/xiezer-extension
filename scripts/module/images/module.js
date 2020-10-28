@@ -223,7 +223,6 @@ App.module.extend('images', function() {
                 });
             },
             upload: function(xhr, name, base64Data) {
-                debugger
                 let setting = Model.get('setting_github');
                 if (!setting) {
                     self.module.component.notification('Setting data error. please check first.', 'danger');

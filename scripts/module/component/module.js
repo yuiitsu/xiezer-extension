@@ -247,14 +247,14 @@ App.module.extend('component', function() {
         return {
             show: function(type, title, msg, confirm_callback, cancel_callback) {
                 let dialog_id = Date.parse(new Date());
-                $('body').append(self.view.getView('component', 'dialog', {
+                $('html').append(self.view.getView('component', 'dialog', {
                     type: type,
                     title: title,
                     msg: msg,
                     dialog_id: dialog_id
                 }));
 
-                $('.dialog-close').off('click').on('click', function() {
+                $('.xiezer-dialog-close').off('click').on('click', function() {
                     let dialog_id = $(this).attr('data-dialog-id');
                     $('.dialog-' + dialog_id).remove();
                     if (self.is_function(cancel_callback)) {
@@ -262,7 +262,7 @@ App.module.extend('component', function() {
                     }
                 });
 
-                $('.dialog-action-button').off('click').on('click', function() {
+                $('.xiezer-dialog-action-button').off('click').on('click', function() {
                     let dialog_id = $(this).attr('data-dialog-id'),
                         data_type = $(this).attr('data-type');
                     $('.dialog-' + dialog_id).remove();
