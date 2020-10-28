@@ -6,7 +6,7 @@ App.view.extend('notes', function() {
 
     this.layout = function() {
         return `
-            {{ var notesOrder = 'order_' + data.notesOrder }}
+            {{ var notesOrder = data.notesOrder ? 'order_' + data.notesOrder : 'order_prev' }}
             <div class="notes-main display-flex-column">
                 <div class="notes-header display-flex-row">
                     <div class="notes-header-left display-flex-auto display-flex-row">
@@ -105,7 +105,7 @@ App.view.extend('notes', function() {
             <div class="display-flex-auto notes-items-container">
                 {{ for var i in data.list }}
                 {{ var item = data.list[i] }}
-                {{ var focusClassName = item.id == data.selectedNoteId ? 'focus' : '' }}
+                {{ var focusClassName = item.isSelected ? 'focus' : '' }}
                 {{ var isLockedClassName = item.isLocked ? 'is-locked' : '' }}
                 {{ var lockShowClass = item.isLocked ? 'visibility-show' : 'visibility-hide' }}
                 <div class="notes-item display-flex-row {{ focusClassName }} {{ isLockedClassName }}" data-id="{{ item['id'] }}" data-title="{{ item.title }}">

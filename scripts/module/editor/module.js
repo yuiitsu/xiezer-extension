@@ -25,6 +25,7 @@ App.module.extend('editor', function() {
     };
 
     this.saveNote = function(content) {
+        Model.set('action', 'update');
         Model.set('note', content);
     };
 

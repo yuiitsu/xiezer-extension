@@ -133,7 +133,7 @@ App.view.extend('folder', function() {
         return `
             {{ for var i in data.list }}
             {{ var item = data.list[i] }}
-            {{ var focus = item.id === data.selectedNoteBookId ? 'focus': '' }}
+            {{ var focus = item.selected ? 'focus': '' }}
             {{ var childrenShow = item['children'].length > 0 ? 'visibility-show' : 'visibility-hide' }}
             {{ var isLockedClassName = item.isLocked ? 'is-locked' : '' }}
             <div class="folder-child display-flex display-flex-row {{ focus }} {{ isLockedClassName }}" data-id="{{ item['id'] }}" data-name="{{ item['name'] }}" data-show-children="{{ item['showChildren'] }}">

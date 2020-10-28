@@ -24,12 +24,14 @@ App.module.extend('images', function() {
         let useLib = Model.get('useLib');
         if (!Model.get('setting_' + useLib)) {
             try {
-                let setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
-                if (!setting) {
-                    Model.set('imageListError', 'Please set up a Github account first.');
-                    return false;
-                }
-                Model.set('setting_' + useLib, setting);
+                self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+                    let setting = JSON.parse(res);
+                    if (!setting) {
+                        Model.set('imageListError', 'Please set up a Github account first.');
+                        return false;
+                    }
+                    Model.set('setting_' + useLib, setting);
+                });
             } catch (e) {
                 console.error(e);
                 // self.module.component.notification('Setting data error. please check setting.', 'danger');
@@ -54,6 +56,7 @@ App.module.extend('images', function() {
         pathList = [];
         //
         let container = self.module.component.module({
+            container: $('html'),
             name: 'Picture Library',
             width: 800,
         }, self.view.getView('images', 'layout', {}), '');
@@ -147,10 +150,7 @@ App.module.extend('images', function() {
                 }
                 isQueryLoading = true;
                 self.loading.show();
-                self.module.data.latestImages.query(function() {
-                    self.loading.hide();
-                    isQueryLoading = false;
-                });
+                self.module.data.latestImages.query();
             } else {
                 Model.set('useLib', currentLib);
                 self.lib.load();
@@ -164,18 +164,22 @@ App.module.extend('images', function() {
             let useLib = Model.get('useLib');
             if (!Model.get('setting_' + useLib)) {
                 try {
-                    let setting = JSON.parse(localStorage.getItem(settingKey[useLib]));
-                    if (!setting) {
-                        Model.set('imageListError', 'Please set up a Github account first.');
-                        return false;
-                    }
-                    Model.set('setting_' + useLib, setting);
+                    self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+                        let setting = JSON.parse(res);
+                        if (!setting) {
+                            Model.set('imageListError', 'Please set up a Github account first.');
+                            return false;
+                        }
+                        Model.set('setting_' + useLib, setting);
+                        self.module.images.lib[useLib].queryPage();
+                    });
                 } catch (e) {
                     self.module.component.notification('Setting data error. please check first.', 'danger');
                     return false;
                 }
+            } else {
+                this[useLib].queryPage();
             }
-            this[useLib].queryPage();
         },
         github: {
             queryPage: function(callback) {
@@ -219,6 +223,7 @@ App.module.extend('images', function() {
                 });
             },
             upload: function(xhr, name, base64Data) {
+                debugger
                 let setting = Model.get('setting_github');
                 if (!setting) {
                     self.module.component.notification('Setting data error. please check first.', 'danger');
@@ -263,9 +268,7 @@ App.module.extend('images', function() {
                         return false;
                     }
                     // delete local data, if it exists.
-                    self.module.data.latestImages.delete(sha, function() {
-                        Model.set('currentLib', Model.get('currentLib'));
-                    });
+                    self.module.data.latestImages.delete(sha);
                     //
                     // self.lib.reload();
                 }, true);
@@ -346,21 +349,35 @@ App.module.extend('images', function() {
         });
         //
         container.find('.images-lib-setting').on('click', function() {
-            let useLib = Model.get('useLib'), 
-                setting = localStorage.getItem(settingKey[useLib]);
+            let useLib = Model.get('useLib');
             //
-            try {
-                setting = JSON.parse(setting);
-                setting = setting ? setting : {
-                    user: '',
-                    repos: '',
-                    token: ''
-                };
-            } catch (e) {
-                self.module.component.notification('Setting data error. please check setting.', 'danger');
-                return false;
-            }
-            self.view.display('images', 'setting_' + useLib, setting, $('.images-lib-list-container'));
+            self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+                try {
+                    let setting = JSON.parse(res);
+                    setting = setting ? setting : {
+                        user: '',
+                        repos: '',
+                        token: ''
+                    };
+                    self.view.display('images', 'setting_' + useLib, setting, $('.images-lib-list-container'));
+                } catch (e) {
+                    Model.set('imageListError', 'Please set up a Github account first.');
+                }
+                // Model.set('setting_' + useLib, setting);
+                // self.module.images.lib[useLib].queryPage();
+            });
+            // try {
+            //     setting = JSON.parse(setting);
+            //     setting = setting ? setting : {
+            //         user: '',
+            //         repos: '',
+            //         token: ''
+            //     };
+            // } catch (e) {
+            //     self.module.component.notification('Setting data error. please check setting.', 'danger');
+            //     return false;
+            // }
+            // self.view.display('images', 'setting_' + useLib, setting, $('.images-lib-list-container'));
         });
         //
         container.on('click', '.images-lib-setting-save-github', function(e) {
@@ -387,7 +404,11 @@ App.module.extend('images', function() {
                 repos: repos,
                 token: token
             };
-            localStorage.setItem(settingKey.github, JSON.stringify(data));
+            // localStorage.setItem(settingKey.github, JSON.stringify(data));
+            self.sendMessage('data', 'setLocalStorage', {
+                key: settingKey.github,
+                data: JSON.stringify(data)
+            })
             Model.set('setting_' + Model.get('useLib'), data);
             self.module.component.notification('Save successfuly.');
             //
@@ -573,6 +594,7 @@ App.module.extend('images', function() {
         isUploading = true;
         //
         let container = self.module.component.module({
+            container: $('html'),
             name: 'Picture Library Uploador',
             noClose: true
         }, self.view.getView('images', 'miniUpload', {}), '');       
@@ -619,5 +641,15 @@ App.module.extend('images', function() {
             }
             reader.readAsDataURL(res);       
         });
-    }
+    };
+
+    this.queryLatestImagesResult = function(result) {
+        Model.set('imageList', result);
+        self.loading.hide();
+        isQueryLoading = false;
+    };
+
+    this.deleteResult = function(status) {
+        Model.set('currentLib', Model.get('currentLib'));
+    };
 });

@@ -7,10 +7,8 @@ App.module.extend('final', function() {
 
     this.init = function() {
         //
-        this.module.data.readAllNoteBooks(function() {
-            self.module.data.readAllNotes();
-            self.loadLastNote();
-        });
+        // self.loadLastNote();
+        self.sendMessage('data', 'getLastNote');
     };
 
     this.loadLastNote = function() {

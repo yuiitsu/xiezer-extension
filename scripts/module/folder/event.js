@@ -31,14 +31,15 @@ App.event.extend('folder', function() {
         },
 
         newNoteBook: function() {
+            let target = $('.notebooks-container');
             // level 1
-            $('.notebooks-container').on('click', '.folder-add', function() {
+            target.on('click', '.folder-add', function() {
                 let elementId = self.module.component.timeToStr();
                 $('#folder-list').prepend(self.view.getView('folder', 'newNoteBook', {elementId: elementId}));
                 $('input[data-element-id="'+ elementId +'"]').focus();
             });
             // level 2
-            $('.notebooks-container').on('click', '.folder-add-child', function() {
+            target.on('click', '.folder-add-child', function() {
                 let parentId = $(this).attr('data-id'), 
                     elementId = self.module.component.timeToStr();
                 $(this).parent().parent().after(self.view.getView('folder', 'newNoteBook', {parentId: parentId, elementId: elementId}));
@@ -57,7 +58,8 @@ App.event.extend('folder', function() {
             let allNotesElement = $('.all-notes');
             allNotesElement.on('click', function() {
                 $('.folder-child').removeClass('focus');
-                Model.set('noteBookId', '');
+                // Model.set('noteBookId', '');
+                self.sendMessage('data', 'setNotebookId', '');
                 $(this).addClass('focus');
             });
             //
@@ -69,6 +71,8 @@ App.event.extend('folder', function() {
                     dbClick = false;
                     return false;
                 }
+                //
+                Model.set('clickNotebookElement', _this);
                 //
                 // allNotesElement.removeClass('focus');
                 if (_this.parent().hasClass('is-locked')) {
@@ -93,27 +97,11 @@ App.event.extend('folder', function() {
                             return false;
                         }
                         //
-                        self.module.data.checkNotebookLock(noteBookId, password, function(status) {
-                            //
-                            if (status) {
-                                Model.set('noteBookId', noteBookId);
-                                _this.parent().removeClass('is-locked');
-                                container.remove();
-                                //
-                                $('.folder-child').removeClass('focus');
-                                _this.parent().addClass('focus');
-                                allNotesElement.removeClass('focus');
-                            } else {
-                                self.module.component.dialog().ok('Unlock failed. Password error.', 'Unlock note', function() {
-                                    let target = container.find('#password');
-                                    target.focus();
-                                    target.select();
-                                });
-                            }
-                        });
+                        self.module.data.checkNotebookLock(noteBookId, password, container[0], _this[0]);
                     });
                 } else {
-                    Model.set('noteBookId', noteBookId);
+                    // Model.set('noteBookId', noteBookId);
+                    self.sendMessage('data', 'setNotebookId', noteBookId);
                     //
                     $('.folder-child').removeClass('focus');
                     _this.parent().addClass('focus');
@@ -138,32 +126,33 @@ App.event.extend('folder', function() {
                         return false;
                     }
                     // update
-                    self.module.data.updateNoteBook({
+                    self.module.data.updateNotebook({
                         parentId: parentId,
                         noteBookId: noteBookId,
                         name: name
-                    }, function() {});
+                    });
                 } else {
                     if (name) {
                         // add
-                        self.module.data.saveNoteBook({
+                        self.module.data.saveNotebook({
                             name: name, 
                             parentId: parentId
-                        }, function() {});
+                        });
                     } else {
                         // pass
                     }
                 }
             };
             //
-            $('#folder-list').on('keydown', '.folder-item-edit-input', function(e) {
+            let target = $('#folder-list');
+            target.on('keydown', '.folder-item-edit-input', function(e) {
                 if (e.keyCode === 13) {
                     d($(this));
                 }
                 e.stopPropagation();
             });
             //
-            $('#folder-list').on('click', '.folder-item-edit-save-button', function(e) {
+            target.on('click', '.folder-item-edit-save-button', function(e) {
                 d($(this).prev().find('input'));
             });
         },
@@ -221,7 +210,7 @@ App.event.extend('folder', function() {
                         break;
                     case "delete":
                         self.module.component.dialog().show('confirm', 'Delete notebook', 'Are you sure you want to delete these?', function() {
-                            self.module.data.deleteNoteBook(noteBookId, function() {});
+                            self.module.data.deleteNotebook(noteBookId, function() {});
                         });
                         break;
                 }
@@ -236,37 +225,10 @@ App.event.extend('folder', function() {
                     name = $(this).attr('data-name'), 
                     action = $(this).attr('data-action');
                 //
+                Model.set('currentNotebookLock', _this);
                 if (action === 'lock') {
                     //
-                    if (self.module.data.notebookHasUnlocked(notebookId)) {
-                        _this.parent().parent().parent().addClass('is-locked');
-                        return false;
-                    }
-                    let container = self.module.component.module({
-                        name: 'Lock notebook',
-                        width: 300
-                    }, self.view.getView('component', 'lockForm', {
-                        id: notebookId,
-                        name: name
-                    }), '');
-                    //
-                    container.find('.lock-confirm').off('click').on('click', function() {
-                        let noteBookId = $(this).attr('data-id'), 
-                            password = container.find('#password').val(), 
-                            confirmPassword = container.find('#confirm-password').val();
-                        //
-                        if (!password || !confirmPassword || password !== confirmPassword) {
-                            container.find('.form-control').addClass('error');
-                            return false;
-                        } else {
-                            container.find('.form-control').removeClass('error');
-                        }
-                        //
-                        self.module.data.lockNotebook(noteBookId, password, function() {
-                            _this.parent().parent().parent().addClass('is-locked');
-                            container.remove();
-                        });
-                    });
+                    self.module.data.notebookHasUnlocked(notebookId);
                 } else {
                     let container = self.module.component.module({
                         name: 'Clear password',

@@ -34,7 +34,7 @@ App.module.extend('previewer', function() {
         //
         this.view.display('previewer', 'layout', {previewOnly: previewOnly, width: previewWith}, $('#previewer-container'));
         let showToc = localStorage.getItem('showToc');
-        Model.set('showToc', showToc === 'true' ? true : false);
+        Model.set('showToc', showToc === 'true');
         //
         $('.previewer-box').scroll(function() {
             let scrollMaster = Model.get('scrollMaster');
@@ -92,7 +92,8 @@ App.module.extend('previewer', function() {
 
     this.renderPreviewMode = function(v) {
         self.renderLayout();
-        Model.set('content', Model.get('content'));
+        // Model.set('content', Model.get('content'));
+        self.sendMessage('data', 'reloadNote', v);
     };
 
     this.renderToc = function() {

@@ -210,3 +210,7 @@
 .notes-item.is-locked .unlocked {
     display: none;
 }
+
+.notes-item.is-locked .visibility-hide {
+    visibility: visible;
+}

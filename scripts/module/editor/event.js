@@ -463,6 +463,7 @@ App.event.extend('editor', function() {
         },
         paste: function() {
             document.getElementById('editor-content').addEventListener('paste', function (event) {
+                debugger
                 console.log(event.clipboardData.getData('text/html'))
                 var items = event.clipboardData && event.clipboardData.items;
                 var file = null;

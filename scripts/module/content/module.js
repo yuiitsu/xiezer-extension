@@ -76,11 +76,13 @@ App.module.extend('content', function() {
         // console.log(articleElementRate);
         // listen background script send message.
         chrome.runtime.onMessage.addListener(function(request, _, response) {
-            let method = request.method;
-            if (self.hasOwnProperty(method)) {
-                self[method](request.data, response);
-            } else {
-                self.log('method '+ method +' not exist.');
+            console.log(request);
+            let module = request.module,
+                method = request.method,
+                data = request.data;
+            //
+            if (self.module[module] && self.module[module].hasOwnProperty(method)) {
+                self.module[module][method](data);
             }
             response('');
         });
@@ -541,7 +543,7 @@ App.module.extend('content', function() {
 
         // }, $('.fika-menu'));
         //
-        self.module._init();
+        self.module.initialize();
         this.extFilter();
         //
         // this.module.reader._init(text, store, photoSrc);

@@ -55,7 +55,7 @@ let App = {
             }
         },
 
-        _init: function() {
+        initialize: function() {
             for (let i in this) {
                 if (this.hasOwnProperty(i)) {
                     if (this[i].hasOwnProperty('init')) {
@@ -154,22 +154,26 @@ let App = {
         eval_view_func: function(model, name) {
             let key = model + "." + name;
             if (!this.hasOwnProperty(key)) {
-                let content = this[model][name](),
-                    _html = [];
-                let txt = ["App.view.extend('"+ model +"."+name+"', function() {"];
-                txt.push("this.init = function(data) {");
-                txt.push("var html = '';");
-                content = content.split('\n');
-                for (let i in content) {
-                    _html.push(this.parse(content[i]));
+                try {
+                    let content = this[model][name](),
+                        _html = [];
+                    let txt = ["App.view.extend('"+ model +"."+name+"', function() {"];
+                    txt.push("this.init = function(data) {");
+                    txt.push("var html = '';");
+                    content = content.split('\n');
+                    for (let i in content) {
+                        _html.push(this.parse(content[i]));
+                    }
+                    txt.push(_html.join(""));
+                    txt.push("return html;");
+                    txt.push("}");
+                    txt.push("});");
+                    // will be executed during development mode.
+                    let f = (new Function('return function v() {' + txt.join('') + '}'))();
+                    f();
+                } catch (e) {
+                    console.error(e);
                 }
-                txt.push(_html.join(""));
-                txt.push("return html;");
-                txt.push("}");
-                txt.push("});");
-                // will be executed during development mode.
-                let f = (new Function('return function v() {' + txt.join('') + '}'))();
-                f();
             }
         },
 
@@ -380,6 +384,33 @@ let App = {
     //         App.browser = 'firefox';
     //     }
     // },
+
+    sendMessage: function(module, method, data, callback) {
+        chrome.runtime.sendMessage({
+            module: module,
+            method: method,
+            data: data
+        }, function(res) {
+            if ($.isFunction(callback)) {
+                callback(res);
+            }
+        });
+    },
+
+    sendMessageToFront: function(module, method, data, callback) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            let tabId = tabs[0].id;
+            chrome.tabs.sendMessage(tabId, {
+                module: module,
+                method: method,
+                data: data
+            }, function (res) {
+                if ($.isFunction(callback)) {
+                    callback(res);
+                }
+            });
+        });
+    },
 
     log: function(msg) {
         console.log('[CES]', msg);

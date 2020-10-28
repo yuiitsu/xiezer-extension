@@ -173,6 +173,11 @@ App.module.extend('component', function() {
         $('#notification-box').remove();
         clearTimeout(notification_timer);
         //
+        if (typeof text !== 'string') {
+            type = text.type;
+            text = text.msg;
+        }
+        //
         let bg = type ? type : 'success';
         $('body').append(self.view.getView('component', 'notification', {
             text: text,
@@ -194,8 +199,10 @@ App.module.extend('component', function() {
      * @param action
      */
     this.module = function(options, content, action) {
-        let module_id = Date.parse(new Date());
-        $('body').append(this.view.getView('component', 'module', {
+        let module_id = Date.parse(new Date()),
+            containerParent = options.container ? options.container : $('body');
+
+        containerParent.append(this.view.getView('component', 'module', {
             name: options.name,
             content: content,
             action: action,
@@ -206,7 +213,7 @@ App.module.extend('component', function() {
         let container = $('.module-box-' + module_id);
         container.find('.js-handler').attr('data-module-id', module_id);
         if (options.width) {
-            container.find('.module-content').css({width: options.width});
+            container.find('.xiezer-module-content').css({width: options.width});
         }
 
         // 检查高度
@@ -217,17 +224,18 @@ App.module.extend('component', function() {
         //target.css('height', target_height);
 
         if (!options.noClose) {
-            $('.module-close').off('click').on('click', function() {
+            $('.xiezer-module-close').off('click').on('click', function() {
                 // let module_id = $(this).attr('data-module-id');
                 $('.module-box-' + module_id).remove();
             });
 
-            $('.module-mask').off('click').on('click', function() {
+            $('.xiezer-module-mask').off('click').on('click', function() {
                 let module_id = $(this).attr('data-module-id');
                 $('.module-box-' + module_id).remove();
             });
         }
         //
+        Model.set('currentModuleComponent', container);
         return container;
     };
 
