@@ -86,6 +86,8 @@ App.module.extend('content', function() {
             }
             response('');
         });
+        //
+        Model.set('environment', 'contentScript');
     };
 
     this.findArticlePro = function() {
@@ -301,14 +303,14 @@ App.module.extend('content', function() {
         if (isAvailable) {
             this.readerMode();
         }
-        //
-        chrome.extension.sendMessage({
-            'method': 'reader_ready',
-            'data': {
-                is_available: isAvailable,
-            }
-        }, function () {
-        });
+        // //
+        // chrome.runtime.sendMessage({
+        //     'method': 'reader_ready',
+        //     'data': {
+        //         is_available: isAvailable,
+        //     }
+        // }, function () {
+        // });
     };
 
     this.findNextNode = function(element) {
@@ -615,13 +617,14 @@ App.module.extend('content', function() {
 	// 	}
     // };
 
-    this.openReaderMode = function() {
+    this.openReaderMode = function(pageUrl) {
 		if (location.href !== pageUrl) {
 			this.findArticlePro();
 		}
 		if (!isAvailable) {
 		    return false;
         }
+        self.sendMessage('data', 'setNoteId', self.module.component.md5(pageUrl));
 		//
         let target = $('#xiezer');
 		if (target.length === 0) {
@@ -666,10 +669,10 @@ App.module.extend('content', function() {
         $('html, body').css('overflow-y', overflow);
 
         // autopilot 时可能document 还没有ready jquery无法获取相应element
-        $(document).ready(function() {
-            // self.tocScroll();
-            // self.highlightCode();
-        });
+        // $(document).ready(function() {
+        //     // self.tocScroll();
+        //     // self.highlightCode();
+        // });
         // chrome.extension.sendMessage({
         //     'method': 'is_open',
         //     'data': isOpen

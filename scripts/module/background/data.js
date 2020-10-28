@@ -125,7 +125,7 @@ App.module.extend('data', function() {
             });
         } else {
             data['notebook'] = Model.get('noteBookId');
-            data['noteId'] = self._uuid();
+            data['noteId'] = noteId ? noteId : self._uuid();
             data['createAt'] = new Date().getTime();
             request = db.transaction(['notes'], 'readwrite')
                 .objectStore('notes')
@@ -388,6 +388,8 @@ App.module.extend('data', function() {
                     self.sendMessageToFront('editor', 'renderEditorData', result.content);
                     self.sendMessageToFront('previewer', 'renderContent', result.content);
                     localStorage.setItem('lastNoteId', noteId);
+                } else {
+                    self.sendMessage('editor', 'dataNotExist', noteId);
                 }
             })
         } else {

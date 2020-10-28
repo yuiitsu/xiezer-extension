@@ -137,8 +137,9 @@ App.module.extend('background', function() {
 
     this.openReaderMode = function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {
-            'module': 'content',
-            'method': 'openReaderMode'
+            module: 'content',
+            method: 'openReaderMode',
+            data: tab.url
         }, function (response) {});
         // self.sendMessage('content', 'openReaderMode', {});
         // chrome.storage.sync.set({version:Version.currentVersion})

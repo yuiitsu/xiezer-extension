@@ -23,20 +23,18 @@ App.module.extend('images', function() {
         //
         let useLib = Model.get('useLib');
         if (!Model.get('setting_' + useLib)) {
-            try {
-                self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+            self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+                try {
                     let setting = JSON.parse(res);
                     if (!setting) {
                         Model.set('imageListError', 'Please set up a Github account first.');
                         return false;
                     }
                     Model.set('setting_' + useLib, setting);
-                });
-            } catch (e) {
-                console.error(e);
-                // self.module.component.notification('Setting data error. please check setting.', 'danger');
-                return false;
-            }
+                } catch (e) {
+                    // console.error(e);
+                }
+            });
         }
     };
 

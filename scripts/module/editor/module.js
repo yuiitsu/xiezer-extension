@@ -4,7 +4,8 @@
  */
 App.module.extend('editor', function() {
     //
-    let self = this;
+    let self = this,
+        dataNotExist = true;
 
     this.init = function() {
         //
@@ -25,7 +26,7 @@ App.module.extend('editor', function() {
     };
 
     this.saveNote = function(content) {
-        Model.set('action', 'update');
+        Model.set('action', dataNotExist ? 'new' : 'update');
         Model.set('note', content);
     };
 
@@ -40,6 +41,7 @@ App.module.extend('editor', function() {
         Model.set('editorCharactersCount', data.length);
         Model.set('editorAutoSaved', '');
         // Model.set('notesOpened', true);
+        dataNotExist = false;
     };
 
     this.renderCharactersCount = function(n) {
@@ -97,4 +99,8 @@ App.module.extend('editor', function() {
         container.trigger('change');
         container.scrollTop(scrollTop);
     };
+
+    this.dataNotExist = function(noteId) {
+        dataNotExist = true;
+    }
 });
