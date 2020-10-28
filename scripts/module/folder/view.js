@@ -157,7 +157,7 @@ App.view.extend('folder', function() {
             {{ var focus = child.id === data.selectedNoteBookId ? 'focus': '' }}
             {{ var isChildLockedClassName = child.isLocked ? 'is-locked' : '' }}
             {{ var lockShowClass = child.isLocked ? 'visibility-show' : 'visibility-hide' }}
-            <div class="folder-child folder-child2 display-flex display-flex-row {{ focus }} {{ isChildLockedClassName }}">
+            <div class="folder-child folder-child2 display-flex display-flex-row {{ focus }} {{ isChildLockedClassName }}" data-id="{{ child['id'] }}">
                 <div class="folder-item display-flex-auto" data-id="{{ child['id'] }}" data-name="{{ child.name }}" data-parent-id="{{ child['parentId'] }}">{{ child['name'] }}</div>
                 <div class="folder-item-action {{ lockShowClass }}">
                     <div class="folder-action-item">

@@ -27,6 +27,7 @@ App.module.extend('data', function() {
         //
         // this.openDb();
         //
+        Model.set('environment', 'page');
         Model.set('note', '').watch('note', this.saveNote);
         // Model.set('noteBookId', '').watch('noteBookId', this.readAllNotes);
         Model.set('noteId', '').watch('noteId', this.readNote);
@@ -44,7 +45,8 @@ App.module.extend('data', function() {
         }
         self.sendMessage('data', 'saveNote', {
             action: Model.get('action'),
-            content: content
+            content: content,
+            environment: Model.get('environment')
         });
     };
 

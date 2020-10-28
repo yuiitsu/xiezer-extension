@@ -82,13 +82,14 @@ App.module.extend('data', function() {
 
     this.saveNote = function(params) {
         let content = params.content,
-            action = params.action;
+            action = params.action,
+            environment = params.environment;
         if (!content) {
             return false;
         }
         // self.currentData.set(content);
         //
-        let lines = content.split('\n'), 
+        let lines = content.split('\n'),
             title = lines[0], 
             data = {
                 title: title.substr(0, 80),
@@ -124,8 +125,8 @@ App.module.extend('data', function() {
                 }
             });
         } else {
-            data['notebook'] = Model.get('noteBookId');
-            data['noteId'] = noteId ? noteId : self._uuid();
+            data['notebook'] = Model.get('notebookId');
+            data['noteId'] = noteId && environment === 'contentScript' ? noteId : self._uuid();
             data['createAt'] = new Date().getTime();
             request = db.transaction(['notes'], 'readwrite')
                 .objectStore('notes')
