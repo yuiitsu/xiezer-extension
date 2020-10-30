@@ -49,27 +49,13 @@ App.module.extend('previewer', function() {
         });
     };
 
-    // this.renderPreview = function(content) {
-    //     if (editorModifyLastTime === 0) {
-    //         console.log(1);
-    //         self.renderContent(content);
-    //         editorModifyLastTime = Model.get('editorModifyTime');
-    //     } else {
-    //         clearInterval(previewerTimer);
-    //         previewerTimer = setInterval(function() {
-    //             let editorModifyTime = Model.get('editorModifyTime');
-    //             if (editorModifyTime > editorModifyLastTime) {
-    //                 editorModifyLastTime = editorModifyTime;
-    //                 self.renderContent(content);
-    //             }
-    //         }, 1000);
-    //     }
-    // };
-
-    this.renderContent = function(content) {
+    this.renderContent = function(result) {
         //
-        let container = $('#previewer');
+        let container = $('#previewer'),
+            content = typeof result === 'string' ? result : result.content;
+        //
         if (content) {
+            Model.set('currentNote', result);
             // container.html(marked(content));
             container.html(self.md.render(content));
             //

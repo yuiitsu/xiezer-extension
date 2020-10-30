@@ -11,7 +11,13 @@ App.event.extend('notes', function() {
                 self.module.init.switchPreviewMode('false');
                 let content = '# Untitled\n';
                 Model.set('action', 'new');
-                Model.set('note', content);
+                // Model.set('note', content);
+                self.sendMessage('data', 'saveNote', {
+                    action: 'new',
+                    content: content,
+                    // environment: Model.get('environment')
+                    // contentNoteId: Model.get('contentNoteId')
+                });
             });
         },
         openNote: function() {

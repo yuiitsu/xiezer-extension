@@ -61,9 +61,9 @@ App.module.extend('init', function() {
 
     this.renderEditorHide = function(v) {
         if (v === 'true') {
-            $('#editor').addClass('hide');
+            $('#xiezer-editor').addClass('hide');
         } else {
-            $('#editor').removeClass('hide');
+            $('#xiezer-editor').removeClass('hide');
         }
     };
 

@@ -7,7 +7,10 @@ App.event.extend('content', function() {
     let self = this;
 
     this.event = {
-        listenExample: function() {
+        closeTranslationMode: function() {
+            $('html').on('click', '.xiezer-header-x', function() {
+                self.module.content.closeReaderMode();
+            })
         }
     }
 });

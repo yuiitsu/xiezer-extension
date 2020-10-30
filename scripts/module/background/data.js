@@ -36,7 +36,7 @@ App.module.extend('data', function() {
         Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         // Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
         // Model.set('moveToNotebookSingle', '').watch('moveToNotebookSingle', this.moveToNotebookSingle);
-        // Model.set('latestImage', '').watch('latestImage', this.latestImages.save);
+        Model.set('latestImage', '').watch('latestImage', this.module.latestImages.save);
     };
 
     this.openDb = function(success, error) {
@@ -83,7 +83,8 @@ App.module.extend('data', function() {
     this.saveNote = function(params) {
         let content = params.content,
             action = params.action,
-            environment = params.environment;
+            environment = params.environment,
+            noteId = params.noteId;
         if (!content) {
             return false;
         }
@@ -96,8 +97,8 @@ App.module.extend('data', function() {
                 content: content
             };
         //
-        let request = null, 
-            noteId = Model.get('noteId');
+        let request = null;
+            // noteId = environment === 'contentScript' && contentNoteId ? contentNoteId : Model.get('noteId');
             // action = Model.get('action');
             // currentNote = Model.get('currentNote');
         //
@@ -386,8 +387,8 @@ App.module.extend('data', function() {
                     Model.set('currentNote', result);
                     // Model.set('currentNote', result);
                     // Model.set('editorData', result.content);
-                    self.sendMessageToFront('editor', 'renderEditorData', result.content);
-                    self.sendMessageToFront('previewer', 'renderContent', result.content);
+                    self.sendMessageToFront('editor', 'renderEditorData', result);
+                    self.sendMessageToFront('previewer', 'renderContent', result);
                     localStorage.setItem('lastNoteId', noteId);
                 } else {
                     self.sendMessage('editor', 'dataNotExist', noteId);

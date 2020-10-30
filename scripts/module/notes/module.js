@@ -189,20 +189,24 @@ App.module.extend('notes', function() {
     };
 
     this.moveToNoteBookResult = function(status) {
+        let container = $(Model.get('currentModuleComponent'));
         if (status) {
             Model.set('moveToNotebookId', '');
             Model.set('isEditMode', false);
             Model.set('notesChecked', []);
             self.module.component.notification('Update successfully!');
+            container.remove();
         } else {
             self.module.component.notification('Update successfully!', 'warring');
         }
     };
 
     this.moveToNoteBookSingleResult = function(status) {
+        let container = $(Model.get('currentModuleComponent'));
         if (status) {
             Model.set('moveToNotebookId', '');
             self.module.component.notification('Update successfully!');
+            container.remove();
         } else {
             self.module.component.notification('Update successfully!', 'warring');
         }

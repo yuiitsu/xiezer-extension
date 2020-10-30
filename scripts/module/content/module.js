@@ -87,7 +87,6 @@ App.module.extend('content', function() {
             response('');
         });
         //
-        Model.set('environment', 'contentScript');
     };
 
     this.findArticlePro = function() {
@@ -547,6 +546,8 @@ App.module.extend('content', function() {
         //
         self.module.initialize();
         this.extFilter();
+        Model.set('environment', 'contentScript');
+        console.log('content script');
         //
         // this.module.reader._init(text, store, photoSrc);
     };
@@ -685,11 +686,11 @@ App.module.extend('content', function() {
         $('html, body').css('overflow-y', 'auto');
         $('body').show();
         target.hide();
-        //
-        chrome.extension.sendMessage({
-            'method': 'is_open',
-            'data': false
-        }, function () {});
+        // //
+        // chrome.extension.sendMessage({
+        //     'method': 'is_open',
+        //     'data': false
+        // }, function () {});
     };
 
     // this.sendFeedback = function(isMatch) {

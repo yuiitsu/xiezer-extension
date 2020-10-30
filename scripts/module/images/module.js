@@ -23,9 +23,10 @@ App.module.extend('images', function() {
         //
         let useLib = Model.get('useLib');
         if (!Model.get('setting_' + useLib)) {
-            self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
+            let settingString = localStorage.getItem(settingKey[useLib]);
+            if (settingString) {
                 try {
-                    let setting = JSON.parse(res);
+                    let setting = JSON.parse(settingString);
                     if (!setting) {
                         Model.set('imageListError', 'Please set up a Github account first.');
                         return false;
@@ -34,7 +35,20 @@ App.module.extend('images', function() {
                 } catch (e) {
                     // console.error(e);
                 }
-            });
+            } else {
+                self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function (res) {
+                    try {
+                        let setting = JSON.parse(res);
+                        if (!setting) {
+                            Model.set('imageListError', 'Please set up a Github account first.');
+                            return false;
+                        }
+                        Model.set('setting_' + useLib, setting);
+                    } catch (e) {
+                        // console.error(e);
+                    }
+                });
+            }
         }
     };
 

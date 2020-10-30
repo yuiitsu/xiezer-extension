@@ -13,10 +13,10 @@ App.module.extend('latestImages', function() {
         if (!data || !data.name || !data.url || !data.sha) {
             return false;
         }
-        // data['imageId'] = data.sha;
-        // data['createAt'] = new Date().getTime();
-        // data['lib'] = Model.get('useLib');
-        // data['type'] = 'file';
+        data['imageId'] = data.sha;
+        data['createAt'] = new Date().getTime();
+        data['lib'] = Model.get('useLib');
+        data['type'] = 'file';
         request = db.transaction(['latestImages'], 'readwrite')
             .objectStore('latestImages')
             .add(data);

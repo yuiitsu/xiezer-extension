@@ -28,7 +28,8 @@ App.module.extend('data', function() {
         // this.openDb();
         //
         Model.set('environment', 'page');
-        Model.set('note', '').watch('note', this.saveNote);
+        console.log('content script data module');
+        // Model.set('note', '').watch('note', this.saveNote);
         // Model.set('noteBookId', '').watch('noteBookId', this.readAllNotes);
         Model.set('noteId', '').watch('noteId', this.readNote);
         Model.set('notesOrder', Model.default.notesOrder).watch('notesOrder', this.setNotesOrder);
@@ -39,16 +40,17 @@ App.module.extend('data', function() {
         Model.set('latestImage', '').watch('latestImage', this.latestImages.save);
     };
 
-    this.saveNote = function(content) {
-        if (!content) {
-            return false;
-        }
-        self.sendMessage('data', 'saveNote', {
-            action: Model.get('action'),
-            content: content,
-            environment: Model.get('environment')
-        });
-    };
+    // this.saveNote = function(content) {
+    //     if (!content) {
+    //         return false;
+    //     }
+    //     self.sendMessage('data', 'saveNote', {
+    //         action: Model.get('action'),
+    //         content: content,
+    //         environment: Model.get('environment'),
+    //         contentNoteId: Model.get('contentNoteId')
+    //     });
+    // };
 
     /**
      * @param {*} data 

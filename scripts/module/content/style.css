@@ -7,6 +7,7 @@
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
 .xiezer-header-container {
@@ -14,6 +15,11 @@
     padding: 10px 20px;
     background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
+}
+
+.xiezer-header-x {
+    float: right;
+    cursor: pointer;
 }
 
 .xiezer-main-container {
@@ -28,10 +34,37 @@
     height: 100%;
     overflow-y: auto;
     line-height: 1.6;
+    background-color: rgba(214, 202, 165, 0.1);
+    border-right: 1px solid rgba(214, 202, 165, 0.8);
 }
 
 .xiezer-origin-content-container h1 {
-    font-size: 36px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.xiezer-origin-content-container h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.xiezer-origin-content-container h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.xiezer-origin-content-container h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.xiezer-origin-content-container h5 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.xiezer-origin-content-container h6 {
+    font-size: 0.75rem;
     font-weight: bold;
 }
 
@@ -39,6 +72,10 @@
     font-size: 21px;
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.xiezer-origin-content-container a {
+    color: rgba(201, 69, 54, 1);
 }
 
 .xiezer-origin-content-container img {
@@ -61,6 +98,7 @@
     display: flex;
     flex-direction: row;
     box-sizing: border-box;
+    padding-left: 0;
 }
 
 .xiezer-editor-container .action-bar .action-left {
@@ -74,6 +112,11 @@
 .xiezer-editor-container textarea {
     outline: none;
     border: 1px solid #efefef;
+}
+
+.editor-entity-autosave-status {
+    height: 30px;
+    line-height: 30px;
 }
 
 .xiezer-content-module .display-flex {display: flex;}
@@ -96,6 +139,10 @@
 .xiezer-content-module * {
     box-sizing: border-box;outline: none;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+.xiezer-content-module .loading svg {
+    animation: loading 800ms infinite linear;
 }
 
 .xiezer-btn{border:0;cursor:pointer;border-radius: 3px;width: 100%;height: 100%;padding: 0;}

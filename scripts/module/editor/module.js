@@ -5,7 +5,8 @@
 App.module.extend('editor', function() {
     //
     let self = this,
-        dataNotExist = true;
+        dataNotExist = true,
+        noteId = '';
 
     this.init = function() {
         //
@@ -16,7 +17,7 @@ App.module.extend('editor', function() {
         Model.set('notesOpened', false).watch('notesOpened', this.renderActionIcon);
         Model.set('editorRange', {});
         //
-        self.view.display('editor', 'layout', {content: ''}, $('#editor'));
+        self.view.display('editor', 'layout', {content: ''}, $('#xiezer-editor'));
     };
 
     this.previewNote = function(content) {
@@ -27,18 +28,27 @@ App.module.extend('editor', function() {
 
     this.saveNote = function(content) {
         Model.set('action', dataNotExist ? 'new' : 'update');
-        Model.set('note', content);
+        // Model.set('note', content);
+        self.sendMessage('data', 'saveNote', {
+            action: Model.get('action'),
+            content: content,
+            environment: Model.get('environment'),
+            noteId: noteId
+        });
     };
 
     this.renderEditorData = function(data) {
+        let content = data.content;
         //
+        noteId = data.noteId;
         self.event.editor.clearTimer();
         //
         let target = $('.editor-content');
-        target.val(data);
+        target.val(content);
         target.scrollTop(0);
         //
-        Model.set('editorCharactersCount', data.length);
+        // Model.set('contentNoteId', noteId);
+        Model.set('editorCharactersCount', content.length);
         Model.set('editorAutoSaved', '');
         // Model.set('notesOpened', true);
         dataNotExist = false;
