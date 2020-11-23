@@ -42,6 +42,7 @@ App.module.extend('editor', function() {
         //
         noteId = data.noteId;
         self.event.editor.clearTimer();
+        console.log('editor noteId: ' + noteId);
         //
         let target = $('.editor-content');
         target.val(content);
@@ -73,7 +74,7 @@ App.module.extend('editor', function() {
             clientHeight = target.outerHeight(),
             scrollTop = (scrollHeight - clientHeight) * percent;
         //
-        $('.editor-content').animate({scrollTop: scrollTop}, 0);
+        target.animate({scrollTop: scrollTop}, 0);
     };
 
     this.renderActionIcon = function(status) {
@@ -110,7 +111,8 @@ App.module.extend('editor', function() {
         container.scrollTop(scrollTop);
     };
 
-    this.dataNotExist = function(noteId) {
+    this.dataNotExist = function(result) {
         dataNotExist = true;
+        noteId = result;
     }
 });

@@ -33,7 +33,7 @@ App.module.extend('data', function() {
         Model.set('note', '').watch('note', this.saveNote);
         Model.set('notebookId', '').watch('notebookId', this.readAllNotes);
         Model.set('noteId', '').watch('noteId', this.readNote);
-        Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
+        // Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         // Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
         // Model.set('moveToNotebookSingle', '').watch('moveToNotebookSingle', this.moveToNotebookSingle);
         Model.set('latestImage', '').watch('latestImage', this.module.latestImages.save);
@@ -312,11 +312,11 @@ App.module.extend('data', function() {
         return Model.get('notebooks');
     };
 
-    this.readAllNotes = function() {
+    this.readAllNotes = function(options) {
         let objectStore = db.transaction('notes').objectStore('notes'),
             result = [], 
             notebookId = Model.get('notebookId'),
-            searchKey = Model.get('searchKey'), 
+            searchKey = options && options.searchKey ? options.searchKey : Model.get('searchKey'),
             index = notebookId ? 'notebook' : 'createAt',
             order = Model.get('notesOrder'),
             noteId = Model.get('noteId');
@@ -391,7 +391,7 @@ App.module.extend('data', function() {
                     self.sendMessageToFront('previewer', 'renderContent', result);
                     localStorage.setItem('lastNoteId', noteId);
                 } else {
-                    self.sendMessage('editor', 'dataNotExist', noteId);
+                    self.sendMessageToFront('editor', 'dataNotExist', noteId);
                 }
             })
         } else {

@@ -88,7 +88,9 @@ App.module.extend('data', function() {
     };
 
     this.readAllNotes = function() {
-        self.sendMessage('data', 'readAllNotes', {});
+        self.sendMessage('data', 'readAllNotes', {
+            searchKey: Model.get('searchKey')
+        });
     };
 
     this.readNote = function(noteId) {
