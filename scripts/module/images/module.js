@@ -175,20 +175,24 @@ App.module.extend('images', function() {
         load: function() {
             let useLib = Model.get('useLib');
             if (!Model.get('setting_' + useLib)) {
-                try {
                     self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
-                        let setting = JSON.parse(res);
-                        if (!setting) {
+                        if (!res) {
                             Model.set('imageListError', 'Please set up a Github account first.');
-                            return false;
+                        } else {
+                            try {
+                                let setting = JSON.parse(res);
+                                if (!setting) {
+                                    Model.set('imageListError', 'Please set up a Github account first.');
+                                    return false;
+                                }
+                                Model.set('setting_' + useLib, setting);
+                                self.module.images.lib[useLib].queryPage();
+                            } catch (e) {
+                                self.module.component.notification('Setting data error. please check first.', 'danger');
+                                return false;
+                            }
                         }
-                        Model.set('setting_' + useLib, setting);
-                        self.module.images.lib[useLib].queryPage();
                     });
-                } catch (e) {
-                    self.module.component.notification('Setting data error. please check first.', 'danger');
-                    return false;
-                }
             } else {
                 this[useLib].queryPage();
             }
@@ -363,16 +367,24 @@ App.module.extend('images', function() {
             let useLib = Model.get('useLib');
             //
             self.sendMessage('data', 'getLocalStorage', settingKey[useLib], function(res) {
-                try {
-                    let setting = JSON.parse(res);
-                    setting = setting ? setting : {
+                if (!res) {
+                    self.view.display('images', 'setting_' + useLib, {
                         user: '',
                         repos: '',
                         token: ''
-                    };
-                    self.view.display('images', 'setting_' + useLib, setting, $('.images-lib-list-container'));
-                } catch (e) {
-                    Model.set('imageListError', 'Please set up a Github account first.');
+                    }, $('.images-lib-list-container'));
+                } else {
+                    try {
+                        let setting = JSON.parse(res);
+                        setting = setting ? setting : {
+                            user: '',
+                            repos: '',
+                            token: ''
+                        };
+                        self.view.display('images', 'setting_' + useLib, setting, $('.images-lib-list-container'));
+                    } catch (e) {
+                        Model.set('imageListError', 'Please set up a Github account first.');
+                    }
                 }
                 // Model.set('setting_' + useLib, setting);
                 // self.module.images.lib[useLib].queryPage();

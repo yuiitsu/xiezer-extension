@@ -165,7 +165,7 @@ App.event.extend('folder', function() {
                 //
                 showChildren = showChildren === '1' ? '0' : '1';
                 //
-                self.module.data.updateNoteBook({
+                self.module.data.updateNotebook({
                     parentId: '',
                     noteBookId: noteBookId,
                     name: name,
