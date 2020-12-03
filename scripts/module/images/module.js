@@ -21,7 +21,8 @@ App.module.extend('images', function() {
     this._init = function() {
         Model.set('useLib', 'github');
         //
-        let useLib = Model.get('useLib');
+        let useLib = Model.get('useLib'), 
+            defaultPath = Model.get('defaultPath');
         if (!Model.get('setting_' + useLib)) {
             let settingString = localStorage.getItem(settingKey[useLib]);
             if (settingString) {
@@ -48,6 +49,35 @@ App.module.extend('images', function() {
                         // console.error(e);
                     }
                 });
+            };
+        };
+        //
+        if (!defaultPath) {
+            defaultPath = self.module.data.getDefaultLibAndPath();
+            if (defaultPath) {
+                try {
+                    let d = JSON.parse(defaultPath);
+                    if (d) {
+                        Model.set('defaultPath', d);
+                    } else {
+                        Model.set('defaultPath', []);
+                    }
+                } catch (e) {
+                    Model.set('defaultPath', []);
+                }
+            } else {
+                self.sendMessage('data', 'getDefaultLibAndPath', {}, function(res) {
+                    try {
+                        let d = JSON.parse(res);
+                        if (d) {
+                            Model.set('defaultPath', d);
+                        } else {
+                            Model.set('defaultPath', []);
+                        }
+                    } catch (e) {
+                        Model.set('defaultPath', []);
+                    }
+                });
             }
         }
     };
@@ -71,7 +101,9 @@ App.module.extend('images', function() {
             container: $('html'),
             name: 'Picture Library',
             width: 800,
-        }, self.view.getView('images', 'layout', {}), '');
+        }, self.view.getView('images', 'layout', {
+            defaultPath: Model.get('defaultPath')
+        }), '');
         //
         this.listen(container);
         //
@@ -103,6 +135,7 @@ App.module.extend('images', function() {
                     list.push({
                         url: element.url,
                         name: element.name,
+                        path: element.path,
                         sha: element.sha,
                         type: 'image',
                         lib: element.lib
@@ -130,7 +163,9 @@ App.module.extend('images', function() {
             if (data.currentNum === data.total && data.complete === 100) {
                 viewName = 'uploadComplete';
             }
-            self.view.display('images', viewName, data, $('.images-uploading-progress-container'));
+            try {
+                self.view.display('images', viewName, data, $('.images-uploading-progress-container'));
+            } catch (e) {}
         } else {
             $('.images-uploading-progress-container').html('');
         }
@@ -208,6 +243,7 @@ App.module.extend('images', function() {
                 let setting = Model.get('setting_github'), 
                     time = new Date().getTime();
                 //
+                // pathList = pathList ? pathList : Model.get('defaultPath') ? Model.get('defaultPath') : [];
                 let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
                 ajax = self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'?t=' + time, {
                     headers: {
@@ -226,6 +262,7 @@ App.module.extend('images', function() {
                     response.forEach(item => {
                         result.push({
                             name: item.name,
+                            path: item.path,
                             url: item.download_url,
                             sha: item.sha,
                             type: item.type,
@@ -246,6 +283,12 @@ App.module.extend('images', function() {
                     // Model.set('imageUploadProgress', '');
                     return false;
                 }
+                debugger
+                let defaultPath = Model.get('defaultPath');
+                if (defaultPath) {
+                    pathList = defaultPath.path ? defaultPath.path : [];
+                }
+                // pathList = pathList ? pathList : Model.get('defaultPath') ? Model.get('defaultPath') : [];
                 let path = pathList.length > 0 ? pathList.join('/') + '/' : '';
                 xhr.open('PUT', 'https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents/' + path + name, true);
                 xhr.setRequestHeader('Authorization', 'token ' + setting.token);
@@ -268,8 +311,8 @@ App.module.extend('images', function() {
                         sha: sha
                     };
                 //
-                let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
-                self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents'+ path +'/' + name, {
+                // let path = pathList.length > 0 ? '/' + pathList.join('/') : '';
+                self.module.component.request('https://api.github.com/repos/'+ setting.user +'/'+ setting.repos +'/contents/' + name, {
                     headers: {
                         'Authorization': 'token ' + setting.token
                     },
@@ -507,6 +550,15 @@ App.module.extend('images', function() {
             Model.set('currentLib', currentLib);
             e.stopPropagation();
         });
+        //
+        container.on('click', '.images-lib-path-set-default', function(e) {
+            self.module.data.setDefaultLibAndPath(Model.get('currentLib'), pathList);
+            Model.set('defaultPath', {
+                lib: Model.get('currentLib'),
+                path: pathList
+            });
+            e.stopPropagation();
+        });
     };
 
     this.prepareUploadData = function(files, num) {
@@ -572,7 +624,8 @@ App.module.extend('images', function() {
                         Model.set('latestImage', {
                             name: result.content.name,
                             url: result.content.download_url,
-                            sha: result.content.sha
+                            sha: result.content.sha,
+                            path: result.content.path
                         });
                         //
                         callback(xhr.response);

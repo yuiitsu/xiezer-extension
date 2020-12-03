@@ -33,6 +33,7 @@ App.module.extend('data', function() {
         Model.set('note', '').watch('note', this.saveNote);
         Model.set('notebookId', '').watch('notebookId', this.readAllNotes);
         Model.set('noteId', '').watch('noteId', this.readNote);
+        Model.watch('notesOrder', this.readAllNotes);
         // Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         // Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
         // Model.set('moveToNotebookSingle', '').watch('moveToNotebookSingle', this.moveToNotebookSingle);
@@ -758,6 +759,17 @@ App.module.extend('data', function() {
         if (lastNoteId) {
             Model.set('noteId', lastNoteId);
         }
+    };
+
+    this.setDefaultLibAndPath = function(data) {
+        this.setLocalStorage({
+            key: 'defaultLibAndPath',
+            data: JSON.stringify(data)
+        });
+    };
+
+    this.getDefaultLibAndPath = function() {
+        return this.getLocalStorage('defaultLibAndPath');
     };
 
     this.setLocalStorage = function(params) {

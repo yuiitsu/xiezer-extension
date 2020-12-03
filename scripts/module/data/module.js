@@ -210,6 +210,30 @@ App.module.extend('data', function() {
         Model.set('editorData', '');
     };
 
+    this.setDefaultLibAndPath = function(lib, path) {
+        self.sendMessage('data', 'setDefaultLibAndPath', {
+            lib: lib,
+            path: path
+        }, function(res) {
+            console.log(res);
+        });
+    };
+
+    this.getDefaultLibAndPath = function() {
+        return this.getLocalStorage('defaultLibAndPath');
+    };
+
+    this.setLocalStorage = function(params) {
+        let key = params.key,
+            data = params.data;
+        //
+        localStorage.setItem(key, data);
+    };
+
+    this.getLocalStorage = function(key) {
+        return localStorage.getItem(key);
+    }
+
     this.latestImages = {
         /**
          * @param {*} data 

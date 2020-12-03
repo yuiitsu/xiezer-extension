@@ -339,3 +339,11 @@
 .images-lib-setting-action-line button:last-child {
     margin-right: 0;
 }
+
+.images-lib-path-set-default {
+    cursor: pointer;
+}
+
+.images-lib-path-set-default:hover {
+    color: rgba(201, 69, 54, 1);
+}
