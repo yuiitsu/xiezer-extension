@@ -50,7 +50,8 @@
         ]
     }],
     "browser_action": {
-        "default_title": "XIEZER"
+        "default_title": "XIEZER",
+        "default_icon": "images/XIEZER-LOGO.png"
     },
     "permissions": [
         "tabs",
