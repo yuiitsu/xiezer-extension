@@ -283,10 +283,11 @@ App.module.extend('images', function() {
                     // Model.set('imageUploadProgress', '');
                     return false;
                 }
-                debugger
-                let defaultPath = Model.get('defaultPath');
-                if (defaultPath) {
-                    pathList = defaultPath.path ? defaultPath.path : [];
+                if (pathList && pathList.length === 0) {
+                    let defaultPath = Model.get('defaultPath');
+                    if (defaultPath) {
+                        pathList = defaultPath.path ? defaultPath.path : [];
+                    }
                 }
                 // pathList = pathList ? pathList : Model.get('defaultPath') ? Model.get('defaultPath') : [];
                 let path = pathList.length > 0 ? pathList.join('/') + '/' : '';

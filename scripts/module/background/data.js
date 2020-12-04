@@ -766,6 +766,10 @@ App.module.extend('data', function() {
             key: 'defaultLibAndPath',
             data: JSON.stringify(data)
         });
+        Model.set('defaultPath', {
+            lib: data.lib,
+            path: data.path
+        })
     };
 
     this.getDefaultLibAndPath = function() {
