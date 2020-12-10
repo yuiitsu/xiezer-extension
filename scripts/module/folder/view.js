@@ -10,9 +10,9 @@ App.view.extend('folder', function() {
                 <div class="logo-container display-flex display-flex-row">
                     <div class="logo display-flex-auto">
                         <div class="logo-bg">
-                            <img src="images/XIEZER-LOGO.png" /> 
+                            <img src="images/XIEZER-LOGO-48.png" /> 
                         </div>
-                        XIEZER
+                        <div class="logo-bg">XIEZER</div>
                     </div>
                     <div class="folder-switch">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-bar-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -63,6 +63,7 @@ App.view.extend('folder', function() {
                             <div class="folder-root-icon"></div>
                         </div>
                     </div>
+                    <!--
                     <div class="folder-item-container folder-root">
                         <div class="folder-root-title display-flex display-flex-row">
                             <div class="display-flex-auto">
@@ -77,6 +78,7 @@ App.view.extend('folder', function() {
                             <div class="folder-root-icon"></div>
                         </div>
                     </div>
+                    -->
                     <div class="folder-item-container folder-root">
                         <div class="folder-root-title display-flex display-flex-row">
                             <div class="display-flex-auto">

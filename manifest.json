@@ -51,12 +51,17 @@
     }],
     "browser_action": {
         "default_title": "XIEZER",
-        "default_icon": "images/XIEZER-LOGO.png"
+        "default_icon": "images/XIEZER-LOGO-16.png"
     },
     "permissions": [
         "tabs",
         "contextMenus",
         "http://*/*",
         "https://*/*"
-    ]
+    ],
+    "icons": {
+        "16": "images/XIEZER-LOGO-16.png",
+        "48": "images/XIEZER-LOGO-48.png",
+        "128": "images/XIEZER-LOGO.png"
+    }
 }

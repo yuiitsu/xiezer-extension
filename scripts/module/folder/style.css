@@ -15,6 +15,7 @@
 .logo {
     display: inline-block;
     color: rgba(255, 255, 255, 1);
+    padding: 3px 0;
 }
 
 .logo-bg {
@@ -22,13 +23,13 @@
     /* padding: 5px; */
     /* background-color: rgba(0, 0, 0, 0.2); */
     margin-right: 8px;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     /* border: 1px solid rgba(0, 0, 0, 0.25); */
     vertical-align: middle;
 }
 
 .logo-bg img {
-    height: 30px;
+    height: 20px;
 }
 
 .folder-switch {
