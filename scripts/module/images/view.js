@@ -8,11 +8,7 @@ App.view.extend('images', function() {
             <div class="images-lib-container display-flex-column">
                 <div class="images-lib-action-bar display-flex-row">
                     <div class="images-lib-current-container">
-                        Current: 
-                        <span class="images-lib-current">{{ data.defaultPath.lib }}</span> > 
-                        {{ for var i in data.defaultPath.path }}
-                        <span class="images-lib-current"> {{ data.defaultPath.path[i] }}</span> 
-                        {{ end }}
+                        {{ this.view.getView('images', 'defaultPath', data.defaultPath) }}
                     </div>
                     <div class="images-uploading-progress-container display-flex-auto display-flex-row"></div>
                     <div class="images-lib-action images-lib-upload" for="file">
@@ -284,6 +280,16 @@ App.view.extend('images', function() {
     this.miniUpload = function() {
         return `
             <div class="mini-upload-container images-uploading-progress-container display-flex-row"></div>
+        `;
+    };
+
+    this.defaultPath = function() {
+        return `
+            Default: 
+            <span class="images-lib-current"> {{ data.lib }}</span>  
+            {{ for var i in data.path }}
+            <span class="images-lib-current"> > {{ data.path[i] }}</span> 
+            {{ end }}
         `;
     }
 });

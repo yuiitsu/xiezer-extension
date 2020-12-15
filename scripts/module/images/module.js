@@ -91,6 +91,7 @@ App.module.extend('images', function() {
         Model.set('imageUploadProgress', {}).watch('imageUploadProgress', this.renderProgress);
         Model.set('currentLib').watch('currentLib', this.lib.router);
         Model.watch('currentLib', this.renderLibs);
+        Model.watch('defaultPath', this.renderDefaultPath);
     };
 
     this.show = function() {
@@ -729,4 +730,8 @@ App.module.extend('images', function() {
     this.deleteResult = function(status) {
         Model.set('currentLib', Model.get('currentLib'));
     };
+
+    this.renderDefaultPath = function(data) {
+        self.view.display('images', 'defaultPath', data, $('.images-lib-current-container'));
+    }
 });
