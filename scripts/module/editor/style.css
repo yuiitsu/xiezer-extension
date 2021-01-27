@@ -69,3 +69,17 @@
     height: 230px;
     padding: 10px 0;
 }
+
+.editor-decrypt-falied-tips {
+    padding: 5px 10px;
+    color: #900C3F;
+    background-color: #FFC300;
+    font-size: 12px;
+    display: none;
+}
+
+.editor-decrypt-falied-tips span {
+    color: #335BFF;
+    text-decoration: underline;
+    cursor: pointer;
+}

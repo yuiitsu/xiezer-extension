@@ -15,6 +15,7 @@ App.event.extend('notes', function() {
                 self.sendMessage('data', 'saveNote', {
                     action: 'new',
                     content: content,
+                    AESSecret: Model.get('AESSecret')
                     // environment: Model.get('environment')
                     // contentNoteId: Model.get('contentNoteId')
                 });

@@ -8,7 +8,10 @@ App.module.extend('final', function() {
     this.init = function() {
         //
         // self.loadLastNote();
-        self.sendMessage('data', 'getLastNote');
+        let AESSecret = Model.get('AESSecret');
+        self.sendMessage('data', 'getLastNote', {
+            AESSecret: AESSecret ? AESSecret : ''
+        });
     };
 
     this.loadLastNote = function() {

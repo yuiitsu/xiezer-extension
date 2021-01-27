@@ -18,34 +18,42 @@ App.module.extend('init', function() {
         //
         previewOnly = localStorage.getItem('previewOnly');
         previewOnly = previewOnly ? previewOnly : 'false';
-
-        // 初始化模块
-        self.module.initialize();
-        // 监听background message
-        chrome.runtime.onMessage.addListener(function(request, _, callback) {
-            console.log(request);
-            let module = request.module,
-                method = request.method,
-                data = request.data;
-            //
-            if (self.module[module] && self.module[module].hasOwnProperty(method)) {
-                self.module[module][method](data);
+        // 检查是否开启AES加密
+        self.sendMessage('data', 'getSettings', {}, function(settings) {
+            let isAES = settings.isAES, 
+                AESSecret = Model.get('AESSecret');
+            if (isAES && !AESSecret) {
+                // 已启用加密，需输入密码
+                self.module.setting.showAESSecretForm();
+            } else {
+                // 初始化模块
+                self.module.initialize();
+                // 监听background message
+                chrome.runtime.onMessage.addListener(function(request, _, callback) {
+                    let module = request.module,
+                        method = request.method,
+                        data = request.data;
+                    //
+                    if (self.module[module] && self.module[module].hasOwnProperty(method)) {
+                        self.module[module][method](data);
+                    }
+                    callback('');
+                });
+                // 发送ready消息
+                chrome.runtime.sendMessage({
+                    method: 'ready'
+                }, function(res) {
+                });
+                //
+                // this.module.data.openDb(function() {
+                //     setTimeout(function() {
+                //         self.module.initialize();
+                //     }, 500);
+                // }, function() {
+                //     self.view.display('init', 'error', {message: 'Failed to open DB.'}, $('.prepare-content'));
+                // });
             }
-            callback('');
         });
-        // 发送ready消息
-        chrome.runtime.sendMessage({
-            method: 'ready'
-        }, function(res) {
-        });
-        //
-        // this.module.data.openDb(function() {
-        //     setTimeout(function() {
-        //         self.module.initialize();
-        //     }, 500);
-        // }, function() {
-        //     self.view.display('init', 'error', {message: 'Failed to open DB.'}, $('.prepare-content'));
-        // });
     };
 
     this.init = function() {

@@ -224,12 +224,12 @@ App.module.extend('component', function() {
         //target.css('height', target_height);
 
         if (!options.noClose) {
-            $('.xiezer-module-close').off('click').on('click', function() {
+            container.find('.xiezer-module-close').off('click').on('click', function() {
                 // let module_id = $(this).attr('data-module-id');
                 $('.module-box-' + module_id).remove();
             });
 
-            $('.xiezer-module-mask').off('click').on('click', function() {
+            container.find('.xiezer-module-mask').off('click').on('click', function() {
                 let module_id = $(this).attr('data-module-id');
                 $('.module-box-' + module_id).remove();
             });

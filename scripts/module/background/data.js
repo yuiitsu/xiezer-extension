@@ -20,7 +20,8 @@ App.module.extend('data', function() {
         showToc: false,
         showNoteBook: false,
         scrollMaster: 'editor',
-        notesOrder: 'prev'
+        notesOrder: 'prev',
+        isAES: 0
     }
 
     this.init = function() {
@@ -30,9 +31,14 @@ App.module.extend('data', function() {
             Model.set('notesOrder', notesOrder);
         }
         //
+        let isAES = localStorage.getItem('isAES');
+        if (isAES && isAES === '1') {
+            Model.set('isAES', 1);
+        }
+        //
         Model.set('note', '').watch('note', this.saveNote);
         Model.set('notebookId', '').watch('notebookId', this.readAllNotes);
-        Model.set('noteId', '').watch('noteId', this.readNote);
+        // Model.set('noteId', '').watch('noteId', this.readNote);
         Model.watch('notesOrder', this.readAllNotes);
         // Model.set('searchKey', '').watch('searchKey', this.readAllNotes);
         // Model.set('moveToNotebook', '').watch('moveToNotebook', this.moveToNotebook);
@@ -85,7 +91,8 @@ App.module.extend('data', function() {
         let content = params.content,
             action = params.action,
             environment = params.environment,
-            noteId = params.noteId;
+            noteId = params.noteId, 
+            AESSecret = params.AESSecret;
         if (!content) {
             return false;
         }
@@ -97,6 +104,16 @@ App.module.extend('data', function() {
                 title: title.substr(0, 80),
                 content: content
             };
+        //
+        if (Model.get('isAES') && AESSecret) {
+            let encryptContent = CryptoJS.AES.encrypt(content, AESSecret).toString();
+            data['content'] = encryptContent;
+            data['isAESEncrypt'] = 1;
+        } else {
+            data['isAESEncrypt'] = 0;
+        }
+        
+        // console.log(CryptoJS.AES.decrypt(encryptContent, '1234562').toString(CryptoJS.enc.Utf8));
         //
         let request = null;
             // noteId = environment === 'contentScript' && contentNoteId ? contentNoteId : Model.get('noteId');
@@ -138,6 +155,10 @@ App.module.extend('data', function() {
                 self.log('add data success.');
                 Model.set('noteId', data['noteId']);
                 self.readAllNotes();
+                self.readNote({
+                    noteId: data['noteId'],
+                    AESSecret: AESSecret
+                });
             };
             //
             request.onerror = function() {
@@ -370,10 +391,29 @@ App.module.extend('data', function() {
         };
     };
 
-    this.readNote = function(noteId) {
+    this.readNote = function(params) {
+        let noteId = params.noteId, 
+            AESSecret = params.AESSecret;
+        self.setNoteId(noteId);
         if (noteId) {
             self.getOneNote(noteId, function(status, result) {
+                console.log(noteId, status, result);
                 if (status) {
+                    //
+                    result.AESDecrypt = true;
+                    if (Model.get('isAES') && AESSecret && result.isAESEncrypt === 1) {
+                        let decryptContent = null;
+                        try {
+                            decryptContent = CryptoJS.AES.decrypt(result.content, AESSecret).toString(CryptoJS.enc.Utf8);
+                        } catch (e){}
+                        //
+                        if (decryptContent) {
+                            result.content = decryptContent;
+                        } else {
+                            result.AESDecrypt = false;
+                        }
+                    }
+                    //
                     if (result.password && noteLockCache.indexOf(noteId) === -1) {
                         // show unlock note window
                         Model.set('noteId', '');
@@ -403,9 +443,14 @@ App.module.extend('data', function() {
         }
     };
 
-    this.reloadNote = function(status) {
-        let currentNoteId = Model.get('noteId');
+    this.reloadNote = function(params) {
+        let currentNoteId = Model.get('noteId'),
+            AESSecret = params.AESSecret;
         Model.set('noteId', currentNoteId);
+        self.readNote({
+            noteId: currentNoteId,
+            AESSecret: AESSecret
+        })
     };
 
     this.getOneNote = function(noteId, callback) {
@@ -754,10 +799,12 @@ App.module.extend('data', function() {
         Model.set('editorData', '');
     };
 
-    this.getLastNote = function() {
+    this.getLastNote = function(params) {
         let lastNoteId = localStorage.getItem('lastNoteId');
         if (lastNoteId) {
-            Model.set('noteId', lastNoteId);
+            // Model.set('noteId', lastNoteId);
+            params['noteId'] = lastNoteId
+            self.readNote(params);
         }
     };
 
@@ -774,6 +821,25 @@ App.module.extend('data', function() {
 
     this.getDefaultLibAndPath = function() {
         return this.getLocalStorage('defaultLibAndPath');
+    };
+
+    this.setIsAES = function(isAES) {
+        self.setLocalStorage({
+            key: 'isAES',
+            data: isAES
+        })
+        Model.set('isAES', isAES);
+    };
+
+    this.getIsAES = function() {
+        return Model.get('isAES');
+    };
+
+    this.getSettings = function() {
+        let isAES = self.getIsAES();
+        return {
+            isAES: isAES
+        }
     };
 
     this.setLocalStorage = function(params) {

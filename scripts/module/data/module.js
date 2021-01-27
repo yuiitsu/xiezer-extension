@@ -94,7 +94,10 @@ App.module.extend('data', function() {
     };
 
     this.readNote = function(noteId) {
-        self.sendMessage('data', 'setNoteId', noteId);
+        self.sendMessage('data', 'readNote', {
+            noteId: noteId,
+            AESSecret: Model.get('AESSecret')
+        });
     };
 
     this.getOneNote = function(noteId, callback) {

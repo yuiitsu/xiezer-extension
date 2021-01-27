@@ -69,8 +69,12 @@ App.view.extend('editor', function() {
                         </div>
                     </div>
                 </div>
-                <div class="editor-entity display-flex-auto">
-                    <textarea class="editor-content" id="editor-content" 
+                <div class="editor-entity display-flex-auto display-flex-column">
+                    <div class="editor-decrypt-falied-tips">
+                        <div>Content decryption failed. You will not be able to view or modify the content.</div>
+                        <div><span>Please click here to enter the correct key.</span></div>
+                    </div>
+                    <textarea class="editor-content display-flex-auto" id="editor-content" 
                         placeholder="Enter something to start a new note, or update it." spellcheck="false">{{ data.content }}</textarea>
                 </div>
             </div>

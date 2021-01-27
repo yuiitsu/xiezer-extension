@@ -10,6 +10,7 @@
     "background": {
         "scripts": [
             "scripts/lib/jquery-3.4.1.min.js",
+            "scripts/lib/aes.js",
             "scripts/model.js",
             "scripts/app.js",
             "scripts/module/component/module.js",

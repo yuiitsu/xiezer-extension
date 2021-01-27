@@ -33,13 +33,25 @@ App.module.extend('editor', function() {
             action: Model.get('action'),
             content: content,
             environment: Model.get('environment'),
-            noteId: noteId
+            noteId: noteId,
+            AESSecret: Model.get('AESSecret')
         });
     };
 
     this.renderEditorData = function(data) {
-        let content = data.content;
+        let content = data.content, 
+            AESDecrypt = data.AESDecrypt, 
+            $decryptionTips = $('.editor-decrypt-falied-tips'), 
+            $contentEditor = $('#editor-content');
+
         //
+        if (!AESDecrypt) {
+            $decryptionTips.show();
+            $contentEditor.attr('disabled', true);
+        } else {
+            $decryptionTips.hide();
+            $contentEditor.attr('disabled', false);
+        }
         noteId = data.noteId;
         self.event.editor.clearTimer();
         console.log('editor noteId: ' + noteId);

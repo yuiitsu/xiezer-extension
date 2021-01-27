@@ -1,0 +1,66 @@
+.setting-layout {
+    padding: 20px 0;
+}
+
+.setting-side {
+    width: 100px;
+    display: none;
+}
+
+.setting-side-item {
+    margin-bottom: 10px;
+}
+
+.setting-main-item {
+    margin-bottom: 20px;
+}
+
+.setting-main-item-content {
+    margin: 10px 0;
+}
+
+.setting-main-item-switch {
+    padding: 10px 0;
+    color: #ccc;
+}
+
+.setting-main-item-seitch-open {
+    color: #009900;
+}
+
+.setting-main-item-description {
+    color: #999;
+    font-size: 12px;
+}
+
+.setting-main-item-description p {
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+.setting-aes-form {
+    padding-top: 20px;
+}
+
+.setting-aes-form-secret-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+.setting-aes-form-confirm {
+    padding-left: 5px;
+}
+
+.setting-aes-form-confirm button {
+    padding: 0 10px;
+}
+
+.setting-aes-secret-entrance-input input {
+    height: 35px;
+}
+
+.setting-aes-secret-entrance-button {
+    height: 30px;
+    margin-top: 10px;
+}

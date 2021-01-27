@@ -54,6 +54,7 @@ App.module.extend('previewer', function() {
         let container = $('#previewer'),
             content = typeof result === 'string' ? result : result.content;
         //
+        console.log(result);
         if (content) {
             Model.set('currentNote', result);
             // container.html(marked(content));
@@ -79,7 +80,10 @@ App.module.extend('previewer', function() {
     this.renderPreviewMode = function(v) {
         self.renderLayout();
         // Model.set('content', Model.get('content'));
-        self.sendMessage('data', 'reloadNote', v);
+        self.sendMessage('data', 'reloadNote', {
+            status: v,
+            AESSecret: Model.get('AESSecret')
+        });
     };
 
     this.renderToc = function() {
