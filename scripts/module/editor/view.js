@@ -49,6 +49,12 @@ App.view.extend('editor', function() {
                         </button>
                     </div>
                     <div class="action-right">
+                        {{ var withKeyClassName = data.withKey ? 'aes-key-tips-on' : '' }}
+                        <div class="action-item aes-key-tips {{ withKeyClassName }}" title="AES KEY">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key-fill" viewBox="0 0 16 16">
+                                <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </div>
                         <div class="action-item usage-link" title="About markdown" data-url="/help/usage/markdown">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -72,7 +78,7 @@ App.view.extend('editor', function() {
                 <div class="editor-entity display-flex-auto display-flex-column">
                     <div class="editor-decrypt-falied-tips">
                         <div>Content decryption failed. You will not be able to view or modify the content.</div>
-                        <div><span>Please click here to enter the correct key.</span></div>
+                        <div><span class="editor-go-aes-key">Please click here to enter the correct key.</span></div>
                     </div>
                     <textarea class="editor-content display-flex-auto" id="editor-content" 
                         placeholder="Enter something to start a new note, or update it." spellcheck="false">{{ data.content }}</textarea>

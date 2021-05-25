@@ -9,16 +9,21 @@ App.event.extend('notes', function() {
         newNote: function() {
             $('#notes-new-button').on('click', function() {
                 self.module.init.switchPreviewMode('false');
-                let content = '# Untitled\n';
+                let content = '# Untitled\n', 
+                    AESSecret = Model.get('AESSecret');
+                //
                 Model.set('action', 'new');
                 // Model.set('note', content);
-                self.sendMessage('data', 'saveNote', {
+                let sendData = {
                     action: 'new',
                     content: content,
-                    AESSecret: Model.get('AESSecret')
+                    // AESSecret: Model.get('AESSecret'),
+                    AESSecret: AESSecret ? (AESSecret === '{{notUse}}' ? '' : AESSecret) : ''
                     // environment: Model.get('environment')
                     // contentNoteId: Model.get('contentNoteId')
-                });
+                }
+                console.log(sendData);
+                self.sendMessage('data', 'saveNote', sendData);
             });
         },
         openNote: function() {

@@ -32,6 +32,7 @@ App.module.extend('notes', function() {
             searchKey = Model.get('searchKey'), 
             scrollTop = Model.get('notesScrollTop');
         //
+        console.log(data);
         self.view.display('notes', 'list', {
             list: notes, 
             // selectedNoteId: selectedNoteId,

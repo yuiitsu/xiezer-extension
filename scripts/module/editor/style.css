@@ -83,3 +83,11 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+.aes-key-tips {
+    color: #ccc;
+}
+
+.aes-key-tips-on {
+    color: rgba(201, 69, 54, 1);
+}

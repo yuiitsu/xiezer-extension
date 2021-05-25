@@ -214,3 +214,7 @@
 .notes-item.is-locked .visibility-hide {
     visibility: visible;
 }
+
+.isAESEncrypt {
+    color: #EC7063;
+}

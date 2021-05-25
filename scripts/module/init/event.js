@@ -4,7 +4,7 @@
 App.event.extend('initEvent', function() {
 
     let self = this, 
-        host = 'https://www.xiezer.com';
+        host = 'https://www.oneheart.ink';
 
     this.event = {
         usage: function() {

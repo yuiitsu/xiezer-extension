@@ -480,5 +480,12 @@ App.event.extend('editor', function() {
                 }
             });
         },
+        goAESEntrance: function() {
+            $('.editor-entity').on('click', '.editor-go-aes-key', function(e) {
+                Model.set('AESSecret', '');
+                self.module.init._init();
+                e.stopPropagation();
+            });
+        }
     }
 });

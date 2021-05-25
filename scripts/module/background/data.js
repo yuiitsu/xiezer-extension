@@ -354,7 +354,8 @@ App.module.extend('data', function() {
                     createAtInt: cursor.value.createAt,
                     isLocked: !!cursor.value.password,
                     notebook: cursor.value.notebook ? cursor.value.notebook : '',
-                    isSelected: !!(noteId && noteId === cursor.value.noteId)
+                    isSelected: !!(noteId && noteId === cursor.value.noteId),
+                    isAESEncrypt: cursor.value.isAESEncrypt
                 }, isLocked = false;
                 //
                 if (notebookLocked.indexOf(item.notebook) !== -1 && self.notebookLockCache.indexOf(item.notebook) === -1) {
@@ -679,6 +680,7 @@ App.module.extend('data', function() {
                 Model.set('noteId', '');
             }
             //
+            self.sendMessageToFront('editor', 'clearEditor', noteId);
             self.readAllNotes();
             self.sendMessageToFront('notes', 'deleteNotesResult', true);
         };

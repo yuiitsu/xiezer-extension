@@ -57,9 +57,10 @@ App.module.extend('setting', function() {
         //
         $('#setting-aes-form-confirm').off('click').on('click', function() {
             let secret = $('.setting-aes-form-secret-input').val();
-            if (!secret) {
-                return false;
-            }
+            // if (!secret) {
+            //     return false;
+            // }
+            secret = secret ? secret : '{{notUse}}';
             self.setAESSecret(secret);
             self.module.init._init();
         });

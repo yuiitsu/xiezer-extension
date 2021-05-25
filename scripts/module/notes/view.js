@@ -108,13 +108,14 @@ App.view.extend('notes', function() {
                 {{ var focusClassName = item.isSelected ? 'focus' : '' }}
                 {{ var isLockedClassName = item.isLocked ? 'is-locked' : '' }}
                 {{ var lockShowClass = item.isLocked ? 'visibility-show' : 'visibility-hide' }}
+                {{ var isAESEncrypt = item.isAESEncrypt ? 'isAESEncrypt' : '' }}
                 <div class="notes-item display-flex-row {{ focusClassName }} {{ isLockedClassName }}" data-id="{{ item['id'] }}" data-title="{{ item.title }}">
                     <div class="notes-checkbox">
                         {{ this.view.getView('notes', 'checkboxChecked', {}) }}
                         {{ this.view.getView('notes', 'checkboxDefault', {}) }}
                     </div>
                     <div class="display-flex-auto">
-                        <div class="notes-name display-flex-row">
+                        <div class="notes-name display-flex-row {{ isAESEncrypt }}">
                             {{ item['title'] }}
                         </div>
                         <div class="notes-bottom display-flex-row">

@@ -88,7 +88,7 @@ App.view.extend('setting', function() {
                 <div class="prepare-main">
                     <div class="prepare-logo display-flex-row">
                         <div class="display-flex-auto">
-                            XIEZER
+                            OneHeart
                         </div>
                         <div class="logo-bg">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-vector-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -99,7 +99,7 @@ App.view.extend('setting', function() {
                     </div>
                     <div class="prepare-content">
                         <div class="setting-aes-secret-entrance-input">
-                            <input type="text" class="setting-aes-form-secret-input" placeholder="Enter AES Secrect" />
+                            <input type="password" class="setting-aes-form-secret-input" placeholder="Enter AES Secrect" />
                         </div>
                         <div class="setting-aes-secret-entrance-button">
                             <button class="btn btn-primary" id="setting-aes-form-confirm">OK</button>

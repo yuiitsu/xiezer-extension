@@ -9,6 +9,8 @@ App.module.extend('editor', function() {
         noteId = '';
 
     this.init = function() {
+        let AESSecret = Model.get('AESSecret');
+        AESSecret = AESSecret ? (AESSecret === '{{notUse}}' ? '' : AESSecret) : '';
         //
         Model.set('editorData', '').watch('editorData', this.renderEditorData);
         Model.set('editorCharactersCount', 0).watch('editorCharactersCount', this.renderCharactersCount);
@@ -17,7 +19,10 @@ App.module.extend('editor', function() {
         Model.set('notesOpened', false).watch('notesOpened', this.renderActionIcon);
         Model.set('editorRange', {});
         //
-        self.view.display('editor', 'layout', {content: ''}, $('#xiezer-editor'));
+        self.view.display('editor', 'layout', {
+            content: '',
+            withKey: AESSecret
+        }, $('#xiezer-editor'));
     };
 
     this.previewNote = function(content) {
@@ -27,15 +32,18 @@ App.module.extend('editor', function() {
     };
 
     this.saveNote = function(content) {
+        let AESSecret = Model.get('AESSecret');
         Model.set('action', dataNotExist ? 'new' : 'update');
         // Model.set('note', content);
-        self.sendMessage('data', 'saveNote', {
+        let sendData = {
             action: Model.get('action'),
             content: content,
             environment: Model.get('environment'),
             noteId: noteId,
-            AESSecret: Model.get('AESSecret')
-        });
+            AESSecret: AESSecret ? (AESSecret === '{{notUse}}' ? '' : AESSecret) : ''
+        }
+        console.log(sendData);
+        self.sendMessage('data', 'saveNote', sendData);
     };
 
     this.renderEditorData = function(data) {
@@ -126,5 +134,7 @@ App.module.extend('editor', function() {
     this.dataNotExist = function(result) {
         dataNotExist = true;
         noteId = result;
-    }
+    };
+
+    this.clearEditor = function(noteId) {}
 });

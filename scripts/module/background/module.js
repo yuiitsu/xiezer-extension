@@ -33,7 +33,7 @@ App.module.extend('background', function() {
         //
         chrome.contextMenus.create({
             type: 'normal',
-            title: 'XZ - Upload the image',
+            title: 'Upload Image',
             contexts: ['image'],
             id: 'XZ_UPLOADOR',
             onclick: function(info, tab) {
@@ -48,7 +48,7 @@ App.module.extend('background', function() {
         //
         chrome.contextMenus.create({
             type: 'normal',
-            title: 'XZ - Collections',
+            title: 'Collections',
             contexts: ['selection'],
             id: 'XZ_COLLECTIONS',
             onclick: function(info, tab) {
@@ -60,7 +60,7 @@ App.module.extend('background', function() {
         //
         chrome.contextMenus.create({
             type: 'normal',
-            title: 'XZ - Translation Mode',
+            title: 'Translation Mode',
             contexts: ['page'],
             id: 'XZ_TRANSLATION_MODE',
             onclick: self.openReaderMode
